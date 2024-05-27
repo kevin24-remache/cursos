@@ -11,13 +11,13 @@ Login
             <!-- Login v1 -->
             <div class="card mb-0">
                 <div class="card-body">
-                    <a href="javascript:void(0);" class="brand-logo">
+                    <div class="brand-logo">
                         <h2 class="brand-text text-primary ml-1">Iniciar sesión</h2>
-                    </a>
+                    </div>
 
                     <h4 class="card-title mb-1 text-center"> </h4>
 
-                    <form class="auth-login-form mt-2" action="" method="POST">
+                    <form class="auth-login-form mt-2" action="<?= base_url("validate_login") ?>" method="POST">
                         <div class="form-group">
                             <label for="login-email" class="form-label">Correo electrónico</label>
                             <input type="text" class="form-control" id="login-email" name="login-email"
@@ -67,5 +67,5 @@ Login
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
-    <script src="<?=base_url()?>app-assets/js/scripts/pages/page-auth-login.js"></script>
+<script src="<?= base_url() ?>app-assets/js/scripts/pages/page-auth-login.js"></script>
 <?= $this->endSection() ?>

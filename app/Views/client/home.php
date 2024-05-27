@@ -5,96 +5,258 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- v4.0.0-alpha.6 -->
-    <link rel="stylesheet" href="dist/bootstrap/css/bootstrap.min.css">
-
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
 
     <!-- Theme style -->
-    <link rel="stylesheet" href="<?= base_url("dist/css/style.css") ?>">
+    <link rel="stylesheet" href="<?= base_url("assets/css/styles.css") ?>">
     <link rel="stylesheet" href="<?= base_url("dist/css/font-awesome/css/font-awesome.min.css") ?>">
-    <link rel="stylesheet" href="<?= base_url("dist/css/et-line-font/et-line-font.css") ?>">
-    <link rel="stylesheet" href="<?= base_url("dist/css/themify-icons/themify-icons.css") ?>">
 </head>
 
-<body class="hold-transition lockscreen">
-    <div class="mb-4">
-        <div class="error-page text-center mt-3">
-            <div class="theadline">
-                <img class=" img-fluid bg-white rounded-5 p-1 w-50" src="<?= base_url("assets/images/logo-ep.png"); ?>"
-                    alt="">
+<body class="d-flex flex-column h-100">
+    <main class="flex-shrink-0" style="background-color: #d9d9d9;">
+        <nav class="navbar navbar-dark" style="background-color: #0C244B;">
+            <div class="container-fluid">
+                <a class="navbar-brand" style="margin-left: 20px;" href="/login">
+                    <H3>PROSERVI-UEB-EP</H3>
+                </a>
             </div>
+        </nav>
+        <div class="mb-4">
+            <div class="text-center">
+                <img src="<?= base_url("assets/images/logo-ep.png"); ?>" alt="" height="100px">
+            </div>
+            <section class="container">
+                <div class="row">
+                    <div class="col col-xl-3 col-lg-3 col-md-4 col-sm-6 p-3">
+                        <div class="bg-white shadow">
+                            <figure class="p-1">
+                                <img src="<?= base_url("assets/images/ejemplo_congreso.jpg") ?>" alt="Imagen del Curso"
+                                    class="img-fluid imagen-pequena rounded-2 ">
+                            </figure>
+                            <figure class="text-center">
+                                <img src="<?= base_url("assets/images/logo_ueb.png") ?>" alt="Logo del curso"
+                                    class="img-fluid" width="120px;">
+                            </figure>
+
+                            <section class="px-3">
+                                <article class="date__start__content">
+                                    Inicia el 31 de mayo de 2024
+                                </article>
+
+                                <section class="card__icons__container">
+                                    <article>
+                                        <p><i class="fa fa-clock-o"></i> DURACIÓN</p>
+                                        <span>225 Horas</span>
+                                    </article>
+
+                                    <article>
+                                        <p><i class="fa fa-users"></i> MODALIDAD</p>
+                                        <span>Virtual</span>
+                                    </article>
+                                </section>
+
+                                <section class="pt-3 pb-4">
+                                    <button class="btn border border-danger mb-2 card__button text-danger" data-bs-toggle="modal" data-bs-target="#modalInfo"  type="button"
+                                        style="width:100%;">
+                                        Más Información
+                                    </button>
+                                    <button class="btn btn-danger" data-bs-toggle="modal"
+                                        data-bs-target="#modalInscripcion" data-evento="Nombre del evento" type="button"
+                                        style="width:100%;">
+                                        Inscribirse
+                                    </button>
+                                </section>
+                            </section>
+                        </div>
+                    </div>
+                    <div class="col col-xl-3 col-lg-3 col-md-4 col-sm-6 p-3">
+                        <div class="bg-white shadow">
+                            <figure class="imagen__curso__content">
+                                <img src="<?= base_url("assets/images/ejemplo_congreso.jpg") ?>" alt="Imagen del Curso"
+                                    class="img-fluid imagen-pequena">
+                            </figure>
+                            <figure class="imagen__curso__content px-5">
+                                <img src="<?= base_url("assets/images/logo_ueb.png") ?>" alt="Logo del curso"
+                                    class="img-fluid">
+                            </figure>
+
+                            <section class="px-3">
+                                <article style="width:100%;" class="date__start__content">
+                                    Inicia el 31 de mayo de 2024
+                                </article>
+
+                                <section class="card__icons__container">
+                                    <article>
+                                        <p><i class="fa fa-clock-o"></i> DURACIÓN</p>
+                                        <span>225 Horas</span>
+                                    </article>
+
+                                    <article>
+                                        <p><i class="fa fa-users"></i> MODALIDAD</p>
+                                        <span>Virtual</span>
+                                    </article>
+                                </section>
+
+                                <section class="pt-3 pb-4">
+                                    <button class="btn border border-danger mb-2 card__button text-danger" type="button"
+                                        style="width:100%;">
+                                        Más Información
+                                    </button>
+                                    <button class="btn btn-danger" data-bs-toggle="modal"
+                                        data-bs-target="#modalInscripcion" data-evento="Nombre del evento" type="button"
+                                        style="width:100%;">
+                                        Inscribirse
+                                    </button>
+                                </section>
+                            </section>
+                        </div>
+                    </div>
+                    <div class="col col-xl-3 col-lg-3 col-md-4 col-sm-6 p-3">
+                        <div class="bg-white shadow">
+                            <figure class="imagen__curso__content">
+                                <img src="<?= base_url("assets/images/ejemplo_congreso.jpg") ?>" alt="Imagen del Curso"
+                                    class="img-fluid imagen-pequena">
+                            </figure>
+                            <figure class="imagen__curso__content px-5">
+                                <img src="<?= base_url("assets/images/logo_ueb.png") ?>" alt="Logo del curso"
+                                    class="img-fluid">
+                            </figure>
+
+                            <section class="px-3">
+                                <article style="width:100%;" class="date__start__content">
+                                    Inicia el 31 de mayo de 2024
+                                </article>
+
+                                <section class="card__icons__container">
+                                    <article>
+                                        <p><i class="fa fa-clock-o"></i> DURACIÓN</p>
+                                        <span>225 Horas</span>
+                                    </article>
+
+                                    <article>
+                                        <p><i class="fa fa-users"></i> MODALIDAD</p>
+                                        <span>Virtual</span>
+                                    </article>
+                                </section>
+
+                                <section class="pt-3 pb-4">
+                                    <button class="btn border border-danger mb-2 card__button text-danger" type="button"
+                                        style="width:100%;">
+                                        Más Información
+                                    </button>
+                                    <button class="btn btn-danger" data-bs-toggle="modal"
+                                        data-bs-target="#modalInscripcion" data-evento="Nombre del evento" type="button"
+                                        style="width:100%;">
+                                        Inscribirse
+                                    </button>
+                                </section>
+                            </section>
+                        </div>
+                    </div>
+                    <div class="col col-xl-3 col-lg-3 col-md-4 col-sm-6 p-3">
+                        <div class="bg-white shadow">
+                            <figure class="imagen__curso__content">
+                                <img src="<?= base_url("assets/images/ejemplo_congreso.jpg") ?>" alt="Imagen del Curso"
+                                    class="img-fluid imagen-pequena">
+                            </figure>
+                            <figure class="imagen__curso__content px-5">
+                                <img src="<?= base_url("assets/images/logo_ueb.png") ?>" alt="Logo del curso"
+                                    class="img-fluid">
+                            </figure>
+
+                            <section class="px-3">
+                                <article style="width:100%;" class="date__start__content">
+                                    Inicia el 31 de mayo de 2024
+                                </article>
+
+                                <section class="card__icons__container">
+                                    <article>
+                                        <p><i class="fa fa-clock-o"></i> DURACIÓN</p>
+                                        <span>225 Horas</span>
+                                    </article>
+
+                                    <article>
+                                        <p><i class="fa fa-users"></i> MODALIDAD</p>
+                                        <span>Virtual</span>
+                                    </article>
+                                </section>
+
+                                <section class="pt-3 pb-4">
+                                    <button class="btn border border-danger mb-2 card__button text-danger" type="button"
+                                        style="width:100%;">
+                                        Más Información
+                                    </button>
+                                    <button class="btn btn-danger" data-bs-toggle="modal"
+                                        data-bs-target="#modalInscripcion" data-evento="Nombre del evento" type="button"
+                                        style="width:100%;">
+                                        Inscribirse
+                                    </button>
+                                </section>
+                            </section>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
         </div>
-        <div class="row mt-5 px-5 mx-5 justify-content-center">
-            <div class="col col-xl-3 col-lg-3 col-md-4 col-sm-6 p-3">
-                <div class="card rounded-5">
-                    <div class="card-header">
-                        <h5 class="card-title text-start">Congreso facultad</h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <img id="imagen1" src="<?= base_url("assets/images/ejemplo_congreso.jpg"); ?>"
-                            class="img-fluid imagen-pequena" alt="Imagen 1">
-                    </div>
-                    <div class="card-footer text-start rounded-5">
-                        <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalInscripcion"
-                            data-evento="Congreso facultad">Inscribirse</button>
 
-                    </div>
-                </div>
-            </div>
-            <div class="col col-xl-3 col-lg-3 col-md-4 col-sm-6 p-3">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title text-start">Congreso X</h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <img id="imagen2" src="<?= base_url("assets/images/ejemplo_congreso.jpg"); ?>"
-                            class="img-fluid imagen-pequena" alt="Imagen 1">
-                    </div>
-                    <div class="card-footer text-center">
-                        <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalInscripcion"
-                            data-evento="Congreso X">Inscribirse</button>
+    </main>
+    <style>
+        /* estilo de iconos con texto */
+        .card__icons__container {
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+        }
 
-                    </div>
-                </div>
-            </div>
-            <div class="col col-xl-3 col-lg-3 col-md-4 col-sm-6 p-3">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title text-center">Nombre del Evento</h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <img id="imagen3" src="<?= base_url("assets/images/ejemplo_congreso.jpg"); ?>"
-                            class="img-fluid imagen-pequena" alt="Imagen 1">
-                    </div>
-                    <div class="card-footer text-center">
-                        <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalInscripcion"
-                            data-evento="Nombre del Evento">Inscribirse</button>
+        /* iconos con texto */
+        .card__icons__container article p {
+            margin-bottom: .35rem;
+            font-weight: 500;
+            font-size: .7rem;
+            color: #393939;
+        }
 
-                    </div>
-                </div>
-            </div>
-            <div class="col col-xl-3 col-lg-3 col-md-4 col-sm-6 p-3">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title text-center">Congreso Z</h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <img id="imagen3" src="<?= base_url("assets/images/ejemplo_congreso.jpg"); ?>"
-                            class="img-fluid imagen-pequena" alt="Imagen 1">
-                    </div>
-                    <div class="card-footer text-center">
-                        <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalInscripcion"
-                            data-evento="Congreso Z">Inscribirse</button>
+        /* info de iconos */
+        .card__icons__container article span {
+            color: #514a4a;
+            font-weight: 700;
+            font-size: 1rem;
+        }
 
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
+        /* Fecha de Inicio */
+        .date__start__content {
+            background-color: #d9d9d9;
+            border-radius: 10px;
+            padding: .4rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #727272;
+            font-weight: 500;
+        }
+
+        /* Imagen del Curso */
+        .imagen__curso__content {
+            width: 100%;
+        }
+
+        .imagen__curso__content>img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card__button {
+            background-color: #fff;
+            transition: box-shadow .2s;
+        }
+
+
+        .card__button:hover {
+            box-shadow: 0px 0px 10px 0px rgba(255, 0, 0, 0.5);
+            /* Agregué un sombreado rojo cuando el cursor está encima */
+        }
+    </style>
 
     <!-- Modal de inscripción -->
     <div class="modal fade" id="modalInscripcion" tabindex="-1" aria-labelledby="modalInscripcionLabel"
@@ -122,6 +284,22 @@
             </div>
         </div>
     </div>
+
+<!-- Modal de información -->
+<div class="modal fade" id="modalInfo" tabindex="-1" aria-labelledby="modalInfoLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalInfoLabel">Congreso para la carrera de [Nombre de la carrera]</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Descripción corta del congreso aquí.</p>
+            </div>
+        </div>
+    </div>
+</div>
 
     <style>
         .card-image {
@@ -159,6 +337,18 @@
         <img src="" alt="Imagen ampliada">
     </div>
 
+    <!-- Footer-->
+    <footer class="bg-dark py-3 mt-auto">
+        <div class="container px-5">
+            <div class="row align-items-center justify-content-between flex-column flex-sm-row">
+                <div class="col-auto">
+                    <div class="small m-0 text-white">Copyright 2022 &copy; PROSERVI-UEB-EP | <a
+                            href="https://www.softecsa.com" class="text-decoration-none link-light">Softec Apps
+                            S.A.S</a></div>
+                </div>
+            </div>
+        </div>
+    </footer>
     <!-- Mueve el código JavaScript aquí -->
     <script>
         const imagenes = document.querySelectorAll('.imagen-pequena');

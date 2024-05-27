@@ -17,50 +17,37 @@ class CreateTableUser extends Migration
                 'unsigned' => true,
                 'auto_increment' => true
             ],
-            'event_name' =>[
-                'type' => 'VARCHAR',
-                'constraint' => 255,
-                'null' => false,
-            ],
-            'short_description' =>[
-                'type' => 'VARCHAR',
-                'constraint' => 255,
-                'null' => true,
-            ],
-            'event_date' =>[
-                'type' => 'DATE',
-                'null' => true,
-            ],
-            'event_time' =>[
-                'type' => 'TIME',
-                'null' => true,
-            ],
-            'address' =>[
-                'type' => 'TEXT',
-                'null' => true,
-            ],
-            'id_cat' =>[
+            'rol_id' =>[
                 'type' => 'INT',
                 'unsigned' => true,
-                'null' => true,
+                'null' => false,
             ],
-            'event_start_date' =>[
-                'type' => 'DATE',
-                'null' => true,
-            ],
-            'event_end_date' =>[
-                'type' => 'DATE',
-                'null' => true,
-            ],
-            'event_status' =>[
+            'ic' =>[
                 'type' => 'VARCHAR',
-                'constraint' => 20,
-                'comment' => 'Estado del evento (Activo,Cancelado,Completado)',
-                'null' => true,
+                'constraint' => 10,
+                'null' => false,
             ],
-            'image' =>[
+            'first_name' =>[
                 'type' => 'VARCHAR',
                 'constraint' => 255,
+                'null' => true,
+            ],
+            'last_name' =>[
+                'type' => 'VARCHAR',
+                'constraint' => 255,
+                'null' => true,
+            ],
+            'phone_number' =>[
+                'type' => 'VARCHAR',
+                'constraint' => 10,
+                'null' => true,
+            ],
+            'email' => [
+                'type' => 'TEXT',
+                'null' => false,
+            ],
+            'password' => [
+                'type' => 'TEXT',
                 'null' => true,
             ],
             'created_at' => [
@@ -90,13 +77,11 @@ class CreateTableUser extends Migration
             ],
         ]);
         $this->forge->addkey('id',true);
-        // Agregar la llave foránea para la columna 'id_cat' que referencia a la columna 'id' de la tabla categories
-        $this->forge->addForeignKey('id_cat', 'categories', 'id', 'CASCADE', 'SET NULL');
-        $this->forge->createTable('user');
+        $this->forge->createTable('users');
     }
 
     public function down()
     {
-        //
+        $this->forge->dropTable('users');
     }
 }

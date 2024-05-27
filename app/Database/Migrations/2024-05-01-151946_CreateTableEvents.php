@@ -44,11 +44,11 @@ class CreateTableEvents extends Migration
                 'unsigned' => true,
                 'null' => true,
             ],
-            'event_start_date' =>[
+            'registrations_start_date' =>[
                 'type' => 'DATE',
                 'null' => true,
             ],
-            'event_end_date' =>[
+            'registrations_end_date' =>[
                 'type' => 'DATE',
                 'null' => true,
             ],
@@ -59,9 +59,8 @@ class CreateTableEvents extends Migration
                 'null' => true,
             ],
             'image' =>[
-                'type' => 'VARCHAR',
-                'constraint' => 255,
-                'null' => true,
+                'type' => 'TEXT',
+                'null' => false,
             ],
             'created_at' => [
                 'type' => 'DATETIME',

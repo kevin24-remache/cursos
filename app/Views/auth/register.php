@@ -11,9 +11,9 @@ Crear cuenta
         <!-- Register v1 -->
         <div class="card mb-0">
             <div class="card-body">
-                <a href="javascript:void(0);" class="brand-logo">
+                <div class="brand-logo">
                     <h2 class="brand-text text-primary ml-1">Crear cuenta</h2>
-                </a>
+                </div>
                 <form class="auth-register-form mt-2" action="" method="POST">
                     <div class="form-group">
                         <label for="register-username" class="form-label">Nombre de usuario</label>

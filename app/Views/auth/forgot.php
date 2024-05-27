@@ -11,9 +11,9 @@ Recuperar contraseña
         <!-- Forgot Password v1 -->
         <div class="card mb-0">
             <div class="card-body">
-                <a href="javascript:void(0);" class="brand-logo">
+                <div class="brand-logo">
                     <h2 class="brand-text text-primary ml-1">Recuperar contraseña</h2>
-                </a>
+                </div>
 
                 <h4 class="card-title mb-1">Olvido su contraseña? 🔒</h4>
                 <p class="card-text mb-2">Ingresa tu correo electrónico y te enviaremos instrucciones para restablecer tu contraseña</p>
