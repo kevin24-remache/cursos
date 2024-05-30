@@ -13,10 +13,11 @@ class EventsSeeder extends Seeder
             'event_name' => 'Evento XD',
             'short_description' => 'Evento XD es un evento genial que sirve para futuros profesionales XD',
             'event_date' => '2024-05-01',
+            'modality' => '1',
             'event_time' => '08:00:00',
             'address' => 'Dirección example',
-            'event_start_date' => '2024-05-01',
-            'event_end_date' => '2024-06-01',
+            'registrations_start_date' => '2024-05-01',
+            'registrations_end_date' => '2024-06-01',
             'event_status' => 'Activo',
             'image' => '',
             ]

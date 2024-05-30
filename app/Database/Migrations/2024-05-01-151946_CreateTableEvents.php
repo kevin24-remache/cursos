@@ -31,6 +31,10 @@ class CreateTableEvents extends Migration
                 'type' => 'DATE',
                 'null' => true,
             ],
+            'modality'=>[
+                'type'=>'INT',
+                'null'=>true,
+            ],
             'event_time' =>[
                 'type' => 'TIME',
                 'null' => true,

@@ -26,48 +26,53 @@
             </div>
             <section class="container">
                 <div class="row">
-                    <div class="col col-xl-3 col-lg-3 col-md-4 col-sm-6 p-3">
-                        <div class="bg-white shadow">
-                            <figure class="p-1">
-                                <img src="<?= base_url("assets/images/ejemplo_congreso.jpg") ?>" alt="Imagen del Curso"
-                                    class="img-fluid imagen-pequena rounded-2 ">
-                            </figure>
-                            <figure class="text-center">
-                                <img src="<?= base_url("assets/images/logo_ueb.png") ?>" alt="Logo del curso"
-                                    class="img-fluid" width="120px;">
-                            </figure>
+                    <?php foreach ($events as $key => $event): ?>
+                        <div class="col col-xl-3 col-lg-3 col-md-4 col-sm-6 p-3">
+                            <div class="bg-white shadow">
+                                <figure class="p-1">
+                                    <img src="<?= base_url("") . $event->image; ?>" alt="Imagen del Curso"
+                                        class="img-fluid imagen-pequena rounded-2 ">
+                                </figure>
+                                <figure class="text-center">
+                                    <img src="<?= base_url("assets/images/logo_ueb.png") ?>" alt="Logo del curso"
+                                        class="img-fluid" width="120px;">
+                                </figure>
 
-                            <section class="px-3">
-                                <article class="date__start__content">
-                                    Inicia el 31 de mayo de 2024
-                                </article>
-
-                                <section class="card__icons__container">
-                                    <article>
-                                        <p><i class="fa fa-clock-o"></i> DURACIÓN</p>
-                                        <span>225 Horas</span>
+                                <section class="px-3">
+                                    <article class="date__start__content">
+                                        <?= $event->formatted_event_date ?>
                                     </article>
 
-                                    <article>
-                                        <p><i class="fa fa-users"></i> MODALIDAD</p>
-                                        <span>Virtual</span>
-                                    </article>
-                                </section>
+                                    <section class="card__icons__container">
+                                        <?php if ($event->formatted_modality !== 'Presencial'): ?>
+                                            <article>
+                                                <p><i class="fa fa-clock-o"></i> DURACIÓN</p>
+                                                <span>225 Horas</span>
+                                            </article>
+                                        <?php endif; ?>
 
-                                <section class="pt-3 pb-4">
-                                    <button class="btn border border-danger mb-2 card__button text-danger" data-bs-toggle="modal" data-bs-target="#modalInfo"  type="button"
-                                        style="width:100%;">
-                                        Más Información
-                                    </button>
-                                    <button class="btn btn-danger" data-bs-toggle="modal"
-                                        data-bs-target="#modalInscripcion" data-evento="Nombre del evento" type="button"
-                                        style="width:100%;">
-                                        Inscribirse
-                                    </button>
+                                        <article>
+                                            <p><i class="fa fa-users"></i> MODALIDAD</p>
+                                            <span><?= $event->formatted_modality ?></span>
+                                        </article>
+                                    </section>
+
+                                    <section class="pt-3 pb-4">
+                                        <button class="btn border border-danger mb-2 card__button text-danger"
+                                            data-bs-toggle="modal" data-bs-target="#modalInfo" type="button"
+                                            style="width:100%;">
+                                            Más Información
+                                        </button>
+                                        <button class="btn btn-danger" data-bs-toggle="modal"
+                                            data-bs-target="#modalInscripcion" data-evento="<?= $event->event_name ?>"
+                                            type="button" style="width:100%;">
+                                            Inscribirse
+                                        </button>
+                                    </section>
                                 </section>
-                            </section>
+                            </div>
                         </div>
-                    </div>
+                    <?php endforeach ?>
                     <div class="col col-xl-3 col-lg-3 col-md-4 col-sm-6 p-3">
                         <div class="bg-white shadow">
                             <figure class="imagen__curso__content">
@@ -276,7 +281,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="numeroCedula" class="form-label">Número de Cédula</label>
-                            <input type="text" class="form-control" id="numeroCedula" name="numeroCedula" required>
+                            <input type="number" class="form-control" id="numeroCedula" name="numeroCedula" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Inscribirse</button>
                     </form>
@@ -285,21 +290,20 @@
         </div>
     </div>
 
-<!-- Modal de información -->
-<div class="modal fade" id="modalInfo" tabindex="-1" aria-labelledby="modalInfoLabel"
-    aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="modalInfoLabel">Congreso para la carrera de [Nombre de la carrera]</h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Descripción corta del congreso aquí.</p>
+    <!-- Modal de información -->
+    <div class="modal fade" id="modalInfo" tabindex="-1" aria-labelledby="modalInfoLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="modalInfoLabel">Congreso para la carrera de [Nombre de la carrera]</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Descripción corta del congreso aquí.</p>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
     <style>
         .card-image {

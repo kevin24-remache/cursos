@@ -70,8 +70,8 @@ Eventos
                                 <td><?= $event["event_date"] ?></td>
                                 <td><?= $event["address"] ?></td>
                                 <td><?= $event["id_cat"] ?></td>
-                                <td><?= $event["event_start_date"] ?></td>
-                                <td><?= $event["event_end_date"] ?></td>
+                                <td><?= $event["registrations_start_date"] ?></td>
+                                <td><?= $event["registrations_end_date"] ?></td>
                                 <td></td>
                             </tr>
                         <?php endforeach; ?>
