@@ -40,7 +40,7 @@ $routes->post('validar_cedula', 'Client\InscripcionController::validarCedula');
 $routes->post('obtener_datos_evento', 'Client\InscripcionController::obtenerDatosEvento');
 $routes->post('guardar_inscripcion', 'Client\InscripcionController::guardarInscripcion');
 $routes->post('registrar_usuario', 'Client\InscripcionController::registrarUsuario');
-$routes->get('send_email', 'Client\InscripcionController::send_email');
+// $routes->get('send_email', 'Client\InscripcionController::send_email');
 
 $routes->get('/', 'Client\ClientController::index');
 $routes->get('login', 'Auth\LoginController::index');

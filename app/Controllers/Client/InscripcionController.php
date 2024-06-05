@@ -159,18 +159,35 @@ class InscripcionController extends BaseController
             'payment_time_limit' => $fechaLimitePago->format('Y-m-d H:i:s'), // Añadir la fecha límite de pago
         ];
 
-        // Aquí deberías guardar los datos en tu base de datos
+        $db = \Config\Database::connect();
+        $db->transStart(); // Iniciar la transacción
+
+        // Guardar los datos en la base de datos
         $registrationModel = new RegistrationsModel();
         $registration = $registrationModel->insert($datosInscripcion);
 
+        if ($registration) {
+            // Intentar enviar el correo electrónico
+            $emailEnviado = $this->send_email($user['email'], $codigoPago, $fechaLimitePago->format('Y-m-d'),$user['nombres'] . " " . $user['apellidos']);
 
-        if (!$registration) {
-            return $this->response->setJSON(['error' => true, 'message' => 'No se pudo registrar']);
+            if ($emailEnviado) {
+                // Confirmar la transacción si el correo se envió correctamente
+                $db->transComplete();
+
+                // Devolver una respuesta JSON con el código de pago, los datos del usuario y la fecha límite de pago
+                return $this->response->setJSON(['success' => true, 'codigoPago' => $codigoPago, 'payment_time_limit' => $fechaLimitePago->format('Y-m-d H:i:s')]);
+            } else {
+                // Hacer rollback si el correo no se pudo enviar
+                $db->transRollback();
+                return $this->response->setJSON(['error' => true, 'message' => 'No se pudo enviar el correo electrónico']);
+            }
         } else {
-            // Devolver una respuesta JSON con el código de pago, los datos del usuario y la fecha límite de pago
-            return $this->response->setJSON(['success' => true, 'codigoPago' => $codigoPago, 'payment_time_limit' => $fechaLimitePago->format('Y-m-d H:i:s')]);
+            // Hacer rollback si la inscripción no se pudo guardar
+            $db->transRollback();
+            return $this->response->setJSON(['error' => true, 'message' => 'No se pudo registrar']);
         }
     }
+
 
     public function registrarUsuario()
     {
@@ -182,24 +199,27 @@ class InscripcionController extends BaseController
         return $this->response->setJSON(['success' => $success]);
     }
 
-    public function send_email(){
-        $email= \Config\Services::email();
+    public function send_email($emailAddress, $codigoPago, $fechaLimitePago,$user)
+    {
+        $email = \Config\Services::email();
         $email->setFrom('inscripciones@test.com', 'TEST');
-        $email->setTo('example@example.com');
+        $email->setTo($emailAddress);
         // $email->setCC('');
-        $email->setSubject('Titulo');
-        $cuerpo = '<h4>Tu código de pago es 001</h4>';
-        $cuerpo.= '<p>Recuerda acercarte a realizar el pago antes de la fecha 25/06/2024</p>';
-        $cuerpo.='<a href="">Ver comprobante de registro<a/>';
+        $email->setSubject('Código de pago');
+        $cuerpo = "<h5>Usuario {$user}";
+        $cuerpo.="<h4>Tu código de pago es {$codigoPago}</h4>";
+        $cuerpo .= "<p>Recuerda acercarte a realizar el pago antes de la fecha {$fechaLimitePago}</p>";
+        // $cuerpo .= '<a href="">Ver comprobante de registro<a/>';
 
         $email->setMessage($cuerpo);
 
-        $email->attach('assets/css/prueba.css','attachment','Comprobante.pdf');
-        $email->setAltMessage('Recuerda acercarte a realizar el pago antes de la fecha 25/06/2024');
+        // $email->attach('assets/css/styles.css', 'attachment', 'Comprobante.pdf');
+        $email->setAltMessage("Tu código de pago es {$codigoPago}");
         if ($email->send()) {
-            return '<h3>CORREO ENVIADO</h3>';
-        }else {
-            echo $email->printDebugger(['headers']);
+            return true;
+        } else {
+            // log_message('error', $email->printDebugger(['headers']));
+            return false;
         }
     }
 }

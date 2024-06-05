@@ -9,6 +9,7 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="<?= base_url("assets/css/styles.css") ?>">
     <link rel="stylesheet" href="<?= base_url("dist/css/font-awesome/css/font-awesome.min.css") ?>">
+    <link rel="stylesheet" href="<?= base_url("assets/css/home.css")?>">
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -73,196 +74,11 @@
                             </div>
                         </div>
                     <?php endforeach ?>
-                    <div class="col col-xl-3 col-lg-3 col-md-4 col-sm-6 p-3">
-                        <div class="bg-white shadow">
-                            <figure class="imagen__curso__content">
-                                <img src="<?= base_url("assets/images/ejemplo_congreso.jpg") ?>" alt="Imagen del Curso"
-                                    class="img-fluid imagen-pequena">
-                            </figure>
-                            <figure class="imagen__curso__content px-5">
-                                <img src="<?= base_url("assets/images/logo_ueb.png") ?>" alt="Logo del curso"
-                                    class="img-fluid">
-                            </figure>
-
-                            <section class="px-3">
-                                <article style="width:100%;" class="date__start__content">
-                                    Inicia el 31 de mayo de 2024
-                                </article>
-
-                                <section class="card__icons__container">
-                                    <article>
-                                        <p><i class="fa fa-clock-o"></i> DURACIÓN</p>
-                                        <span>225 Horas</span>
-                                    </article>
-
-                                    <article>
-                                        <p><i class="fa fa-users"></i> MODALIDAD</p>
-                                        <span>Virtual</span>
-                                    </article>
-                                </section>
-
-                                <section class="pt-3 pb-4">
-                                    <button class="btn border border-danger mb-2 card__button text-danger" type="button"
-                                        style="width:100%;">
-                                        Más Información
-                                    </button>
-                                    <button class="btn btn-danger" data-bs-toggle="modal"
-                                        data-bs-target="#modalInscripcion" data-evento="Nombre del evento" type="button"
-                                        style="width:100%;">
-                                        Inscribirse
-                                    </button>
-                                </section>
-                            </section>
-                        </div>
-                    </div>
-                    <div class="col col-xl-3 col-lg-3 col-md-4 col-sm-6 p-3">
-                        <div class="bg-white shadow">
-                            <figure class="imagen__curso__content">
-                                <img src="<?= base_url("assets/images/ejemplo_congreso.jpg") ?>" alt="Imagen del Curso"
-                                    class="img-fluid imagen-pequena">
-                            </figure>
-                            <figure class="imagen__curso__content px-5">
-                                <img src="<?= base_url("assets/images/logo_ueb.png") ?>" alt="Logo del curso"
-                                    class="img-fluid">
-                            </figure>
-
-                            <section class="px-3">
-                                <article style="width:100%;" class="date__start__content">
-                                    Inicia el 31 de mayo de 2024
-                                </article>
-
-                                <section class="card__icons__container">
-                                    <article>
-                                        <p><i class="fa fa-clock-o"></i> DURACIÓN</p>
-                                        <span>225 Horas</span>
-                                    </article>
-
-                                    <article>
-                                        <p><i class="fa fa-users"></i> MODALIDAD</p>
-                                        <span>Virtual</span>
-                                    </article>
-                                </section>
-
-                                <section class="pt-3 pb-4">
-                                    <button class="btn border border-danger mb-2 card__button text-danger" type="button"
-                                        style="width:100%;">
-                                        Más Información
-                                    </button>
-                                    <button class="btn btn-danger" data-bs-toggle="modal"
-                                        data-bs-target="#modalInscripcion" data-evento="Nombre del evento" type="button"
-                                        style="width:100%;">
-                                        Inscribirse
-                                    </button>
-                                </section>
-                            </section>
-                        </div>
-                    </div>
-                    <div class="col col-xl-3 col-lg-3 col-md-4 col-sm-6 p-3">
-                        <div class="bg-white shadow">
-                            <figure class="imagen__curso__content">
-                                <img src="<?= base_url("assets/images/ejemplo_congreso.jpg") ?>" alt="Imagen del Curso"
-                                    class="img-fluid imagen-pequena">
-                            </figure>
-                            <figure class="imagen__curso__content px-5">
-                                <img src="<?= base_url("assets/images/logo_ueb.png") ?>" alt="Logo del curso"
-                                    class="img-fluid">
-                            </figure>
-
-                            <section class="px-3">
-                                <article style="width:100%;" class="date__start__content">
-                                    Inicia el 31 de mayo de 2024
-                                </article>
-
-                                <section class="card__icons__container">
-                                    <article>
-                                        <p><i class="fa fa-clock-o"></i> DURACIÓN</p>
-                                        <span>225 Horas</span>
-                                    </article>
-
-                                    <article>
-                                        <p><i class="fa fa-users"></i> MODALIDAD</p>
-                                        <span>Virtual</span>
-                                    </article>
-                                </section>
-
-                                <section class="pt-3 pb-4">
-                                    <button class="btn border border-danger mb-2 card__button text-danger" type="button"
-                                        style="width:100%;">
-                                        Más Información
-                                    </button>
-                                    <button class="btn btn-danger" data-bs-toggle="modal"
-                                        data-bs-target="#modalInscripcion" data-evento="Nombre del evento" type="button"
-                                        style="width:100%;">
-                                        Inscribirse
-                                    </button>
-                                </section>
-                            </section>
-                        </div>
-                    </div>
-
                 </div>
             </section>
         </div>
 
     </main>
-    <style>
-        /* estilo de iconos con texto */
-        .card__icons__container {
-            width: 100%;
-            display: flex;
-            justify-content: space-around;
-        }
-
-        /* iconos con texto */
-        .card__icons__container article p {
-            margin-bottom: .35rem;
-            font-weight: 500;
-            font-size: .7rem;
-            color: #393939;
-        }
-
-        /* info de iconos */
-        .card__icons__container article span {
-            color: #514a4a;
-            font-weight: 700;
-            font-size: 1rem;
-        }
-
-
-        /* Fecha de Inicio */
-        .date__start__content {
-            background-color: #d9d9d9;
-            border-radius: 10px;
-            padding: .4rem;
-            text-align: center;
-            margin-bottom: 1.5rem;
-            color: #727272;
-            font-weight: 500;
-        }
-
-        /* Imagen del Curso */
-        .imagen__curso__content {
-            width: 100%;
-        }
-
-        .imagen__curso__content>img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .card__button {
-            background-color: #fff;
-            transition: box-shadow .2s;
-        }
-
-
-        .card__button:hover {
-            box-shadow: 0px 0px 10px 0px rgba(255, 0, 0, 0.5);
-            /* Agregué un sombreado rojo cuando el cursor está encima */
-        }
-    </style>
-
     <!-- Modal de inscripción -->
     <div class="modal fade" id="modalInscripcion" tabindex="-1" aria-labelledby="modalInscripcionLabel"
         aria-hidden="true">
@@ -393,38 +209,6 @@
             </div>
         </div>
     </div>
-
-    <style>
-        .card-image {
-            width: 188px;
-            height: 176px;
-        }
-
-        .imagen-pequena {
-            cursor: pointer;
-            width: 100%;
-            height: 100%;
-            /* Cambia el cursor al pasar sobre la imagen */
-        }
-
-        .imagen-grande {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 9999;
-            background-color: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .imagen-grande img {
-            max-width: 90%;
-            max-height: 90%;
-        }
-    </style>
 
     <div id="imagen-ampliada" class="imagen-grande" style="display: none;">
         <img src="" alt="Imagen ampliada">
