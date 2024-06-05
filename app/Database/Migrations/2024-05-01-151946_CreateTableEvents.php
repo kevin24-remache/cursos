@@ -8,9 +8,6 @@ class CreateTableEvents extends Migration
 {
     public function up()
     {
-        // Deshabilitar chequeo de claves foráneas temporalmente
-        $this->db->disableForeignKeyChecks();
-
         $this->forge->addField([
             'id' =>[
                 'type' => 'INT',
@@ -41,11 +38,6 @@ class CreateTableEvents extends Migration
             ],
             'address' =>[
                 'type' => 'TEXT',
-                'null' => true,
-            ],
-            'id_cat' =>[
-                'type' => 'INT',
-                'unsigned' => true,
                 'null' => true,
             ],
             'registrations_start_date' =>[
@@ -93,8 +85,6 @@ class CreateTableEvents extends Migration
             ],
         ]);
         $this->forge->addkey('id',true);
-        // Agregar la llave foránea para la columna 'id_cat' que referencia a la columna 'id' de la tabla categories
-        $this->forge->addForeignKey('id_cat', 'categories', 'id', 'CASCADE', 'SET NULL');
         $this->forge->createTable('events');
 
     }

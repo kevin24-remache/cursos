@@ -65,7 +65,7 @@
                                         </button>
                                         <button class="btn btn-danger" data-bs-toggle="modal"
                                             data-bs-target="#modalInscripcion" data-evento="<?= $event->event_name ?>"
-                                            type="button" style="width:100%;">
+                                            data-event-id="<?= $event->id ?>" type="button" style="width:100%;">
                                             Inscribirse
                                         </button>
                                     </section>
@@ -273,8 +273,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="procesar_inscripcion.php" method="POST">
-                        <input type="hidden" id="evento" name="evento">
+                    <form id="formInscripcion">
+                        <input type="hidden" id="eventoId" name="eventoId">
                         <div class="mb-3">
                             <label for="nombreEvento" class="form-label">Nombre del Evento</label>
                             <input type="text" class="form-control" id="nombreEvento" readonly>
@@ -283,7 +283,96 @@
                             <label for="numeroCedula" class="form-label">Número de Cédula</label>
                             <input type="number" class="form-control" id="numeroCedula" name="numeroCedula" required>
                         </div>
-                        <button type="submit" class="btn btn-primary">Inscribirse</button>
+
+                        <div class="float-end">
+                            <button type="submit" class="btn btn-success me-1">Inscribirse</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de registro de usuario -->
+    <div class="modal fade" id="modalRegistroUsuario" tabindex="-1" aria-labelledby="modalRegistroUsuarioLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalRegistroUsuarioLabel">Registro de Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formRegistroUsuario">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="apellido" class="form-label">Apellido</label>
+                            <input type="text" class="form-control" id="apellido" name="apellido" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="numeroCedulaRegistro" class="form-label">Número de Cédula</label>
+                            <input type="number" class="form-control" id="numeroCedulaRegistro" name="numeroCedula"
+                                readonly>
+                        </div>
+                        <div class="float-start">
+                            <!-- <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="button" class="btn btn-outline-success" disabled>
+                                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                                </button>
+                                <button type="button" class="btn btn-success" onclick="cerrarYMostrarModal()">
+                                    Regresar
+                                </button>
+                            </div> -->
+                        </div>
+                        <div class="float-end">
+                            <button type="submit" class="btn btn-primary me-1">Registrar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de detalles del evento -->
+    <div class="modal fade" id="modalDetallesEvento" tabindex="-1" aria-labelledby="modalDetallesEventoLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalDetallesEventoLabel" style="color: #0C244B;"><span
+                            id="titleEvent"></span></h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formDetallesEvento">
+                        <div class="mb-3">
+                            <label for="descripcionEvento" class="form-label">Descripción del Evento</label>
+                            <textarea class="form-control" id="descripcionEvento" readonly></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Seleccione la categoría</label>
+                            <div id="categoria"></div>
+                        </div>
+
+                        <div class="alert alert-success" role="alert">
+                            Una vez seleccionada la categoría del evento finaliza con la inscripción y se te enviara un
+                            código a tu correo electrónico que deberás usarlo para realizar el pago
+                        </div>
+                        <div class="mb-3 row">
+                            <input type="hidden" id="id_user">
+                            <p>Usuario <span id="nombresPersona"></span> <span id="apellidosPersona"></span></p>
+                        </div>
+
+                        <div class="float-end">
+                            <button type="submit" class="btn btn-success me-1">Finalizar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -375,19 +464,24 @@
         myModal.addEventListener('show.bs.modal', function (event) {
             var button = event.relatedTarget;
             var evento = button.getAttribute('data-evento');
+            var eventId = button.getAttribute('data-event-id');
+
             var modalEvento = myModal.querySelector('#nombreEvento');
             modalEvento.value = evento;
 
-            var hiddenEvento = myModal.querySelector('#evento');
-            hiddenEvento.value = evento;
+            var hiddenEventoId = myModal.querySelector('#eventoId');
+            hiddenEventoId.value = eventId;
         });
+
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="<?= base_url("assets/js/home/home.js") ?>"></script>
 
     <!-- template -->
     <script src="<?= base_url("dist/js/niche.js") ?>"></script>
+
+    <script src="<?= base_url("assets/js/sweetalert/sweetalert.min.js") ?>"></script>
 </body>
 
 </html>

@@ -4,9 +4,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class EventsModel extends Model
+class RegistrationsModel extends Model
 {
-    protected $table = 'events';
+    protected $table = 'registrations';
     protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
     protected $returnType = 'array';
@@ -58,14 +58,5 @@ class EventsModel extends Model
     //     return $data;
     // }
 
-    public function getEventById($id)
-    {
-        return $this->select('events.id, events.event_name, events.short_description, events.event_date, events.modality, events.address, events.registrations_start_date, events.registrations_end_date, events.event_status, events.image, GROUP_CONCAT(categories.id) AS category_ids, GROUP_CONCAT(categories.category_name) AS categories')
-            ->join('event_category', 'event_category.event_id = events.id', 'left')
-            ->join('categories', 'categories.id = event_category.cat_id', 'left')
-            ->where('events.id', $id)
-            ->groupBy('events.id')
-            ->first();
-    }
 
 }

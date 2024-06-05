@@ -75,7 +75,7 @@ class CategoriesController extends BaseController
                 } else {
                     $flashMessages[] = ['Categoría agregada exitosamente'];
 
-                    return redirect()->to('admin/events')->with('flashMessages', $flashMessages);
+                    return redirect()->to('admin/category/new')->with('flashMessages', $flashMessages);
                 }
             } else {
                 return $this->redirectView($validation, [['Error en los datos enviados', 'warning']], $data);

@@ -69,7 +69,7 @@ Eventos
                                 <td><?= $event["short_description"] ?></td>
                                 <td><?= $event["event_date"] ?></td>
                                 <td><?= $event["address"] ?></td>
-                                <td><?= $event["id_cat"] ?></td>
+                                <td></td>
                                 <td><?= $event["registrations_start_date"] ?></td>
                                 <td><?= $event["registrations_end_date"] ?></td>
                                 <td></td>

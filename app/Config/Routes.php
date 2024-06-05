@@ -36,6 +36,12 @@ $routes->group('admin', static function ($routes) {
         $categories->post('trash/restore/', 'Admin\CategoriesController::restore');
     });
 });
+$routes->post('validar_cedula', 'Client\InscripcionController::validarCedula');
+$routes->post('obtener_datos_evento', 'Client\InscripcionController::obtenerDatosEvento');
+$routes->post('guardar_inscripcion', 'Client\InscripcionController::guardarInscripcion');
+$routes->post('registrar_usuario', 'Client\InscripcionController::registrarUsuario');
+$routes->get('send_email', 'Client\InscripcionController::send_email');
+
 $routes->get('/', 'Client\ClientController::index');
 $routes->get('login', 'Auth\LoginController::index');
 $routes->get('logout', 'Auth\LoginController::logout');

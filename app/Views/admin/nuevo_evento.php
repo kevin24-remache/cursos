@@ -8,7 +8,7 @@ Agregar eventos
 <!-- Select 2 -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <!-- dropify -->
-<link rel="stylesheet" href="<?= base_url("dist/plugins/dropify/dropify.min.css");?>">
+<link rel="stylesheet" href="<?= base_url("dist/plugins/dropify/dropify.min.css"); ?>">
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
@@ -37,7 +37,8 @@ Agregar eventos
 
                         <form action="<?= base_url("admin/event/add") ?>" method="POST" enctype="multipart/form-data">
                             <div class="row">
-                                <div class="col-md-6">
+
+                                <div class="col-md-4">
                                     <div class="form-group has-feedback">
                                         <label class="control-label">Nombre del evento</label>
                                         <input class="form-control" name="event_name" placeholder=""
@@ -47,13 +48,26 @@ Agregar eventos
                                             class="text-danger"><?= isset($validation) ? display_data($validation, 'event_name') : '' ?></span>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group has-feedback">
                                         <label class="control-label">Fecha del evento</label>
                                         <input class="form-control" name="event_date" placeholder="" type="date"
                                             value="<?= isset($last_data) ? display_data($last_data, 'event_date') : '' ?>">
                                         <span
                                             class="text-danger"><?= isset($validation) ? display_data($validation, 'event_date') : '' ?></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group has-feedback">
+                                        <label class="control-label">Modalidad</label>
+                                        <select class="form-select" name="modality">
+                                            <option value="" disabled selected>Seleccione la modalidad del evento
+                                            </option>
+                                            <option value="1" <?= isset($last_data) && $last_data['modality'] == '1' ? 'selected' : '' ?>>Presencial</option>
+                                            <option value="2" <?= isset($last_data) && $last_data['modality'] == '2' ? 'selected' : '' ?>>Virtual</option>
+                                        </select>
+                                        <span
+                                            class="text-danger"><?= isset($validation) ? display_data($validation, 'modality') : '' ?></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -69,13 +83,17 @@ Agregar eventos
                                     <div class="form-group has-feedback">
                                         <label class="control-label">Categorías del evento</label>
 
-                                        <select id="id_cat" class="form-control select2 " name="id_cat" style="100%">
-                                            <?php foreach ($categories as $key => $category) :?>
-                                                <option value="">Seleccione una categoría</option>
-                                            <option value="<?=$category["id"]?>"><?=$category["category_name"]?></option>
-                                            <?php endforeach?>
+                                        <select id="id_cat" class="form-control select2" name="id_cat[]"
+                                            multiple="multiple" style="100%">
+                                            <option value="" disabled>Seleccione una categoría</option>
+                                            <?php foreach ($categories as $key => $category): ?>
+                                                <option value="<?= $category["id"] ?>" <?= isset($last_data['categories']) && in_array($category["id"], $last_data['categories']) ? 'selected' : '' ?>>
+                                                    <?= $category["category_name"] ?>
+                                                </option>
+                                            <?php endforeach ?>
                                         </select>
-                                        <span class="text-danger"><?= isset($validation) ? display_data($validation, 'id_cat') : '' ?></span>
+                                        <span
+                                            class="text-danger"><?= isset($validation) ? display_data($validation, 'categories') : '' ?></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -83,9 +101,9 @@ Agregar eventos
                                         <label class="control-label">Fecha de inicio de la inscripción</label>
                                         <input class="form-control" name="registrations_start_date"
                                             placeholder="Company" type="date"
-                                            value="<?= isset($last_data) ? display_data($last_data, 'event_start_date') : '' ?>">
+                                            value="<?= isset($last_data) ? display_data($last_data, 'registrations_start_date') : '' ?>">
                                         <span
-                                            class="text-danger"><?= isset($validation) ? display_data($validation, 'event_start_date') : '' ?></span>
+                                            class="text-danger"><?= isset($validation) ? display_data($validation, 'registrations_start_date') : '' ?></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -93,9 +111,9 @@ Agregar eventos
                                         <label class="control-label">Fecha de finalización de la inscripción</label>
                                         <input class="form-control" name="registrations_end_date" placeholder=""
                                             type="date"
-                                            value="<?= isset($last_data) ? display_data($last_data, 'event_end_date') : '' ?>">
+                                            value="<?= isset($last_data) ? display_data($last_data, 'registrations_end_date') : '' ?>">
                                         <span
-                                            class="text-danger"><?= isset($validation) ? display_data($validation, 'event_end_date') : '' ?></span>
+                                            class="text-danger"><?= isset($validation) ? display_data($validation, 'registrations_end_date') : '' ?></span>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6">

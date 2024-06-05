@@ -11,7 +11,7 @@ class CategoriesSeeder extends Seeder
         $data=[
             [
             'category_name' => 'Categoría de test',
-            'short_description' => 'EDescripción de la categoría del test',
+            'short_description' => 'Descripción de la categoría del test',
             ]
         ];
         $this->db->table('categories')->insertBatch($data);

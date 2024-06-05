@@ -18,16 +18,22 @@ class CreateTableRegistrations extends Migration
                 'unsigned' => true,
                 'auto_increment' => true
             ],
-            'date_time' =>[
-                'type' => 'DATETIME',
-                'null' => false,
+            'user_id' =>[
+                'type' => 'INT',
+                'unsigned' => true,
+                'null' => true,
             ],
             'event_cod' =>[
                 'type' => 'INT',
                 'unsigned' => true,
                 'null' => true,
             ],
-            'full_name' =>[
+            'cat_id' =>[
+                'type' => 'INT',
+                'unsigned' => true,
+                'null' => true,
+            ],
+            'full_name_user' =>[
                 'type' => 'VARCHAR',
                 'constraint' => 250,
                 'null' => false,
@@ -72,11 +78,15 @@ class CreateTableRegistrations extends Migration
             ],
             'payment_cod' =>[
                 'type' => 'INT',
-                'null' => true,
+                'null' => false,
             ],
             'address_payment' =>[
                 'type' => 'INT',
                 'null' => true,
+            ],
+            'payment_time_limit' =>[
+                'type' => 'DATE',
+                'null' => false
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -106,7 +116,8 @@ class CreateTableRegistrations extends Migration
         ]);
         $this->forge->addkey('id',true);
         // Agregar la llave foránea para la columna 'event_cod' que referencia a la columna 'id' de la tabla event
-        $this->forge->addForeignKey('event_cod', 'event', 'id', 'CASCADE', 'SET NULL');
+        $this->forge->addForeignKey('event_cod', 'events', 'id', 'CASCADE', 'SET NULL');
+        $this->forge->addForeignKey('cat_id', 'categories', 'id', 'CASCADE', 'SET NULL');
         $this->forge->createTable('registrations');
     }
 

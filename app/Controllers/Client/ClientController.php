@@ -24,7 +24,7 @@ class ClientController extends BaseController
         // Formatear las fechas de los eventos
         foreach ($all_events as $event) {
             $event->formatted_event_date = format_event_date($event->event_date);
-            $event->formatted_modality = $event->modality == 1 ? 'Presencial' : 'OTRO';
+            $event->formatted_modality = $event->modality == 1 ? 'Presencial' : '   Virtual';
         }
         // print_r($all_events);
         $data = [
