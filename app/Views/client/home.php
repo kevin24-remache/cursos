@@ -27,16 +27,14 @@
             </div>
             <section class="container">
                 <div class="row">
-                    <?php foreach ($events as $key => $event): ?>
+                    <?php foreach ($events as $key => $event) : ?>
                         <div class="col col-xl-3 col-lg-3 col-md-4 col-sm-6 p-3">
                             <div class="bg-white shadow">
                                 <figure class="p-1">
-                                    <img src="<?= base_url("") . $event->image; ?>" alt="Imagen del Curso"
-                                        class="img-fluid imagen-pequena rounded-2 ">
+                                    <img src="<?= base_url("") . $event->image; ?>" alt="Imagen del Curso" class="img-fluid imagen-pequena rounded-2 ">
                                 </figure>
                                 <figure class="text-center">
-                                    <img src="<?= base_url("assets/images/logo_ueb.png") ?>" alt="Logo del curso"
-                                        class="img-fluid" width="120px;">
+                                    <img src="<?= base_url("assets/images/logo_ueb.png") ?>" alt="Logo del curso" class="img-fluid" width="120px;">
                                 </figure>
 
                                 <section class="px-3">
@@ -45,7 +43,7 @@
                                     </article>
 
                                     <section class="card__icons__container">
-                                        <?php if ($event->formatted_modality !== 'Presencial'): ?>
+                                        <?php if ($event->formatted_modality !== 'Presencial') : ?>
                                             <article>
                                                 <p><i class="fa fa-clock-o"></i> DURACIÓN</p>
                                                 <span>225 Horas</span>
@@ -59,14 +57,10 @@
                                     </section>
 
                                     <section class="pt-3 pb-4">
-                                        <button class="btn border border-danger mb-2 card__button text-danger"
-                                            data-bs-toggle="modal" data-bs-target="#modalInfo" type="button"
-                                            style="width:100%;">
+                                        <button class="btn border border-danger mb-2 card__button text-danger" data-bs-toggle="modal" data-bs-target="#modalInfo" type="button" style="width:100%;">
                                             Más Información
                                         </button>
-                                        <button class="btn btn-danger" data-bs-toggle="modal"
-                                            data-bs-target="#modalInscripcion" data-evento="<?= $event->event_name ?>"
-                                            data-event-id="<?= $event->id ?>" type="button" style="width:100%;">
+                                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalInscripcion" data-evento="<?= $event->event_name ?>" data-event-id="<?= $event->id ?>" type="button" style="width:100%;">
                                             Inscribirse
                                         </button>
                                     </section>
@@ -80,8 +74,7 @@
 
     </main>
     <!-- Modal de inscripción -->
-    <div class="modal fade" id="modalInscripcion" tabindex="-1" aria-labelledby="modalInscripcionLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="modalInscripcion" tabindex="-1" aria-labelledby="modalInscripcionLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -97,7 +90,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="numeroCedula" class="form-label">Número de Cédula</label>
-                            <input type="number" class="form-control" id="numeroCedula" name="numeroCedula" required>
+                            <input type="text" class="form-control" id="numeroCedula" name="numeroCedula" required>
                         </div>
 
                         <div class="float-end">
@@ -111,8 +104,7 @@
     </div>
 
     <!-- Modal de registro de usuario -->
-    <div class="modal fade" id="modalRegistroUsuario" tabindex="-1" aria-labelledby="modalRegistroUsuarioLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="modalRegistroUsuario" tabindex="-1" aria-labelledby="modalRegistroUsuarioLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -122,17 +114,28 @@
                 <div class="modal-body">
                     <form id="formRegistroUsuario">
                         <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="nombre" name="nombre" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="apellido" class="form-label">Apellido</label>
-                            <input type="text" class="form-control" id="apellido" name="apellido" required>
-                        </div>
-                        <div class="mb-3">
                             <label for="numeroCedulaRegistro" class="form-label">Número de Cédula</label>
-                            <input type="number" class="form-control" id="numeroCedulaRegistro" name="numeroCedula"
-                                readonly>
+                            <input type="text" class="form-control" id="numeroCedulaRegistro" name="numeroCedula" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombres</label>
+                            <input type="text" class="form-control" id="nombres" name="nombres" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="apellido" class="form-label">Apellidos</label>
+                            <input type="text" class="form-control" id="apellidos" name="apellidos" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">Número de teléfono o celular</label>
+                            <input type="text" class="form-control" id="telefono" name="telefono" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Correo electrónico</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="direccion" class="form-label">Dirección</label>
+                            <input type="direccion" class="form-control" id="direccion" name="direccion" required>
                         </div>
                         <div class="float-start">
                             <!-- <div class="btn-group" role="group" aria-label="Basic example">
@@ -155,13 +158,11 @@
     </div>
 
     <!-- Modal de detalles del evento -->
-    <div class="modal fade" id="modalDetallesEvento" tabindex="-1" aria-labelledby="modalDetallesEventoLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="modalDetallesEvento" tabindex="-1" aria-labelledby="modalDetallesEventoLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalDetallesEventoLabel" style="color: #0C244B;"><span
-                            id="titleEvent"></span></h5>
+                    <h5 class="modal-title" id="modalDetallesEventoLabel" style="color: #0C244B;"><span id="titleEvent"></span></h5>
 
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -219,8 +220,7 @@
         <div class="container px-5">
             <div class="row align-items-center justify-content-between flex-column flex-sm-row">
                 <div class="col-auto">
-                    <div class="small m-0 text-white">Copyright 2022 &copy; PROSERVI-UEB-EP | <a
-                            href="https://www.softecsa.com" class="text-decoration-none link-light">Softec Apps
+                    <div class="small m-0 text-white">Copyright 2022 &copy; PROSERVI-UEB-EP | <a href="https://www.softecsa.com" class="text-decoration-none link-light">Softec Apps
                             S.A.S</a></div>
                 </div>
             </div>
@@ -254,7 +254,7 @@
         });
         // Capturar el nombre del evento al abrir el modal
         var myModal = document.getElementById('modalInscripcion');
-        myModal.addEventListener('show.bs.modal', function (event) {
+        myModal.addEventListener('show.bs.modal', function(event) {
             var button = event.relatedTarget;
             var evento = button.getAttribute('data-evento');
             var eventId = button.getAttribute('data-event-id');
@@ -265,7 +265,6 @@
             var hiddenEventoId = myModal.querySelector('#eventoId');
             hiddenEventoId.value = eventId;
         });
-
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
