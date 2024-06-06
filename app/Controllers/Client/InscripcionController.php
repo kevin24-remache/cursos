@@ -8,67 +8,27 @@ use App\Models\RegistrationsModel;
 
 class InscripcionController extends BaseController
 {
-    // Arreglo de personas
-    private $personas = array(
-        array(
-            "id" => "1",
-            "cedula" => "0250072444",
-            "nombres" => "Juan Carlos",
-            "apellidos" => "Sanchez Chimbo",
-            "telefono" => "0999685745",
-            "direccion" => "La prensa",
-            "email" => "juan@example.com"
-        ),
-        array(
-            "id" => "2",
-            "cedula" => "0250072445",
-            "nombres" => "Nombre1 Nombre2",
-            "apellidos" => "Apellido1 Apellido2",
-            "telefono" => "1234567891",
-            "direccion" => "Dirección2",
-            "email" => "correo2@example.com"
-        ),
-        array(
-            "id" => "3",
-            "cedula" => "0250072446",
-            "nombres" => "Nombre3 nombre3",
-            "apellidos" => "Apellido3",
-            "telefono" => "1234567892",
-            "direccion" => "Dirección3",
-            "email" => "correo3@example.com"
-        )
-    );
-    public function getPersonas()
-    {
-        return $this->personas;
-    }
     public function validarCedula()
     {
-        // Obtener el número de cédula del cuerpo JSON de la solicitud
-        $numeroCedula = $this->request->getJSON()->numeroCedula;
 
-        // Validar que el número de cédula sea numérico
-        if (!is_numeric($numeroCedula)) {
-            return $this->response->setJSON(['exists' => false, 'message' => 'El número de cédula debe ser numérico']);
-        }
-        // Buscar la persona que coincide con la cédula
-        $personas = $this->getPersonas();
+        // Obtener los datos del usuario enviados en la solicitud POST
+        $userData = $this->request->getJSON(true);
+        $persona = [
+            'cedula' => $userData['user']['cedula'],
+            'nombres' => $userData['user']['nombres'],
+            'apellidos' => $userData['user']['apellidos'],
+            'email' => $userData['user']['email'],
+            'telefono' => $userData['user']['telefono'],
+        ];
 
-        $personaEncontrada = null;
-        foreach ($personas as $persona) {
-            if ($numeroCedula === $persona['cedula']) {
-                $personaEncontrada = $persona;
-                break;
-            }
-        }
         helper('format_names');
         // Preparar la respuesta JSON
-        if ($personaEncontrada) {
-            $persona_formateada = formatear_nombre_apellido($personaEncontrada['nombres'], $personaEncontrada['apellidos']);
+        if ($persona) {
+            $persona_formateada = formatear_nombre_apellido($persona['nombres'], $persona['apellidos']);
             $respuesta = [
                 'exists' => true,
                 'persona' => [
-                    'id' => $personaEncontrada['id'],
+                    'id' => $persona['cedula'],
                     'nombres' => $persona_formateada['nombres'],
                     'apellidos' => $persona_formateada['apellidos']
                 ]
@@ -119,7 +79,7 @@ class InscripcionController extends BaseController
 
         // Obtener los datos del usuario por su ID
         $user = null;
-        $personas = $this->getPersonas();
+        $personas = [];
         foreach ($personas as $persona) {
             if ($idUser == $persona['id']) {
                 $user = $persona;
@@ -168,7 +128,7 @@ class InscripcionController extends BaseController
 
         if ($registration) {
             // Intentar enviar el correo electrónico
-            $emailEnviado = $this->send_email($user['email'], $codigoPago, $fechaLimitePago->format('Y-m-d'),$user['nombres'] . " " . $user['apellidos']);
+            $emailEnviado = $this->send_email($user['email'], $codigoPago, $fechaLimitePago->format('Y-m-d'), $user['nombres'] . " " . $user['apellidos']);
 
             if ($emailEnviado) {
                 // Confirmar la transacción si el correo se envió correctamente
@@ -199,7 +159,7 @@ class InscripcionController extends BaseController
         return $this->response->setJSON(['success' => $success]);
     }
 
-    public function send_email($emailAddress, $codigoPago, $fechaLimitePago,$user)
+    public function send_email($emailAddress, $codigoPago, $fechaLimitePago, $user)
     {
         $email = \Config\Services::email();
         $email->setFrom('inscripciones@test.com', 'TEST');
@@ -207,7 +167,7 @@ class InscripcionController extends BaseController
         // $email->setCC('');
         $email->setSubject('Código de pago');
         $cuerpo = "<h5>Usuario {$user}";
-        $cuerpo.="<h4>Tu código de pago es {$codigoPago}</h4>";
+        $cuerpo .= "<h4>Tu código de pago es {$codigoPago}</h4>";
         $cuerpo .= "<p>Recuerda acercarte a realizar el pago antes de la fecha {$fechaLimitePago}</p>";
         // $cuerpo .= '<a href="">Ver comprobante de registro<a/>';
 

@@ -9,7 +9,7 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="<?= base_url("assets/css/styles.css") ?>">
     <link rel="stylesheet" href="<?= base_url("dist/css/font-awesome/css/font-awesome.min.css") ?>">
-    <link rel="stylesheet" href="<?= base_url("assets/css/home.css")?>">
+    <link rel="stylesheet" href="<?= base_url("assets/css/home.css") ?>">
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -226,6 +226,15 @@
             </div>
         </div>
     </footer>
+
+    <!-- Aquí incluye el SDK de Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-database.js"></script>
+    <!-- Si estás utilizando la base de datos en tiempo real -->
+    <!-- Luego, incluye tu archivo de configuración -->
+    <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-firestore.js"></script>
+    <script src="<?php echo base_url('assets/js/firebase.js'); ?>"></script>
+
     <!-- Mueve el código JavaScript aquí -->
     <script>
         const imagenes = document.querySelectorAll('.imagen-pequena');
