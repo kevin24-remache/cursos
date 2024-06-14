@@ -3,11 +3,14 @@ namespace App\Controllers\Auth;
 
 use App\Controllers\BaseController;
 use App\Models\LoginModel;
+use RolesOptions;
 
 class LoginController extends BaseController
 {
     public function index()
     {
+        $accessGranted = grantAccess();
+        if ($accessGranted) return $accessGranted;
         return view('auth/login');
     }
     public function login()
@@ -19,17 +22,28 @@ class LoginController extends BaseController
 
         // Buscar al usuario por su correo electrónico
         $user = $loginModel->where('email', $email)->first();
-
         if ($user) {
             // Verificar la contraseña
             if (password_verify($password, $user['password'])) {
                 // Iniciar sesión exitosa
-                // Puedes almacenar datos del usuario en la sesión aquí
                 $session = session();
-                $session->set('user_id', $user['id']);
+                $session->set('id', $user['id']);
                 $session->set('user_email', $user['email']);
-                // Redirigir al usuario a la página de inicio
-                return redirect('admin/dashboard');
+                $session->set('rol', $user['rol_id']); // Establecer el rol del usuario
+
+                // Redirigir al usuario según su rol
+                switch ($user['rol_id']) {
+                    case RolesOptions::AdminPrincipal:
+                        return redirect('admin/dashboard');
+                    case RolesOptions::AdministradorDePagos:
+                        return redirect('punto/pago');
+                    case RolesOptions::AdministradorDeEventos:
+                        return redirect('eventos/dashboard'); // Ruta de ejemplo para el Administrador de Eventos
+                    case RolesOptions::UsuarioPublico:
+                        return redirect('public/dashboard'); // Ruta de ejemplo para el Usuario Público
+                    default:
+                        return redirect('login');
+                }
             } else {
                 // Contraseña incorrecta
                 $data['error'] = 'Contraseña incorrecta';
@@ -43,10 +57,14 @@ class LoginController extends BaseController
     }
     public function forgotPassword()
     {
+        $accessGranted = grantAccess();
+        if ($accessGranted) return $accessGranted;
         return view('auth/forgot');
     }
     public function register()
     {
+        $accessGranted = grantAccess();
+        if ($accessGranted) return $accessGranted;
         return view('auth/register');
     }
     public function logout()

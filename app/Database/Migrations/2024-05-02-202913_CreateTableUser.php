@@ -50,6 +50,10 @@ class CreateTableUser extends Migration
                 'type' => 'TEXT',
                 'null' => true,
             ],
+            'address' => [
+                'type' => 'TEXT',
+                'null' => true,
+            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => false,

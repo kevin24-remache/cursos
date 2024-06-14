@@ -39,24 +39,99 @@ class RegistrationsModel extends Model
     protected $beforeDelete = ['setDeletedBy'];
     protected $afterDelete = [];
 
+    public function allInscritos()
+    {
 
-    // protected function setCreatedBy($data)
-    // {
-    //     $data['data']['created_by'] = session('id') ?? 1;
-    //     return $data;
-    // }
+        $query = $this->db->table('payments')
+            ->select('
+                payments.payment_cod AS codigo_pago,
+                registrations.ic AS cedula,
+                registrations.full_name_user AS nombres,
+                events.event_name AS evento,
+                categories.category_name AS categoria,
+                registrations.address AS direccion,
+                registrations.phone AS telefono,
+                registrations.email AS email,
+                payments.payment_status
+            ')
+            ->join('registrations', 'payments.id_register = registrations.id')
+            ->join('events', 'registrations.event_cod = events.id', 'left')
+            ->join('categories', 'registrations.cat_id = categories.id', 'left')
+            ->orderBy('payments.payment_cod')
+            ->get()
+            ->getResultArray();
 
-    // protected function setUpdatedBy($data)
-    // {
-    //     $data['data']['updated_by'] = session('id') ?? 1;
-    //     return $data;
-    // }
+        // Map the payment status to human-readable format
+        foreach ($query as &$row) {
+            $row['estado_pago'] = $this->getPaymentStatusText($row['payment_status']);
+        }
 
-    // protected function setDeletedBy($data)
-    // {
-    //     $this->set(['deleted_by' => session('id') ?? 1])->update($data['id']);
-    //     return $data;
-    // }
+        return $query;
+    }
 
+    public function getInscripcionesByCedula($cedula)
+    {
+        $query = $this->db->table('payments')
+            ->select('
+                payments.id AS id_pago,
+                payments.payment_cod AS codigo_pago,
+                registrations.ic AS cedula,
+                registrations.full_name_user AS nombres,
+                events.event_name AS evento,
+                categories.category_name AS categoria,
+                categories.cantidad_dinero AS precio,
+                registrations.address AS direccion,
+                registrations.phone AS telefono,
+                registrations.email AS email,
+                payments.payment_status
+            ')
+            ->join('registrations', 'payments.id_register = registrations.id')
+            ->join('events', 'registrations.event_cod = events.id', 'left')
+            ->join('categories', 'registrations.cat_id = categories.id', 'left')
+            ->where('registrations.ic', $cedula)
+            ->orderBy('payments.payment_cod')
+            ->get()
+            ->getResultArray();
+
+        // Map the payment status to human-readable format
+        foreach ($query as &$row) {
+            $row['estado_pago'] = getPaymentStatusText($row['payment_status']);
+        }
+
+        return $query;
+    }
+
+    public function getInscripcionesByCedulaYEstado($cedula, $estado)
+    {
+        $query = $this->db->table('payments')
+            ->select('
+            payments.id AS id_pago,
+            payments.payment_cod AS codigo_pago,
+            registrations.ic AS cedula,
+            registrations.full_name_user AS nombres,
+            events.event_name AS evento,
+            categories.category_name AS categoria,
+            categories.cantidad_dinero AS precio,
+            registrations.address AS direccion,
+            registrations.phone AS telefono,
+            registrations.email AS email,
+            payments.payment_status
+        ')
+            ->join('registrations', 'payments.id_register = registrations.id')
+            ->join('events', 'registrations.event_cod = events.id', 'left')
+            ->join('categories', 'registrations.cat_id = categories.id', 'left')
+            ->where('registrations.ic', $cedula)
+            ->where('payments.payment_status', $estado)
+            ->orderBy('payments.payment_cod')
+            ->get()
+            ->getResultArray();
+
+        // Map the payment status to human-readable format
+        foreach ($query as &$row) {
+            $row['estado_pago'] = getPaymentStatusText($row['payment_status']);
+        }
+
+        return $query;
+    }
 
 }

@@ -13,6 +13,39 @@
 </head>
 
 <body class="d-flex flex-column h-100">
+    <!-- Preloader HTML -->
+    <div id="preloader" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+<style>
+    #preloader {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.spinner {
+  border: 16px solid #f3f3f3;
+  border-top: 16px solid #3498db;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+</style>
     <main class="flex-shrink-0" style="background-color: #d9d9d9;">
         <nav class="navbar navbar-dark" style="background-color: #0C244B;">
             <div class="container-fluid">
@@ -27,14 +60,16 @@
             </div>
             <section class="container">
                 <div class="row">
-                    <?php foreach ($events as $key => $event) : ?>
+                    <?php foreach ($events as $key => $event): ?>
                         <div class="col col-xl-3 col-lg-3 col-md-4 col-sm-6 p-3">
                             <div class="bg-white shadow">
                                 <figure class="p-1">
-                                    <img src="<?= base_url("") . $event->image; ?>" alt="Imagen del Curso" class="img-fluid imagen-pequena rounded-2 ">
+                                    <img src="<?= base_url("") . $event->image; ?>" alt="Imagen del Curso"
+                                        class="img-fluid imagen-pequena rounded-2 ">
                                 </figure>
                                 <figure class="text-center">
-                                    <img src="<?= base_url("assets/images/logo_ueb.png") ?>" alt="Logo del curso" class="img-fluid" width="120px;">
+                                    <img src="<?= base_url("assets/images/logo_ueb.png") ?>" alt="Logo del curso"
+                                        class="img-fluid" width="120px;">
                                 </figure>
 
                                 <section class="px-3">
@@ -43,7 +78,7 @@
                                     </article>
 
                                     <section class="card__icons__container">
-                                        <?php if ($event->formatted_modality !== 'Presencial') : ?>
+                                        <?php if ($event->formatted_modality !== 'Presencial'): ?>
                                             <article>
                                                 <p><i class="fa fa-clock-o"></i> DURACIÓN</p>
                                                 <span>225 Horas</span>
@@ -57,10 +92,14 @@
                                     </section>
 
                                     <section class="pt-3 pb-4">
-                                        <button class="btn border border-danger mb-2 card__button text-danger" data-bs-toggle="modal" data-bs-target="#modalInfo" type="button" style="width:100%;">
+                                        <button class="btn border border-danger mb-2 card__button text-danger"
+                                            data-bs-toggle="modal" data-bs-target="#modalInfo" type="button"
+                                            style="width:100%;">
                                             Más Información
                                         </button>
-                                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalInscripcion" data-evento="<?= $event->event_name ?>" data-event-id="<?= $event->id ?>" type="button" style="width:100%;">
+                                        <button class="btn btn-danger" data-bs-toggle="modal"
+                                            data-bs-target="#modalInscripcion" data-evento="<?= $event->event_name ?>"
+                                            data-event-id="<?= $event->id ?>" type="button" style="width:100%;">
                                             Inscribirse
                                         </button>
                                     </section>
@@ -74,7 +113,8 @@
 
     </main>
     <!-- Modal de inscripción -->
-    <div class="modal fade" id="modalInscripcion" tabindex="-1" aria-labelledby="modalInscripcionLabel" aria-hidden="true">
+    <div class="modal fade" id="modalInscripcion" tabindex="-1" aria-labelledby="modalInscripcionLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -104,7 +144,8 @@
     </div>
 
     <!-- Modal de registro de usuario -->
-    <div class="modal fade" id="modalRegistroUsuario" tabindex="-1" aria-labelledby="modalRegistroUsuarioLabel" aria-hidden="true">
+    <div class="modal fade" id="modalRegistroUsuario" tabindex="-1" aria-labelledby="modalRegistroUsuarioLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -115,14 +156,15 @@
                     <form id="formRegistroUsuario">
                         <div class="mb-3">
                             <label for="numeroCedulaRegistro" class="form-label">Número de Cédula</label>
-                            <input type="text" class="form-control" id="numeroCedulaRegistro" name="numeroCedula" readonly>
+                            <input type="text" class="form-control" id="numeroCedulaRegistro" name="numeroCedula"
+                                readonly>
                         </div>
                         <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombres</label>
+                            <label for="nombres" class="form-label">Nombres</label>
                             <input type="text" class="form-control" id="nombres" name="nombres" required>
                         </div>
                         <div class="mb-3">
-                            <label for="apellido" class="form-label">Apellidos</label>
+                            <label for="apellidos" class="form-label">Apellidos</label>
                             <input type="text" class="form-control" id="apellidos" name="apellidos" required>
                         </div>
                         <div class="mb-3">
@@ -158,11 +200,13 @@
     </div>
 
     <!-- Modal de detalles del evento -->
-    <div class="modal fade" id="modalDetallesEvento" tabindex="-1" aria-labelledby="modalDetallesEventoLabel" aria-hidden="true">
+    <div class="modal fade" id="modalDetallesEvento" tabindex="-1" aria-labelledby="modalDetallesEventoLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalDetallesEventoLabel" style="color: #0C244B;"><span id="titleEvent"></span></h5>
+                    <h5 class="modal-title" id="modalDetallesEventoLabel" style="color: #0C244B;"><span
+                            id="titleEvent"></span></h5>
 
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -220,7 +264,8 @@
         <div class="container px-5">
             <div class="row align-items-center justify-content-between flex-column flex-sm-row">
                 <div class="col-auto">
-                    <div class="small m-0 text-white">Copyright 2022 &copy; PROSERVI-UEB-EP | <a href="https://www.softecsa.com" class="text-decoration-none link-light">Softec Apps
+                    <div class="small m-0 text-white">Copyright 2022 &copy; PROSERVI-UEB-EP | <a
+                            href="https://www.softecsa.com" class="text-decoration-none link-light">Softec Apps
                             S.A.S</a></div>
                 </div>
             </div>
@@ -254,7 +299,7 @@
         });
         // Capturar el nombre del evento al abrir el modal
         var myModal = document.getElementById('modalInscripcion');
-        myModal.addEventListener('show.bs.modal', function(event) {
+        myModal.addEventListener('show.bs.modal', function (event) {
             var button = event.relatedTarget;
             var evento = button.getAttribute('data-evento');
             var eventId = button.getAttribute('data-event-id');
@@ -268,11 +313,11 @@
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="<?= base_url("assets/js/home/home.js") ?>"></script>
 
     <!-- template -->
     <script src="<?= base_url("dist/js/niche.js") ?>"></script>
-
     <script src="<?= base_url("assets/js/sweetalert/sweetalert.min.js") ?>"></script>
 </body>
 

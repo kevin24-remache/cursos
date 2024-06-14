@@ -14,7 +14,9 @@ class LoginModel extends Model
     protected $protectFields = true;
     protected $allowedFields = [
         'ic',
+        'first_name',
+        'last_name',
         'email',
-        'rol_id'
+        'rol_id',
     ];
 }

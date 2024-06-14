@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateTableRegistrations extends Migration
+class CreateTablePayments extends Migration
 {
     public function up()
     {
@@ -13,47 +13,50 @@ class CreateTableRegistrations extends Migration
         $this->db->disableForeignKeyChecks();
 
         $this->forge->addField([
-            'id' =>[
+            'id' => [
                 'type' => 'INT',
                 'unsigned' => true,
                 'auto_increment' => true
             ],
-            'event_cod' =>[
+            'id_register' => [
                 'type' => 'INT',
                 'unsigned' => true,
                 'null' => true,
             ],
-            'cat_id' =>[
+            'amount_pay' =>[
+                'type' => 'NUMERIC',
+                'constraint' => '10,2',
+                'null' => true,
+            ],
+            'payment_status' => [
+                'type' => 'INT',
+                'comment' => 'Estado del pago (Pendiente,Completado,Fallido,EnProceso,Cancelado)',
+                'null' => true,
+            ],
+            'date_time_payment' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            'payment_cod' => [
+                'type' => 'INT',
+                'null' => false,
+            ],
+            'address_payment' => [
+                'type' => 'INT',
+                'null' => true,
+            ],
+            'payment_time_limit' => [
+                'type' => 'DATE',
+                'null' => false
+            ],
+            'payment_method_id' => [
                 'type' => 'INT',
                 'unsigned' => true,
                 'null' => true,
             ],
-            'full_name_user' =>[
+            'num_autorizacion' => [
                 'type' => 'VARCHAR',
-                'constraint' => 250,
-                'null' => false,
-            ],
-            'ic' =>[
-                'type' => 'VARCHAR',
-                'constraint' => 10,
-                'null' => false,
-            ],
-            'address' =>[
-                'type' => 'TEXT',
-                'null' => true,
-            ],
-            'phone' =>[
-                'type' => 'VARCHAR',
-                'constraint' => 10,
-                'null' => true,
-            ],
-            'email' =>[
-                'type' => 'TEXT',
-                'null' => true,
-            ],
-            'event_name' =>[
-                'type' => 'VARCHAR',
-                'constraint' => 255,
+                'constraint' => 50,
                 'null' => true,
             ],
             'created_at' => [
@@ -82,15 +85,16 @@ class CreateTableRegistrations extends Migration
                 'null' => true,
             ],
         ]);
-        $this->forge->addkey('id',true);
-        // Agregar la llave foránea para la columna 'event_cod' que referencia a la columna 'id' de la tabla event
-        $this->forge->addForeignKey('event_cod', 'events', 'id', 'CASCADE', 'SET NULL');
-        $this->forge->addForeignKey('cat_id', 'categories', 'id', 'CASCADE', 'SET NULL');
-        $this->forge->createTable('registrations');
+        $this->forge->addkey('id', true);
+        // Agregar la llave foránea para la columna 'id_register' que referencia a la columna 'id' de la tabla registrations
+        $this->forge->addForeignKey('id_register', 'registrations', 'id', 'CASCADE', 'SET NULL');
+        $this->forge->addForeignKey('payment_method_id', 'payment_methods', 'id', 'CASCADE', 'SET NULL');
+        $this->forge->createTable('payments');
     }
 
     public function down()
     {
-        $this->forge->dropTable('registrations');
+
+        $this->forge->dropTable('payments');
     }
 }

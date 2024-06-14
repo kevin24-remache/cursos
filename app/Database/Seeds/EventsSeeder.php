@@ -10,16 +10,16 @@ class EventsSeeder extends Seeder
     {
         $data=[
             [
-            'event_name' => 'Evento XD',
-            'short_description' => 'Evento XD es un evento genial que sirve para futuros profesionales XD',
-            'event_date' => '2024-05-01',
+            'event_name' => 'Congreso internacional de ciencia, tecnología, innovación y emprendimiento (VII CTIE)',
+            'short_description' => 'Evento internacional de ciencia y tecnología que realiza la UEB',
+            'event_date' => '2024-06-30',
             'modality' => '1',
-            'event_time' => '08:00:00',
-            'address' => 'Dirección example',
-            'registrations_start_date' => '2024-05-01',
-            'registrations_end_date' => '2024-06-01',
+            'event_time' => '',
+            'address' => 'Universidad Estatal de Bolívar (UEB)',
+            'registrations_start_date' => '2024-06-14',
+            'registrations_end_date' => '2024-06-20',
             'event_status' => 'Activo',
-            'image' => '',
+            'image' => 'assets/images/events/1718289673_8e477fa52c0bf8181751.jpg',
             ]
         ];
         $this->db->table('events')->insertBatch($data);

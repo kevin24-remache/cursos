@@ -1,10 +1,20 @@
 document.addEventListener("DOMContentLoaded", function () {
+  function showPreloader() {
+    document.getElementById("preloader").style.display = "flex";
+  }
+
+  function hidePreloader() {
+    document.getElementById("preloader").style.display = "none";
+  }
+
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
 
   async function obtenerUsuario(userId) {
     try {
+      showPreloader();
       const doc = await db.collection("Usuarios").doc(userId).get();
+      hidePreloader();
       if (doc.exists) {
         //console.log(doc.data());
         return doc.data();
@@ -12,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return null;
       }
     } catch (error) {
+      hidePreloader();
       console.log("Error getting document:", error);
       return null;
     }
@@ -49,6 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .getElementById("formRegistroUsuario")
     .addEventListener("submit", function (event) {
       event.preventDefault();
+      showPreloader();
       let cedula = document.getElementById("numeroCedula").value;
       let nombres = document.getElementById("nombres").value;
       let apellidos = document.getElementById("apellidos").value;
@@ -122,20 +134,22 @@ document.addEventListener("DOMContentLoaded", function () {
                             // Convertir las cadenas de categorías en arrays
                             let categoryIds = eventData.category_ids.split(",");
                             let categoryNames = eventData.categories.split(",");
+                            let categoryPagos = eventData.cantidad_dinero.split(",");
 
                             // Construir HTML para los radio botones de categorías
                             let categoriaHtml = "";
                             for (let i = 0; i < categoryIds.length; i++) {
                               categoriaHtml += `
-                                                  <div class="form-check form-check-inline">
-                                                      <input class="form-check-input" type="radio" name="categoria" value="${categoryIds[i]}" id="categoria${categoryIds[i]}" required>
-                                                      <label class="form-check-label" for="categoria${categoryIds[i]}">${categoryNames[i]}</label>
-                                                  </div>`;
+                                <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="radio" name="categoria" value="${categoryIds[i]}" id="categoria${categoryIds[i]}" required>
+                                  <label class="form-check-label" for="categoria${categoryIds[i]}">
+                                    ${categoryNames[i]} - $${categoryPagos[i]}
+                                  </label>
+                                </div>`;
                             }
 
                             // Insertar HTML generado en el documento
-                            document.getElementById("categoria").innerHTML =
-                              categoriaHtml;
+                            document.getElementById("categoria").innerHTML = categoriaHtml;
                           } else {
                             // Agregar un radio button para indicar que no hay categorías disponibles
                             document.getElementById("categoria").innerHTML = `
@@ -225,6 +239,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .getElementById("formDetallesEvento")
     .addEventListener("submit", function (event) {
       event.preventDefault();
+      showPreloader();
 
       // Obtener el id del usuario y el id del evento
       let idUser = document.getElementById("id_user").value;
@@ -248,6 +263,7 @@ document.addEventListener("DOMContentLoaded", function () {
       })
         .then((response) => response.json())
         .then((data) => {
+          hidePreloader();
           if (data.error) {
             // Mostrar el mensaje de error
             swal("Ups! Algo salio mal!", data.message, "warning");
@@ -260,11 +276,17 @@ document.addEventListener("DOMContentLoaded", function () {
               diferenciaMilisegundos / (1000 * 60 * 60 * 24)
             );
             // Mostrar el mensaje de confirmación y código de pago
-            swal(
-              "Bien, te registraste para el evento",
-              "Tu código de pago es: ${ data.codigoPago }\nTienes ${ diasRestantes } días para realizar el pago.",
-              "success"
-            );
+            Swal.fire({
+              title: "<strong>Registro Exitoso!</strong>",
+              icon: "success",
+              html: `
+                <p>Bien, te registraste para el evento.</p>
+                <p>Tu código de pago es: <b>${data.codigoPago}</b></p>
+                <p>Tienes <b>${diasRestantes}</b> días para realizar el pago.</p>
+              `,
+              showCloseButton: true,
+              confirmButtonText: 'Ok',
+            });
             $("#modalDetallesEvento").modal("hide");
           } else {
             swal(
@@ -275,6 +297,7 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         })
         .catch((error) => {
+          hidePreloader();
           console.error("Error:", error);
           swal(
             "Ups! Algo salio mal!",

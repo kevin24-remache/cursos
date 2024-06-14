@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        @page {
+            margin: 10px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 10px;
+        }
+
+        header,
+        footer {
+            text-align: center;
+        }
+
+        .container {
+            width: 100%;
+        }
+
+        .section {
+            margin-bottom: 10px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table,
+        .table th,
+        .table td {
+            border: 1px solid black;
+        }
+
+        .table th,
+        .table td {
+            padding: 3px;
+            text-align: left;
+        }
+
+        .title {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .break-word {
+            word-wrap: break-word;
+            word-break: break-all;
+            white-space: normal;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="title">SOFTEC MICROSYSTEMS</div>
+        <div>7 de Mayo y Olmedo</div>
+        <div>RUC: 0201975844001</div>
+        <div>Factura Nro: 002-201-000000977</div>
+        <div>Fecha autorización: 2024-06-04T17:22:09-05:00</div>
+        <div>Ambiente: PRODUCCIÓN</div>
+
+        <hr>
+        <div>NÚMERO DE AUTORIZACIÓN:</div>
+        <div class="break-word"><?=$num_autorizacion?></div>
+    </header>
+    <main>
+        <hr>
+        <div class="container">
+            <div class="section">
+                <div><strong>Cliente:</strong> <?=$user?></div>
+                <div><strong>C.I/RUC:</strong> <?=$user_ic?></div>
+                <div><strong>Fecha Emisión:</strong> <?=$fecha_emision?></div>
+            </div>
+            <div class="section">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Cant.</th>
+                            <th>Desc.</th>
+                            <th>P.Unit</th>
+                            <th>V.Tot</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Uso de plataforma</td>
+                            <td><?=$precio_unitario?></td>
+                            <td><?=$val_total?></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="section text-right">
+                <div><strong>Sub Total:</strong><?=$sub_total?></div>
+                <div><strong>Sub Total 0:</strong><?=$sub_total_0?></div>
+                <div><strong>Sub Total 15%:</strong><?=$sub_total_15?></div>
+                <div><strong>IVA 15%:</strong><?=$iva?></div>
+                <div><strong>TOTAL:</strong><?=$total?></div>
+            </div>
+            <div class="section">
+                <div><strong>FORMA DE PAGO:</strong> SIN UTILIZACIÓN DEL SISTEMA FINANCIERO</div>
+            </div>
+            <div class="section">
+                <div><strong>Mail:</strong> <?=$email_user?></div>
+                <div><strong>Contacto:</strong> <?=$user_tel?></div>
+                <div><strong>Operador:</strong> <?=$operador?></div>
+            </div>
+            <div class="title">
+                <strong>VALOR TOTAL PAGADO:</strong>
+                <h1> <?=$valor_total?></h1>
+            </div>
+            <div class="section">
+                <div>En breve será emitida su factura electrónica, en caso de no estar en la bandeja principal, revisar
+                    en la bandeja de spam.</div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

@@ -42,10 +42,12 @@ class CategoriesController extends BaseController
     {
         $category_name = $this->request->getPost('category_name');
         $short_description = $this->request->getPost('short_description');
+        $category_value = $this->request->getPost('category_value');
 
         $data = [
             'category_name' => trim($category_name),
             'short_description' => trim($short_description),
+            'cantidad_dinero' => $category_value,
         ];
 
         try {
@@ -55,6 +57,10 @@ class CategoriesController extends BaseController
                     'category_name' => [
                         'label' => 'Nombre de la categoría',
                         'rules' => 'required|min_length[3]|is_unique[categories.category_name]',
+                    ],
+                    'cantidad_dinero' => [
+                        'label' => 'Valor de la categoría',
+                        'rules' => 'required|',
                     ],
                     'short_description' => [
                         'label' => 'Descripción corta',

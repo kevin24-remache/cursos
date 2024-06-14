@@ -46,6 +46,16 @@ Agregar categorías
                                             class="text-danger"><?= isset($validation) ? display_data($validation, 'category_name') : '' ?></span>
                                     </div>
                                 </div>
+                                <div class="col">
+                                    <div class="form-group has-feedback">
+                                        <label class="control-label">Valor de la categoría</label>
+                                        <input class="form-control" name="category_value" placeholder=""
+                                            value="<?= isset($last_data) ? display_data($last_data, 'cantidad_dinero') : '' ?>"
+                                            type="number">
+                                        <span
+                                            class="text-danger"><?= isset($validation) ? display_data($validation, 'cantidad_dinero') : '' ?></span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col">

@@ -26,6 +26,7 @@ Categorías
                     <thead class="thead-light">
                         <tr>
                             <th>Nombre de la categoría</th>
+                            <th>Valor por la categoría</th>
                             <th>Descripción de la categoría</th>
                             <th>Acciones</th>
                         </tr>
@@ -34,6 +35,7 @@ Categorías
                         <?php foreach ($categories as $key => $category) :?>
                         <tr>
                             <td><?= $category["category_name"]?></td>
+                            <td><?= $category["cantidad_dinero"]?></td>
                             <td><?= $category["short_description"]?></td>
                             <td></td>
                         </tr>

@@ -4,10 +4,77 @@ namespace App\Controllers\Client;
 
 use App\Controllers\BaseController;
 use App\Models\EventsModel;
+use App\Models\PaymentsModel;
 use App\Models\RegistrationsModel;
+use CodeIgniter\I18n\Time;
+use Dompdf\Dompdf;
 
 class InscripcionController extends BaseController
 {
+    private function generarCodigoPagoUnico()
+    {
+        $paymentModel = new PaymentsModel();
+
+        do {
+            $codigoPago = rand(1000000, 9999999); // Genera un código de pago aleatorio de 7 dígitos
+            $existingCode = $paymentModel->where('payment_cod', $codigoPago)->first();
+        } while ($existingCode);
+
+        return $codigoPago;
+    }
+    private function calcularFechaLimitePago($fechaInscripcion, $fechaEvento)
+    {
+        // Calcular la diferencia en días entre la fecha de inscripción y la fecha del evento
+        $diasRestantes = $fechaInscripcion->diff($fechaEvento)->days;
+
+        // Si la inscripción es el mismo día del evento
+        if ($diasRestantes == 0) {
+            return $fechaEvento;
+        }
+
+        // Si la diferencia es menor que 7 días, el intervalo será el número de días restantes
+        if ($diasRestantes < 7) {
+            $intervalo = new \DateInterval('P' . $diasRestantes . 'D');
+        } else {
+            $intervalo = new \DateInterval('P7D'); // Intervalo de 7 días
+        }
+
+        // Calcular la fecha límite de pago
+        $fechaLimitePago = (clone $fechaInscripcion)->add($intervalo);
+
+        // Comparar con la fecha del evento
+        if ($fechaLimitePago > $fechaEvento) {
+            $fechaLimitePago = $fechaEvento;
+        }
+
+        return $fechaLimitePago;
+    }
+
+
+
+    private function prepararDatosInscripcion($persona, $event, $catId)
+    {
+        return [
+            'event_cod' => $event['id'],
+            'cat_id' => $catId,
+            'full_name_user' => $persona['nombres'] . ' ' . $persona['apellidos'],
+            'ic' => $persona['cedula'],
+            'address' => $persona['adress'],
+            'phone' => $persona['telefono'],
+            'email' => $persona['email'],
+            'event_name' => $event['event_name'],
+        ];
+    }
+
+    private function prepararDatosPago($codigoPago, $fechaLimitePago)
+    {
+        return [
+            'payment_status' => 1,
+            'payment_cod' => $codigoPago,
+            'payment_time_limit' => $fechaLimitePago->format('Y-m-d H:i:s')
+        ];
+    }
+
     public function validarCedula()
     {
 
@@ -19,6 +86,7 @@ class InscripcionController extends BaseController
             'apellidos' => $userData['user']['apellidos'],
             'email' => $userData['user']['email'],
             'telefono' => $userData['user']['telefono'],
+            'adress' => $userData['user']['direccion'],
         ];
 
         helper('format_names');
@@ -33,6 +101,8 @@ class InscripcionController extends BaseController
                     'apellidos' => $persona_formateada['apellidos']
                 ]
             ];
+            // Guardar los datos del usuario en la sesión
+            session()->set('persona', $persona);
             return $this->response->setJSON($respuesta);
         } else {
             return $this->response->setJSON(['exists' => false]);
@@ -54,97 +124,71 @@ class InscripcionController extends BaseController
     }
     public function guardarInscripcion()
     {
-        // Obtener los datos de la solicitud
-        $data = $this->request->getJSON();
+        // Obtener los datos de la sesión
+        $persona = session()->get('persona');
+        if (!$persona) {
+            return $this->response->setJSON(['error' => true, 'message' => 'Datos de usuario no encontrados en la sesión']);
+        }
 
-        // Validar los datos si es necesario
-        if (!isset($data->id_user) || !isset($data->eventoId) || !isset($data->catId)) {
+        // Obtener y validar los datos de la solicitud
+        $data = $this->request->getJSON();
+        if (!isset($data->eventoId) || !isset($data->catId)) {
             return $this->response->setJSON(['error' => true, 'message' => 'Datos incompletos']);
         }
 
-        // Procesar cada dato individualmente
-        $idUser = $data->id_user;
+        // Extraer los datos necesarios
         $eventoId = $data->eventoId;
         $catId = $data->catId;
 
         // Verificar si el evento existe
         $eventModel = new EventsModel();
-        $event = $eventModel->find($eventoId);
-
+        $event = $eventModel->getEventNameAndCategories($eventoId, $catId);
         if (!$event) {
             return $this->response->setJSON(['error' => true, 'message' => 'Evento no encontrado']);
         }
-        $event_name = $event['event_name'];
-        $fechaEvento = new \DateTime($event['event_date']);
 
-        // Obtener los datos del usuario por su ID
-        $user = null;
-        $personas = [];
-        foreach ($personas as $persona) {
-            if ($idUser == $persona['id']) {
-                $user = $persona;
-                break;
-            }
-        }
-        // Validar si se encontró al usuario
-        if (!$user) {
-            return $this->response->setJSON(['error' => true, 'message' => 'Usuario no encontrado']);
-        }
+        // Generar un código de pago único
+        $codigoPago = $this->generarCodigoPagoUnico();
 
-        // Simular el guardado de la inscripción y generar un código de pago aleatorio
-        $codigoPago = rand(1000000, 9999999); // Genera un código de pago aleatorio de 7 dígitos
+        // Calcular la fecha límite de pago
+        $fechaInscripcion = Time::now(); // Usar la hora actual del servidor
+        $fechaEvento = new Time($event['event_date']);
+        $fechaLimitePago = $this->calcularFechaLimitePago($fechaInscripcion, $fechaEvento);
 
-        // Calcular la fecha límite de pago (por ejemplo, 7 días desde la fecha de inscripción)
-        $fechaInscripcion = new \DateTime(); // Fecha actual
-        $intervalo = new \DateInterval('P7D'); // Intervalo de 7 días
-        $fechaLimitePago = (clone $fechaInscripcion)->add($intervalo);
-
-        // Comparar con la fecha del evento
-        if ($fechaLimitePago > $fechaEvento) {
-            $fechaLimitePago = $fechaEvento;
-        }
-
-        // Crear el arreglo de datos para el modelo
-        $datosInscripcion = [
-            'user_id' => $idUser,
-            'event_cod' => $eventoId,
-            'cat_id' => $catId,
-            'full_name_user' => $user['nombres'] . " " . $user['apellidos'],
-            'ic' => $user['cedula'],
-            'address' => $user['direccion'],
-            'phone' => $user['telefono'],
-            'email' => $user['email'],
-            'event_name' => $event_name,
-            'payment_cod' => $codigoPago,
-            'payment_time_limit' => $fechaLimitePago->format('Y-m-d H:i:s'), // Añadir la fecha límite de pago
-        ];
-
-        $db = \Config\Database::connect();
-        $db->transStart(); // Iniciar la transacción
+        // Crear los datos para la inscripción y el pago
+        $datosInscripcion = $this->prepararDatosInscripcion($persona, $event, $catId);
+        $datosPayment = $this->prepararDatosPago($codigoPago, $fechaLimitePago);
 
         // Guardar los datos en la base de datos
+        $db = \Config\Database::connect();
+        $db->transStart();
+
         $registrationModel = new RegistrationsModel();
         $registration = $registrationModel->insert($datosInscripcion);
 
-        if ($registration) {
-            // Intentar enviar el correo electrónico
-            $emailEnviado = $this->send_email($user['email'], $codigoPago, $fechaLimitePago->format('Y-m-d'), $user['nombres'] . " " . $user['apellidos']);
+        $datosPayment['id_register'] = $registration;
+        $paymentModel = new PaymentsModel();
+        $payment = $paymentModel->insert($datosPayment);
 
-            if ($emailEnviado) {
-                // Confirmar la transacción si el correo se envió correctamente
-                $db->transComplete();
-
-                // Devolver una respuesta JSON con el código de pago, los datos del usuario y la fecha límite de pago
-                return $this->response->setJSON(['success' => true, 'codigoPago' => $codigoPago, 'payment_time_limit' => $fechaLimitePago->format('Y-m-d H:i:s')]);
-            } else {
-                // Hacer rollback si el correo no se pudo enviar
-                $db->transRollback();
-                return $this->response->setJSON(['error' => true, 'message' => 'No se pudo enviar el correo electrónico']);
-            }
-        } else {
-            // Hacer rollback si la inscripción no se pudo guardar
+        if (!$registration || !$payment) {
             $db->transRollback();
-            return $this->response->setJSON(['error' => true, 'message' => 'No se pudo registrar']);
+            return $this->response->setJSON(['error' => true, 'message' => 'No se pudo registrar la inscripción']);
+        }
+
+        // Intentar enviar el correo electrónico
+        $emailEnviado = $this->send_email($persona, $codigoPago, $fechaLimitePago, $event);
+        if ($emailEnviado) {
+            $db->transComplete();
+            session()->remove('persona');
+            return $this->response->setJSON([
+                'success' => true,
+                'codigoPago' => $codigoPago,
+                'payment_time_limit' => $fechaLimitePago->format('Y-m-d H:i:s')
+            ]);
+        } else {
+            $db->transRollback();
+            session()->remove('persona');
+            return $this->response->setJSON(['error' => true, 'message' => 'No se pudo enviar el correo electrónico']);
         }
     }
 
@@ -159,27 +203,64 @@ class InscripcionController extends BaseController
         return $this->response->setJSON(['success' => $success]);
     }
 
-    public function send_email($emailAddress, $codigoPago, $fechaLimitePago, $user)
+    public function send_email($persona, $codigoPago, $fechaLimitePago, $event)
     {
+        // Fecha de emisión del PDF
+        $fechaEmision = Time::now()->toDateTimeString();
+        $fechaLimitePagoFormateada = $fechaLimitePago->toDateString();
+        // Obtener los datos
+        $user = $persona['nombres'] . ' ' . $persona['apellidos'];
+        $emailAddress = $persona['email'];
+        $evento = $event['event_name'];
+        $categoria = $event['category_name'];
+        $precio = $event['cantidad_dinero'];
+
+
+        // Cargar la vista y pasar los datos
+        $html = view('client/codigo', [
+            'user' => $user,
+            'codigoPago' => $codigoPago,
+            'fechaLimitePago' => $fechaLimitePagoFormateada,
+            'fechaEmision' => $fechaEmision,
+            'evento' => $evento,
+            'categoria' => $categoria,
+            'precio' => $precio
+        ]);
+
+        // Generar el PDF con dompdf
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        $pdfOutput = $dompdf->output();
+        $pdfFilename = 'comprobante_pago.pdf';
+
+        // Guardar temporalmente el PDF en el servidor
+        $tempPdfPath = WRITEPATH . 'uploads/' . $pdfFilename;
+        file_put_contents($tempPdfPath, $pdfOutput);
+
+        // Configurar y enviar el correo electrónico
         $email = \Config\Services::email();
         $email->setFrom('inscripciones@test.com', 'TEST');
         $email->setTo($emailAddress);
-        // $email->setCC('');
         $email->setSubject('Código de pago');
-        $cuerpo = "<h5>Usuario {$user}";
-        $cuerpo .= "<h4>Tu código de pago es {$codigoPago}</h4>";
-        $cuerpo .= "<p>Recuerda acercarte a realizar el pago antes de la fecha {$fechaLimitePago}</p>";
-        // $cuerpo .= '<a href="">Ver comprobante de registro<a/>';
+        $email->setMessage('Tu código de pago está en el PDF adjunto.');
+        $email->attach($tempPdfPath);
 
-        $email->setMessage($cuerpo);
-
-        // $email->attach('assets/css/styles.css', 'attachment', 'Comprobante.pdf');
-        $email->setAltMessage("Tu código de pago es {$codigoPago}");
+        // Intentar enviar el correo
         if ($email->send()) {
+            // Eliminar el archivo temporal después de enviar el correo
+            unlink($tempPdfPath);
             return true;
         } else {
-            // log_message('error', $email->printDebugger(['headers']));
+            // Obtener cualquier error del correo
+            $error = $email->printDebugger(['headers']);
+            log_message('error', 'Error enviando correo: ' . $error);
+
+            // Eliminar el archivo temporal en caso de error
+            unlink($tempPdfPath);
             return false;
         }
     }
+
 }

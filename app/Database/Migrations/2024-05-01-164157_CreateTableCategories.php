@@ -24,6 +24,11 @@ class CreateTableCategories extends Migration
                 'constraint' => 255,
                 'null' => false,
             ],
+            'cantidad_dinero' => [
+                'type' => 'DECIMAL',
+                'constraint' => '10,2',
+                'null' => false,
+            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => false,

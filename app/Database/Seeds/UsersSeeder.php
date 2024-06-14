@@ -18,6 +18,18 @@ class UsersSeeder extends Seeder
             'phone_number' => '0987847289',
             'email' => 'admin@admin.com',
             'password' => password_hash('password', PASSWORD_DEFAULT),
+            'address'=>'Guaranda',
+            ],
+            //Admin pagos
+            [
+            'rol_id' => '2',
+            'ic' => '0245638562',
+            'first_name' => 'Carlos Pepe',
+            'last_name' => 'Perez Sanchez',
+            'phone_number' => '0987857289',
+            'email' => 'perez@exaple.com',
+            'password' => password_hash('password', PASSWORD_DEFAULT),
+            'address'=>'Guanujo'
             ]
         ];
         $this->db->table('users')->insertBatch($data);

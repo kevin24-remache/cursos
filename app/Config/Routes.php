@@ -36,6 +36,18 @@ $routes->group('admin', static function ($routes) {
         $categories->post('trash/restore/', 'Admin\CategoriesController::restore');
     });
 });
+
+$routes->group('punto/pago', static function ($routes) {
+
+    $routes->get('/', 'Payments\DashboardController::index');
+    $routes->get('inscripciones/', 'Payments\InscripcionesController::buscar');
+    $routes->get('inscripciones/(:num)', 'Payments\InscripcionesController::index/$1');
+    $routes->get('inscripciones/(:num)/(:alpha)', 'Payments\InscripcionesController::index/$1/$2');
+    $routes->get('pdf/(:num)', 'Payments\InscripcionesController::demoPDF/$1');
+    $routes->post('pago/', 'Payments\InscripcionesController::pago');
+    $routes->post('buscar', 'Payments\InscripcionesController::buscarPorCedula');
+});
+
 $routes->post('validar_cedula', 'Client\InscripcionController::validarCedula');
 $routes->post('obtener_datos_evento', 'Client\InscripcionController::obtenerDatosEvento');
 $routes->post('guardar_inscripcion', 'Client\InscripcionController::guardarInscripcion');
