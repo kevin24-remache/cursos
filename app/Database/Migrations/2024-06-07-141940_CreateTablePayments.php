@@ -59,6 +59,36 @@ class CreateTablePayments extends Migration
                 'constraint' => 50,
                 'null' => true,
             ],
+            'precio_unitario' => [
+                'type' => 'DOUBLE',
+                'constraint' => '10,2',
+                'null' => true,
+            ],
+            'valor_total' => [
+                'type' => 'DOUBLE',
+                'constraint' => '10,2',
+                'null' => true,
+            ],
+            'sub_total' => [
+                'type' => 'DOUBLE',
+                'constraint' => '10,2',
+                'null' => true,
+            ],
+            'sub_total_0' => [
+                'type' => 'DOUBLE',
+                'constraint' => '10,2',
+                'null' => true,
+            ],
+            'sub_total_15' => [
+                'type' => 'DOUBLE',
+                'constraint' => '10,2',
+                'null' => true,
+            ],
+            'iva' => [
+                'type' => 'DOUBLE',
+                'constraint' => '10,2',
+                'null' => true,
+            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => false,

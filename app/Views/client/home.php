@@ -12,45 +12,69 @@
     <link rel="stylesheet" href="<?= base_url("assets/css/home.css") ?>">
 </head>
 
-<body class="d-flex flex-column h-100">
+<body class="d-flex flex-column min-vh-100">
     <!-- Preloader HTML -->
     <div id="preloader" style="display: none;">
         <div class="spinner"></div>
     </div>
-<style>
-    #preloader {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 9999;
-  background: rgba(255, 255, 255, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+    <style>
+        #preloader {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-.spinner {
-  border: 16px solid #f3f3f3;
-  border-top: 16px solid #3498db;
-  border-radius: 50%;
-  width: 120px;
-  height: 120px;
-  animation: spin 2s linear infinite;
-}
+        .spinner {
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #3498db;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
 
-</style>
-    <main class="flex-shrink-0" style="background-color: #d9d9d9;">
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .no-events {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+            text-align: center;
+            font-size: 1.5rem;
+            color: #555;
+            background-color: #f8f9fa;
+        }
+
+        .no-events h2 {
+            color: #0C244B;
+        }
+
+        .no-events p {
+            color: #888;
+        }
+    </style>
+    <main class="flex-grow-1" style="background-color: #d9d9d9;">
         <nav class="navbar navbar-dark" style="background-color: #0C244B;">
             <div class="container-fluid">
                 <a class="navbar-brand" style="margin-left: 20px;" href="/login">
-                    <H3>PROSERVI-UEB-EP</H3>
+                    <h3>PROSERVI-UEB-EP</h3>
                 </a>
             </div>
         </nav>
@@ -58,59 +82,63 @@
             <div class="text-center">
                 <img src="<?= base_url("assets/images/logo-ep.png"); ?>" alt="" height="100px">
             </div>
-            <section class="container">
-                <div class="row">
-                    <?php foreach ($events as $key => $event): ?>
-                        <div class="col col-xl-3 col-lg-3 col-md-4 col-sm-6 p-3">
-                            <div class="bg-white shadow">
-                                <figure class="p-1">
-                                    <img src="<?= base_url("") . $event->image; ?>" alt="Imagen del Curso"
-                                        class="img-fluid imagen-pequena rounded-2 ">
-                                </figure>
-                                <figure class="text-center">
-                                    <img src="<?= base_url("assets/images/logo_ueb.png") ?>" alt="Logo del curso"
-                                        class="img-fluid" width="120px;">
-                                </figure>
-
-                                <section class="px-3">
-                                    <article class="date__start__content">
-                                        <?= $event->formatted_event_date ?>
-                                    </article>
-
-                                    <section class="card__icons__container">
-                                        <?php if ($event->formatted_modality !== 'Presencial'): ?>
-                                            <article>
-                                                <p><i class="fa fa-clock-o"></i> DURACIÓN</p>
-                                                <span>225 Horas</span>
-                                            </article>
-                                        <?php endif; ?>
-
-                                        <article>
-                                            <p><i class="fa fa-users"></i> MODALIDAD</p>
-                                            <span><?= $event->formatted_modality ?></span>
-                                        </article>
-                                    </section>
-
-                                    <section class="pt-3 pb-4">
-                                        <button class="btn border border-danger mb-2 card__button text-danger"
-                                            data-bs-toggle="modal" data-bs-target="#modalInfo" type="button"
-                                            style="width:100%;">
-                                            Más Información
-                                        </button>
-                                        <button class="btn btn-danger" data-bs-toggle="modal"
-                                            data-bs-target="#modalInscripcion" data-evento="<?= $event->event_name ?>"
-                                            data-event-id="<?= $event->id ?>" type="button" style="width:100%;">
-                                            Inscribirse
-                                        </button>
-                                    </section>
-                                </section>
+            <section class="container flex-grow-1 d-flex">
+                <div class="row flex-grow-1">
+                    <?php if (empty($events)): ?>
+                        <div class="no-events">
+                            <div>
+                                <h2>No hay eventos registrados</h2>
+                                <p>Actualmente no hay eventos disponibles. Por favor, vuelve más tarde.</p>
                             </div>
                         </div>
-                    <?php endforeach ?>
+                    <?php else: ?>
+                        <?php foreach ($events as $key => $event): ?>
+                            <div class="col col-xl-3 col-lg-3 col-md-4 col-sm-6 p-3">
+                                <div class="bg-white shadow">
+                                    <figure class="p-1">
+                                        <img src="<?= base_url("") . $event->image; ?>" alt="Imagen del Curso"
+                                            class="img-fluid imagen-pequena rounded-2 ">
+                                    </figure>
+                                    <figure class="text-center">
+                                        <img src="<?= base_url("assets/images/logo_ueb.png") ?>" alt="Logo del curso"
+                                            class="img-fluid" width="120px;">
+                                    </figure>
+                                    <section class="px-3">
+                                        <article class="date__start__content">
+                                            <?= $event->formatted_event_date ?>
+                                        </article>
+                                        <section class="card__icons__container">
+                                            <?php if ($event->formatted_modality !== 'Presencial'): ?>
+                                                <article>
+                                                    <p><i class="fa fa-clock-o"></i> DURACIÓN</p>
+                                                    <span>225 Horas</span>
+                                                </article>
+                                            <?php endif; ?>
+                                            <article>
+                                                <p><i class="fa fa-users"></i> MODALIDAD</p>
+                                                <span><?= $event->formatted_modality ?></span>
+                                            </article>
+                                        </section>
+                                        <section class="pt-3 pb-4">
+                                            <button class="btn border border-danger mb-2 card__button text-danger"
+                                                data-bs-toggle="modal" data-bs-target="#modalInfo" type="button"
+                                                style="width:100%;">
+                                                Más Información
+                                            </button>
+                                            <button class="btn btn-danger" data-bs-toggle="modal"
+                                                data-bs-target="#modalInscripcion" data-evento="<?= $event->event_name ?>"
+                                                data-event-id="<?= $event->id ?>" type="button" style="width:100%;">
+                                                Inscribirse
+                                            </button>
+                                        </section>
+                                    </section>
+                                </div>
+                            </div>
+                        <?php endforeach ?>
+                    <?php endif; ?>
                 </div>
             </section>
         </div>
-
     </main>
     <!-- Modal de inscripción -->
     <div class="modal fade" id="modalInscripcion" tabindex="-1" aria-labelledby="modalInscripcionLabel"
@@ -132,7 +160,6 @@
                             <label for="numeroCedula" class="form-label">Número de Cédula</label>
                             <input type="text" class="form-control" id="numeroCedula" name="numeroCedula" required>
                         </div>
-
                         <div class="float-end">
                             <button type="submit" class="btn btn-success me-1">Inscribirse</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -181,12 +208,8 @@
                         </div>
                         <div class="float-start">
                             <!-- <div class="btn-group" role="group" aria-label="Basic example">
-                                <button type="button" class="btn btn-outline-success" disabled>
-                                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                                </button>
-                                <button type="button" class="btn btn-success" onclick="cerrarYMostrarModal()">
-                                    Regresar
-                                </button>
+                                <button type="button" class="btn btn-success" onclick="registrarUsuario()">Registrar</button>
+                                <button type="button" class="btn btn-success" onclick="cerrarYMostrarModal()">Regresar</button>
                             </div> -->
                         </div>
                         <div class="float-end">
@@ -205,9 +228,9 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalDetallesEventoLabel" style="color: #0C244B;"><span
-                            id="titleEvent"></span></h5>
-
+                    <h5 class="modal-title" id="modalDetallesEventoLabel" style="color: #0C244B;">
+                        <span id="titleEvent"></span>
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -220,7 +243,6 @@
                             <label class="form-label">Seleccione la categoría</label>
                             <div id="categoria"></div>
                         </div>
-
                         <div class="alert alert-success" role="alert">
                             Una vez seleccionada la categoría del evento finaliza con la inscripción y se te enviara un
                             código a tu correo electrónico que deberás usarlo para realizar el pago
@@ -229,7 +251,6 @@
                             <input type="hidden" id="id_user">
                             <p>Usuario <span id="nombresPersona"></span> <span id="apellidosPersona"></span></p>
                         </div>
-
                         <div class="float-end">
                             <button type="submit" class="btn btn-success me-1">Finalizar</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -264,9 +285,9 @@
         <div class="container px-5">
             <div class="row align-items-center justify-content-between flex-column flex-sm-row">
                 <div class="col-auto">
-                    <div class="small m-0 text-white">Copyright 2022 &copy; PROSERVI-UEB-EP | <a
-                            href="https://www.softecsa.com" class="text-decoration-none link-light">Softec Apps
-                            S.A.S</a></div>
+                    <div class="small m-0 text-white">Copyright 2022 &copy; PROSERVI-UEB-EP |
+                        <a href="https://www.softecsa.com" class="text-decoration-none link-light">Softec Apps S.A.S</a>
+                    </div>
                 </div>
             </div>
         </div>

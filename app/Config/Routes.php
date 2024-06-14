@@ -43,7 +43,7 @@ $routes->group('punto/pago', static function ($routes) {
     $routes->get('inscripciones/', 'Payments\InscripcionesController::buscar');
     $routes->get('inscripciones/(:num)', 'Payments\InscripcionesController::index/$1');
     $routes->get('inscripciones/(:num)/(:alpha)', 'Payments\InscripcionesController::index/$1/$2');
-    $routes->get('pdf/(:num)', 'Payments\InscripcionesController::demoPDF/$1');
+    $routes->get('pdf/(:hash)', 'Payments\InscripcionesController::demoPDF/$1');
     $routes->post('pago/', 'Payments\InscripcionesController::pago');
     $routes->post('buscar', 'Payments\InscripcionesController::buscarPorCedula');
 });
