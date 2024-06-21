@@ -50,8 +50,6 @@ class InscripcionController extends BaseController
         return $fechaLimitePago;
     }
 
-
-
     private function prepararDatosInscripcion($persona, $event, $catId)
     {
         return [
@@ -90,6 +88,7 @@ class InscripcionController extends BaseController
         ];
 
         helper('format_names');
+        helper('email');
         // Preparar la respuesta JSON
         if ($persona) {
             $persona_formateada = formatear_nombre_apellido($persona['nombres'], $persona['apellidos']);
@@ -98,7 +97,8 @@ class InscripcionController extends BaseController
                 'persona' => [
                     'id' => $persona['cedula'],
                     'nombres' => $persona_formateada['nombres'],
-                    'apellidos' => $persona_formateada['apellidos']
+                    'apellidos' => $persona_formateada['apellidos'],
+                    'email'=>mask_email($persona['email']),
                 ]
             ];
             // Guardar los datos del usuario en la sesión
@@ -177,12 +177,15 @@ class InscripcionController extends BaseController
 
         // Intentar enviar el correo electrónico
         $emailEnviado = $this->send_email($persona, $codigoPago, $fechaLimitePago, $event);
-        if ($emailEnviado) {
+        if ($emailEnviado === 'success') {
+            helper('email');
             $db->transComplete();
             session()->remove('persona');
+            $email = mask_email($persona['email']);
             return $this->response->setJSON([
                 'success' => true,
                 'codigoPago' => $codigoPago,
+                'email' => $email,
                 'payment_time_limit' => $fechaLimitePago->format('Y-m-d H:i:s')
             ]);
         } else {
@@ -205,6 +208,8 @@ class InscripcionController extends BaseController
 
     public function send_email($persona, $codigoPago, $fechaLimitePago, $event)
     {
+        helper('email');
+
         // Fecha de emisión del PDF
         $fechaEmision = Time::now()->toDateTimeString();
         $fechaLimitePagoFormateada = $fechaLimitePago->toDateString();
@@ -215,9 +220,8 @@ class InscripcionController extends BaseController
         $categoria = $event['category_name'];
         $precio = $event['cantidad_dinero'];
 
-
         // Cargar la vista y pasar los datos
-        $html = view('client/codigo', [
+        $htmlContent = view('client/codigo', [
             'user' => $user,
             'codigoPago' => $codigoPago,
             'fechaLimitePago' => $fechaLimitePagoFormateada,
@@ -227,40 +231,11 @@ class InscripcionController extends BaseController
             'precio' => $precio
         ]);
 
-        // Generar el PDF con dompdf
-        $dompdf = new Dompdf();
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'portrait');
-        $dompdf->render();
-        $pdfOutput = $dompdf->output();
-        $pdfFilename = 'comprobante_pago.pdf';
+        // Mensaje del email
+        $emailMessage = 'Tu código de pago está en el PDF adjunto.';
 
-        // Guardar temporalmente el PDF en el servidor
-        $tempPdfPath = WRITEPATH . 'uploads/' . $pdfFilename;
-        file_put_contents($tempPdfPath, $pdfOutput);
-
-        // Configurar y enviar el correo electrónico
-        $email = \Config\Services::email();
-        $email->setFrom('inscripciones@test.com', 'TEST');
-        $email->setTo($emailAddress);
-        $email->setSubject('Código de pago');
-        $email->setMessage('Tu código de pago está en el PDF adjunto.');
-        $email->attach($tempPdfPath);
-
-        // Intentar enviar el correo
-        if ($email->send()) {
-            // Eliminar el archivo temporal después de enviar el correo
-            unlink($tempPdfPath);
-            return true;
-        } else {
-            // Obtener cualquier error del correo
-            $error = $email->printDebugger(['headers']);
-            log_message('error', 'Error enviando correo: ' . $error);
-
-            // Eliminar el archivo temporal en caso de error
-            unlink($tempPdfPath);
-            return false;
-        }
+        // Usar la función del helper para enviar el email
+        return send_email_with_pdf($emailAddress, 'Código de pago', $emailMessage, $htmlContent, 'comprobante_registro.pdf');
     }
 
 }

@@ -60,6 +60,7 @@
             font-size: 1.5rem;
             color: #555;
             background-color: #f8f9fa;
+            border-radius: 10px;
         }
 
         .no-events h2 {
@@ -73,9 +74,14 @@
     <main class="flex-grow-1" style="background-color: #d9d9d9;">
         <nav class="navbar navbar-dark" style="background-color: #0C244B;">
             <div class="container-fluid">
-                <a class="navbar-brand" style="margin-left: 20px;" href="/login">
+                <a class="navbar-brand col" style="margin-left: 20px;" href="/login">
                     <h3>PROSERVI-UEB-EP</h3>
                 </a>
+
+                <button class="btn btn-outline-light col" data-bs-toggle="modal" data-bs-target="#modalDeposito"
+                    type="button" style="width:100%;">
+                    Realizar Depósito
+                </button>
             </div>
         </nav>
         <div class="mb-4">
@@ -85,7 +91,7 @@
             <section class="container flex-grow-1 d-flex">
                 <div class="row flex-grow-1">
                     <?php if (empty($events)): ?>
-                        <div class="no-events">
+                        <div class="no-events pt-3">
                             <div>
                                 <h2>No hay eventos registrados</h2>
                                 <p>Actualmente no hay eventos disponibles. Por favor, vuelve más tarde.</p>
@@ -93,7 +99,7 @@
                         </div>
                     <?php else: ?>
                         <?php foreach ($events as $key => $event): ?>
-                            <div class="col col-xl-3 col-lg-3 col-md-4 col-sm-6 p-3">
+                            <div class="col-12 col-sm-12 col-md-4 col-lg-3 col-xl-3 p-3">
                                 <div class="bg-white shadow">
                                     <figure class="p-1">
                                         <img src="<?= base_url("") . $event->image; ?>" alt="Imagen del Curso"
@@ -136,6 +142,14 @@
                             </div>
                         <?php endforeach ?>
                     <?php endif; ?>
+                    <style>
+                        @media (min-width: 550px) and (max-width: 767.98px) {
+                            .col-12.col-sm-12 {
+                                flex: 0 0 50%;
+                                max-width: 50%;
+                            }
+                        }
+                    </style>
                 </div>
             </section>
         </div>
@@ -244,12 +258,14 @@
                             <div id="categoria"></div>
                         </div>
                         <div class="alert alert-success" role="alert">
-                            Una vez seleccionada la categoría del evento finaliza con la inscripción y se te enviara un
-                            código a tu correo electrónico que deberás usarlo para realizar el pago
+                            <p>Estudiante: <span id="nombresPersona" class="text-primary"></span> <span
+                                    id="apellidosPersona" class="text-primary"></span></p>
+                            Cuando finalices se te enviara un
+                            código a tu correo electrónico: <span id="emailPersona" class="text-primary"></span> que
+                            deberás usarlo para realizar el pago
                         </div>
                         <div class="mb-3 row">
                             <input type="hidden" id="id_user">
-                            <p>Usuario <span id="nombresPersona"></span> <span id="apellidosPersona"></span></p>
                         </div>
                         <div class="float-end">
                             <button type="submit" class="btn btn-success me-1">Finalizar</button>
@@ -271,6 +287,79 @@
                 </div>
                 <div class="modal-body">
                     <p>Descripción corta del congreso aquí.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal de depósito -->
+    <div class="modal fade" id="modalDeposito" tabindex="-1" aria-labelledby="modalDepositoLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalDepositoLabel">Realizar Depósito</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formDeposito" method="post" action="<?= base_url("deposito") ?>"
+                        enctype="multipart/form-data">
+
+                        <div class="row">
+                            <div class="mb-3 col-md-6 col-lg-6 col-xl-6">
+                                <label for="codigoPago" class="form-label">Código de pago <span
+                                        class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="codigoPago" name="codigoPago" value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'codigoPago') : '' ?>" required>
+                                <span class="text-danger">
+                                <?= (isset($validation) && ($last_action ?? null) == 'insert') ? display_data($validation, 'codigoPago') : '' ?>
+                            </span>
+                            </div>
+                            <div class="mb-3 col-md-6 col-lg-6 col-xl-6">
+                                <label for="depositoCedula" class="form-label">Número de cédula <span
+                                        class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="depositoCedula" name="depositoCedula" value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'depositoCedula') : '' ?>" required>
+                                    <span class="text-danger">
+                                <?= (isset($validation) && ($last_action ?? null) == 'insert') ? display_data($validation, 'depositoCedula') : '' ?>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="mb-3 col-md-6 col-lg-6 col-xl-6">
+                                <label for="comprobante" class="form-label">Número de comprobante <span
+                                        class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="comprobante" name="comprobante" value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'comprobante') : '' ?>" required>
+                                <span class="text-danger">
+                                <?= (isset($validation) && ($last_action ?? null) == 'insert') ? display_data($validation, 'comprobante') : '' ?>
+                                </span>
+                            </div>
+                            <div class="mb-3 col-md-6 col-lg-6 col-xl-6">
+                                <label for="dateDeposito" class="form-label">Fecha del deposito <span
+                                        class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="dateDeposito" name="dateDeposito" value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'dateDeposito') : '' ?>" required>
+                                <span class="text-danger">
+                                <?= (isset($validation) && ($last_action ?? null) == 'insert') ? display_data($validation, 'dateDeposito') : '' ?>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="montoDeposito" class="form-label">Monto del Depósito</label>
+                            <input type="text" class="form-control" id="montoDeposito" name="montoDeposito" value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'montoDeposito') : '' ?>" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="comprobantePago" class="form-label">Subir Comprobante de Pago <span
+                                    class="text-danger">*</span></label>
+                            <input type="file" class="form-control" id="comprobantePago" name="comprobantePago"
+                                accept="image/*,application/pdf" required>
+
+                                <span class="text-danger">
+                                <?= (isset($validation) && ($last_action ?? null) == 'insert') ? display_data($validation, 'comprobantePago') : '' ?>
+                                </span>
+                        </div>
+                        <div class="float-end">
+                            <button type="submit" class="btn btn-success me-1">Realizar Depósito</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -335,6 +424,48 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        if ('insert' == "<?= $last_action ?? '' ?>") {
+            var myModal = new bootstrap.Modal(document.getElementById('modalDeposito'))
+            myModal.show()
+        }
+    </script>
+    <script>
+        // Función para mostrar la alerta SweetAlert2
+        function showAlert(type, message) {
+            if (type === 'success') {
+                Swal.fire({
+                    title: "<strong>¡Éxito!</strong>",
+                    icon: "success",
+                    html: `<div>${message}</div>`,
+                    showCloseButton: true,
+                    showCancelButton: false,
+                    focusConfirm: false,
+                    confirmButtonText: `<i class="fa fa-thumbs-up"></i> ¡Genial!`,
+                    confirmButtonAriaLabel: "Thumbs up, great!",
+                });
+            } else {
+                Swal.fire({
+                    icon: type,
+                    title: message,
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                });
+            }
+        }
+
+        // Verificar si hay mensajes de éxito, advertencia o error
+        <?php if (session()->has('flashMessages')): ?>
+            <?php foreach (session('flashMessages') as $message): ?>
+                <?php $type = $message[1]; ?>
+                <?php $msg = $message[0]; ?>
+                showAlert('<?= $type ?>', '<?= $msg ?>');
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </script>
     <script src="<?= base_url("assets/js/home/home.js") ?>"></script>
 
     <!-- template -->

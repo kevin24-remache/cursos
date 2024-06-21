@@ -52,7 +52,8 @@ class RegistrationsModel extends Model
                 registrations.address AS direccion,
                 registrations.phone AS telefono,
                 registrations.email AS email,
-                payments.payment_status
+                payments.payment_status,
+                payments.num_autorizacion,
             ')
             ->join('registrations', 'payments.id_register = registrations.id')
             ->join('events', 'registrations.event_cod = events.id', 'left')
@@ -83,7 +84,8 @@ class RegistrationsModel extends Model
                 registrations.address AS direccion,
                 registrations.phone AS telefono,
                 registrations.email AS email,
-                payments.payment_status
+                payments.payment_status,
+                payments.num_autorizacion,
             ')
             ->join('registrations', 'payments.id_register = registrations.id')
             ->join('events', 'registrations.event_cod = events.id', 'left')
@@ -115,7 +117,8 @@ class RegistrationsModel extends Model
             registrations.address AS direccion,
             registrations.phone AS telefono,
             registrations.email AS email,
-            payments.payment_status
+            payments.payment_status,
+            payments.num_autorizacion,
         ')
             ->join('registrations', 'payments.id_register = registrations.id')
             ->join('events', 'registrations.event_cod = events.id', 'left')
@@ -134,4 +137,22 @@ class RegistrationsModel extends Model
         return $query;
     }
 
+    public function getAmountByPaymentCode($depositoCedula, $codigoPago)
+    {
+        // Consulta JOIN para obtener el registro, el pago correspondiente y el precio de la categoría
+        $query = $this->select('
+        categories.cantidad_dinero
+        ')
+            ->join('payments', 'payments.id_register = registrations.id', 'left')
+            ->join('categories', 'categories.id = registrations.cat_id', 'left')
+            ->where('registrations.ic', $depositoCedula)
+            ->where('payments.payment_cod', $codigoPago)
+            ->first();
+
+        if ($query) {
+            return $query;
+        } else {
+            return null;
+        }
+    }
 }

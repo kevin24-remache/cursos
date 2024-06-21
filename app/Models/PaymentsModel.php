@@ -50,26 +50,61 @@ class PaymentsModel extends Model
             registrations.full_name_user AS user,
             registrations.ic AS user_ic,
             payments.date_time_payment AS fecha_emision,
-            categories.cantidad_dinero AS precio_unitario,
-            categories.cantidad_dinero AS val_total,
-            payments.amount_pay AS sub_total,
-            payments.amount_pay AS sub_total_0,
-            0 AS sub_total_15,
-            0 AS iva,
-            payments.amount_pay AS total,
+            payments.precio_unitario AS precio_unitario,
+            categories.cantidad_dinero AS cantidad_dinero,
+            payments.sub_total AS sub_total,
+            payments.sub_total_0 AS sub_total_0,
+            payments.sub_total_15 AS sub_total_15,
+            payments.iva AS iva,
+            payments.total AS total,
             registrations.email AS email_user,
             registrations.phone AS user_tel,
-            users.first_name AS operador,
-            payments.amount_pay AS valor_total
+            payments.valor_total AS valor_total,
+            payments.send_email,
+            payments.id,
+            payments.amount_pay,
+            users.first_name AS operador
         ')
             ->join('registrations', 'payments.id_register = registrations.id', 'left')
             ->join('events', 'registrations.event_cod = events.id', 'left')
             ->join('categories', 'registrations.cat_id = categories.id', 'left')
-            ->join('users', 'payments.created_by = users.id', 'left')
+            ->join('inscripcion_pagos', 'inscripcion_pagos.pago_id = payments.id', 'left')
+            ->join('users', 'users.id = inscripcion_pagos.usuario_id', 'left')
             ->where('payments.num_autorizacion', $num_autorizacion)
+            ->where('payments.payment_status', 2)
             ->get()
             ->getRowArray();
 
         return $query;
+    }
+
+    public function updatePaymentAndInsertInscripcionPago($id_pago, $datosPago, $id_usuario)
+    {
+        $this->db->transStart();
+
+        // Intentar actualizar el registro en la tabla payments
+        $update = $this->update($id_pago, $datosPago);
+
+        // Si la actualización fue exitosa, insertar el registro en la tabla inscripcion_pagos
+        if ($update) {
+            $inscripcionPagosData = [
+                'pago_id' => $id_pago,
+                'fecha_hora' => date('Y-m-d H:i:s'), // Fecha y hora actual
+                'usuario_id' => $id_usuario // Nombre del usuario que hizo el cobro
+            ];
+
+            // Insertar el nuevo registro en la tabla inscripcion_pagos
+            $this->db->table('inscripcion_pagos')->insert($inscripcionPagosData);
+        }
+
+        $this->db->transComplete();
+
+        // Verificar si la transacción fue exitosa
+        if ($this->db->transStatus() === FALSE) {
+            // Si algo salió mal, lanzar una excepción o manejar el error
+            throw new \Exception('Error en la actualización del pago o inserción en inscripcion_pagos.');
+        }
+
+        return $update;
     }
 }

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<title>Voucher</title>
 <html>
 
 <head>
@@ -63,23 +64,28 @@
 <body>
     <header>
         <div class="title">SOFTEC MICROSYSTEMS</div>
+        <div class="title">COMPROBANTE DE RECAUDACIÓN</div>
         <div>7 de Mayo y Olmedo</div>
         <div>RUC: 0201975844001</div>
-        <div>Factura Nro: 002-201-000000977</div>
-        <div>Fecha autorización: 2024-06-04T17:22:09-05:00</div>
+        <!-- <div>Factura Nro: 002-201-000000977</div> -->
+        <div>Fecha autorización: <?=$fecha_emision?></div>
         <div>Ambiente: PRODUCCIÓN</div>
 
         <hr>
         <div>NÚMERO DE AUTORIZACIÓN:</div>
-        <div class="break-word"><?=$num_autorizacion?></div>
+        <div class="break-word">0201975844001<?=$num_autorizacion?>140601</div>
     </header>
     <main>
         <hr>
         <div class="container">
             <div class="section">
-                <div><strong>Cliente:</strong> <?=$user?></div>
-                <div><strong>C.I/RUC:</strong> <?=$user_ic?></div>
-                <div><strong>Fecha Emisión:</strong> <?=$fecha_emision?></div>
+                <div><strong>Cliente: </strong> <?=$user?></div>
+                <div><strong>C.I/RUC: </strong> <?=$user_ic?></div>
+                <?php
+                $timestamp = strtotime($fecha_emision);
+                $fecha_formateada = date('d/m/Y', $timestamp);
+                ?>
+                <div><strong>Fecha Emisión: </strong> <?=$fecha_formateada?></div>
             </div>
             <div class="section">
                 <table class="table">
@@ -94,19 +100,19 @@
                     <tbody>
                         <tr>
                             <td>1</td>
-                            <td>Uso de plataforma</td>
+                            <td>Uso de plataforma para el registro en el evento: </td>
                             <td><?=$precio_unitario?></td>
-                            <td><?=$val_total?></td>
+                            <td><?=$valor_total?></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div class="section text-right">
-                <div><strong>Sub Total:</strong><?=$sub_total?></div>
-                <div><strong>Sub Total 0:</strong><?=$sub_total_0?></div>
-                <div><strong>Sub Total 15%:</strong><?=$sub_total_15?></div>
-                <div><strong>IVA 15%:</strong><?=$iva?></div>
-                <div><strong>TOTAL:</strong><?=$total?></div>
+                <div><strong>Sub Total: $ </strong><?=$sub_total?></div>
+                <div><strong>Sub Total 0: $ </strong><?=$sub_total_0?></div>
+                <div><strong>Sub Total 15%: $ </strong><?=$sub_total_15?></div>
+                <div><strong>IVA 15%: $ </strong><?=$iva?></div>
+                <div><strong>TOTAL: $ </strong><?=$valor_final?></div>
             </div>
             <div class="section">
                 <div><strong>FORMA DE PAGO:</strong> SIN UTILIZACIÓN DEL SISTEMA FINANCIERO</div>
@@ -118,7 +124,7 @@
             </div>
             <div class="title">
                 <strong>VALOR TOTAL PAGADO:</strong>
-                <h1> <?=$valor_total?></h1>
+                <h1> $ <?=$valor_final?></h1>
             </div>
             <div class="section">
                 <div>En breve será emitida su factura electrónica, en caso de no estar en la bandeja principal, revisar

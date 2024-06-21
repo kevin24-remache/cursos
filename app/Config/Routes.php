@@ -40,19 +40,20 @@ $routes->group('admin', static function ($routes) {
 $routes->group('punto/pago', static function ($routes) {
 
     $routes->get('/', 'Payments\DashboardController::index');
-    $routes->get('inscripciones/', 'Payments\InscripcionesController::buscar');
+    $routes->get('inscripciones/', 'Payments\FiltrosController::index');
     $routes->get('inscripciones/(:num)', 'Payments\InscripcionesController::index/$1');
     $routes->get('inscripciones/(:num)/(:alpha)', 'Payments\InscripcionesController::index/$1/$2');
     $routes->get('pdf/(:hash)', 'Payments\InscripcionesController::demoPDF/$1');
     $routes->post('pago/', 'Payments\InscripcionesController::pago');
-    $routes->post('buscar', 'Payments\InscripcionesController::buscarPorCedula');
+    $routes->post('buscar', 'Payments\FiltrosController::buscarPorCedula');
 });
 
 $routes->post('validar_cedula', 'Client\InscripcionController::validarCedula');
 $routes->post('obtener_datos_evento', 'Client\InscripcionController::obtenerDatosEvento');
 $routes->post('guardar_inscripcion', 'Client\InscripcionController::guardarInscripcion');
 $routes->post('registrar_usuario', 'Client\InscripcionController::registrarUsuario');
-// $routes->get('send_email', 'Client\InscripcionController::send_email');
+$routes->post('deposito', 'Client\DepositosController::deposito');
+$routes->post('monto_pago', 'Client\DepositosController::fetchMontoDeposito');
 
 $routes->get('/', 'Client\ClientController::index');
 $routes->get('login', 'Auth\LoginController::index');

@@ -69,6 +69,11 @@ class CreateTablePayments extends Migration
                 'constraint' => '10,2',
                 'null' => true,
             ],
+            'total' => [
+                'type' => 'DOUBLE',
+                'constraint' => '10,2',
+                'null' => true,
+            ],
             'sub_total' => [
                 'type' => 'DOUBLE',
                 'constraint' => '10,2',
@@ -87,6 +92,11 @@ class CreateTablePayments extends Migration
             'iva' => [
                 'type' => 'DOUBLE',
                 'constraint' => '10,2',
+                'null' => true,
+            ],
+            'send_email' => [
+                'type' => 'TINYINT',
+                'constraint' => 1,
                 'null' => true,
             ],
             'created_at' => [

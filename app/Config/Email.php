@@ -28,22 +28,22 @@ class Email extends BaseConfig
     /**
      * SMTP Server Hostname
      */
-    public string $SMTPHost = 'sandbox.smtp.mailtrap.io';
+    public string $SMTPHost = 'mail.mundomascotasec.com';
 
     /**
      * SMTP Username
      */
-    public string $SMTPUser = '7aa1b7dc284834';
+    public string $SMTPUser = 'info@mundomascotasec.com';
 
     /**
      * SMTP Password
      */
-    public string $SMTPPass = '35382d016b6154';
+    public string $SMTPPass = 'Mundomascotas1@';
 
     /**
      * SMTP Port
      */
-    public int $SMTPPort = 2525;
+    public int $SMTPPort = 465;
 
     /**
      * SMTP Timeout (in seconds)
@@ -62,7 +62,7 @@ class Email extends BaseConfig
      *             to the server. 'ssl' means implicit SSL. Connection on port
      *             465 should set this to ''.
      */
-    public string $SMTPCrypto = 'tls';
+    public string $SMTPCrypto = 'ssl';
 
     /**
      * Enable word-wrap

@@ -28,9 +28,8 @@ Pagos
                 <table id="example2" class="table table-bordered table-hover" data-name="cool-table">
                     <thead>
                         <tr>
-                            <th class="dtr-control"></th>
                             <th>Código de pago</th>
-                            <th>Cédula</th>
+                            <th class="exclude-view">Cédula</th>
                             <th>Nombres</th>
                             <th>Evento</th>
                             <th>Categoría</th>
@@ -45,13 +44,14 @@ Pagos
                     <tbody>
 
                         <?php foreach ($registrations as $key => $registration):
-                            helper('payment _status');
+                            $numAutorizacion = $registration['num_autorizacion'];
+                            helper('payment_status');
                             ?>
-                            <tr data-id-pago="<?=$registration["id_pago"]?>" data-codigo-pago="<?= $registration["codigo_pago"] ?>"
+                            <tr data-id-pago="<?= $registration["id_pago"] ?>" data-ic="<?= $registration["cedula"] ?>" data-estado-pago="<?= $registration["estado_pago"] ?>"
+                                data-codigo-pago="<?= $registration["codigo_pago"] ?>"
                                 data-nombres="<?= $registration["nombres"] ?>" data-evento="<?= $registration["evento"] ?>"
                                 data-categoria="<?= $registration["categoria"] ?>"
                                 data-precio="<?= $registration["precio"] ?>">
-                                <td></td>
                                 <td><?= $registration["codigo_pago"] ?></td>
                                 <td><?= $registration["cedula"] ?></td>
                                 <td><?= $registration["nombres"] ?></td>
@@ -65,10 +65,17 @@ Pagos
                                 </td>
                                 <td><?= $registration["precio"] ?></td>
                                 <td>
-                                    <button class="btn btn-outline-success btn-pagar" data-toggle="modal" href="#mi_modal"
-                                        title="Proceder con el pago">
-                                        <i class="fa fa-credit-card-alt" aria-hidden="true"></i> Cobrar
-                                    </button>
+                                    <?php if ($registration['estado_pago'] == 'Pendiente'): ?>
+                                        <button class="btn btn-outline-success btn-pagar" data-toggle="modal" href="#mi_modal"
+                                            title="Proceder con el pago">
+                                            <i class="fa fa-credit-card-alt" aria-hidden="true"></i> Cobrar
+                                        </button>
+                                    <?php elseif ($registration['estado_pago'] == 'Completado'): ?>
+                                        <a class="btn btn-outline-danger"
+                                            href="<?= base_url("punto/pago/pdf/$numAutorizacion") ?>" title="PDF">
+                                            <i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF
+                                        </a>
+                                    <?php endif ?>
                                 </td>
                             </tr>
                         <?php endforeach ?>
@@ -89,7 +96,7 @@ Pagos
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="<?=base_url("punto/pago/pago")?>" id="formPago" method="post">
+                    <form action="<?= base_url("punto/pago/pago") ?>" id="formPago" method="post">
                         <div class="row mb-3">
                             <div class="col">
                                 <label>Nombre:</label>
@@ -103,6 +110,8 @@ Pagos
                             </div>
                         </div>
                         <input type="hidden" name="id" id="id_pago">
+                        <input type="hidden" name="cedula" id="cedula">
+                        <input type="hidden" name="estado_pago" id="estado_pago">
                         <div class="row mb-3">
                             <div class="col">
                                 <label>Evento:</label>
@@ -116,7 +125,7 @@ Pagos
                             </div>
                             <div class="col">
                                 <label>Precio:</label>
-                                <input type="text" class="form-control" id="precio" readonly>
+                                <input type="text" class="form-control" id="precio" name="precio" readonly>
                             </div>
                         </div>
                     </form>
@@ -148,8 +157,6 @@ Pagos
                 { targets: 'exclude-view', visible: false },
                 {
                     className: 'dtr-control bg-white',
-                    orderable: false,
-                    targets: 0
                 }
             ],
             language: {
@@ -173,7 +180,7 @@ Pagos
                 },
             },
             colReorder: true,
-            responsive: true,
+            responsive: false,
             dom: "Bfrtip",
             buttons: [
                 {
@@ -182,42 +189,51 @@ Pagos
                 },
 
                 {
-                    extend: 'collection',
-                    text: '<i class="fa fa-download"></i> Exportar',
-                    buttons: [
-                        {
-                            extend: 'copyHtml5',
-                            text: '<i class="fa fa-files-o text-info"></i> Copiar',
-                            titleAttr: 'Copiar'
-                        },
-                        {
-                            extend: 'excelHtml5',
-                            text: '<i class="fa fa-file-excel-o text-success"></i> Excel',
-                            titleAttr: 'Excel'
-                        },
-                        {
-                            extend: 'csvHtml5',
-                            text: '<i class="fa fa-file-text-o text-primary"></i> CSV',
-                            titleAttr: 'CSV'
-                        },
-                        {
-                            extend: 'pdfHtml5',
-                            text: '<i class="fa fa-file-pdf-o text-red"></i> PDF',
-                            titleAttr: 'PDF'
-                        },
-                        {
-                            extend: 'colvis',
-                            text: 'Columnas visibles',
-                            columnText: function (dt, idx, title) {
-                                // Verifica si la columna es la primera (índice 0) o tiene una clase específica
-                                if (idx === 0 || dt.column(idx).nodes().to$().hasClass('clase-a-excluir')) {
-                                    return null; // Retorna null para excluir la columna de la lista
-                                }
-                                return (idx) + ': ' + title;
-                            }
-                        }
-                    ]
+                    extend: 'colvis',
+                    text: '<i class="fa fa-columns" aria-hidden="true"></i> Columnas visibles',
+                    columnText: function (dt, idx, title) {
+                        return (idx + 1) + ': ' + title;
+                    },
+
+                    className: "bg-success",
                 },
+                // {
+                //     extend: 'collection',
+                //     text: '<i class="fa fa-download"></i> Exportar',
+                //     buttons: [
+                //         {
+                //             extend: 'copyHtml5',
+                //             text: '<i class="fa fa-files-o text-info"></i> Copiar',
+                //             titleAttr: 'Copiar'
+                //         },
+                //         {
+                //             extend: 'excelHtml5',
+                //             text: '<i class="fa fa-file-excel-o text-success"></i> Excel',
+                //             titleAttr: 'Excel'
+                //         },
+                //         {
+                //             extend: 'csvHtml5',
+                //             text: '<i class="fa fa-file-text-o text-primary"></i> CSV',
+                //             titleAttr: 'CSV'
+                //         },
+                //         {
+                //             extend: 'pdfHtml5',
+                //             text: '<i class="fa fa-file-pdf-o text-red"></i> PDF',
+                //             titleAttr: 'PDF'
+                //         },
+                //         {
+                //             extend: 'colvis',
+                //             text: 'Columnas visibles',
+                //             columnText: function (dt, idx, title) {
+                //                 // Verifica si la columna es la primera (índice 0) o tiene una clase específica
+                //                 if (idx === 0 || dt.column(idx).nodes().to$().hasClass('clase-a-excluir')) {
+                //                     return null; // Retorna null para excluir la columna de la lista
+                //                 }
+                //                 return (idx) + ': ' + title;
+                //             }
+                //         }
+                //     ]
+                // },
 
                 // {
                 //     text: '<i class="fa fa-lg fas fa-plus-circle"></i> Agregar',
@@ -240,6 +256,8 @@ Pagos
         });
         $(".btn-pagar").click(function () {
             var fila = $(this).closest("tr");
+            var ic = fila.data("ic");
+            var estadoPago = fila.data("estado-pago");
             var idPago = fila.data("id-pago");
             var codigoPago = fila.data("codigo-pago");
             var nombres = fila.data("nombres");
@@ -248,6 +266,8 @@ Pagos
             var precio = fila.data("precio");
 
             // Actualizar los campos del modal
+            $("#cedula").val(ic);
+            $("#estado_pago").val(estadoPago);
             $("#id_pago").val(idPago);
             $("#nombre").val(nombres);
             $("#evento").val(evento);

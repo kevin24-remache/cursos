@@ -55,6 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("id_user").value = persona.id;
     document.getElementById("nombresPersona").textContent = persona.nombres;
     document.getElementById("apellidosPersona").textContent = persona.apellidos;
+    document.getElementById("emailPersona").textContent = persona.email;
   }
   document
     .getElementById("formRegistroUsuario")
@@ -89,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
       console.error("Error adding document: ", error);
     }
   }
-  document.getElementById("numeroCedula").value = "0202433918";
+  document.getElementById("numeroCedula").value = "0250072444";
 
   document
     .getElementById("formInscripcion")
@@ -282,7 +283,8 @@ document.addEventListener("DOMContentLoaded", function () {
               html: `
                 <p>Bien, te registraste para el evento.</p>
                 <p>Tu código de pago es: <b>${data.codigoPago}</b></p>
-                <p>Tienes <b>${diasRestantes}</b> días para realizar el pago.</p>
+                <p>Tienes <b>${diasRestantes}</b> días para realizar el pago</p>
+                <p>Comprobante de registro enviado a : <b>${data.email}</b></p>
               `,
               showCloseButton: true,
               confirmButtonText: 'Ok',
@@ -306,4 +308,34 @@ document.addEventListener("DOMContentLoaded", function () {
           );
         });
     });
+  document.getElementById('depositoCedula').addEventListener('change', fetchMontoDeposito);
+  document.getElementById('codigoPago').addEventListener('change', fetchMontoDeposito);
+
+  function fetchMontoDeposito() {
+    const cedula = document.getElementById('depositoCedula').value;
+    const codigoPago = document.getElementById('codigoPago').value;
+
+    if (cedula && codigoPago) {
+      fetch('monto_pago', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ cedula: cedula, codigoPago: codigoPago })
+      })
+        .then(response => response.json())
+        .then(data => {
+          const montoDeposito = document.getElementById('montoDeposito');
+          if (data.monto && data.monto.cantidad_dinero) {
+            montoDeposito.value = "$ "+data.monto.cantidad_dinero;
+          } else {
+            montoDeposito.value = '$ 00.00';
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          document.getElementById('montoDeposito').value = '';
+        });
+    }
+  }
 });

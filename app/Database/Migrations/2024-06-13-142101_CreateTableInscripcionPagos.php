@@ -14,11 +14,6 @@ class CreateTableInscripcionPagos extends Migration
                 'unsigned' => true,
                 'auto_increment' => true,
             ],
-            'inscripcion_id' => [
-                'type' => 'INT',
-                'unsigned' => true,
-                'null' => false,
-            ],
             'pago_id' => [
                 'type' => 'INT',
                 'unsigned' => true,
@@ -41,9 +36,12 @@ class CreateTableInscripcionPagos extends Migration
                 'type' => 'DATETIME',
                 'null' => true,
             ],
+            'deleted_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ]
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('inscripcion_id', 'registrations', 'id', 'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('pago_id', 'payments', 'id', 'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('usuario_id', 'users', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('inscripcion_pagos');

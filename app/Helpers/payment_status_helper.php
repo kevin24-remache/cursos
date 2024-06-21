@@ -1,8 +1,8 @@
 <?php
 if (!function_exists('get_payment_status_class')) {
     function get_payment_status_class($estado_pago) {
-        switch ($estado_pago) {
-            case 'pagado':
+        switch (strtolower($estado_pago)) {
+            case 'completado':
                 return 'label label-success';
             case 'pendiente':
                 return 'label label-warning';
