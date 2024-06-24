@@ -83,18 +83,23 @@ class DepositosController extends BaseController
                 ->first();
 
             if (!$query) {
-                $db->transRollback(); // Revertir la transacción
+                $db->transRollback();
                 return $this->redirectView(null, [['La cédula o el código de pago ingresados no son válidos', 'warning']]);
             }
 
             if ($depositosModel->existsPendingDeposit($codigoPago)) {
-                $db->transRollback(); // Revertir la transacción
+                $db->transRollback();
                 return $this->redirectView(null, [['El código de pago ingresado está siendo evaluado ', 'warning']]);
             }
 
+            // Verificar si el número de comprobante y la fecha del depósito ya existen
+            if ($depositosModel->existsComprobanteAndDate($comprobante, $dateDeposito)) {
+                $db->transRollback();
+                return $this->redirectView(null, [['El número de comprobante ya a sido ingresado', 'warning']]);
+            }
             // Validar si el archivo subido es una imagen
             if (!$comprobantePago->isValid() || !in_array($comprobantePago->getMimeType(), ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'])) {
-                $db->transRollback(); // Revertir la transacción
+                $db->transRollback();
                 return $this->redirectView(null, [['El archivo subido no es una imagen válida', 'warning']]);
             }
 

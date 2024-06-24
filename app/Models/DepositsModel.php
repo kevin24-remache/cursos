@@ -47,5 +47,10 @@ class DepositsModel extends Model
         return $existingDeposito !== null;
     }
 
-
+    public function existsComprobanteAndDate($num_comprobante, $date_deposito)
+    {
+        return $this->where('num_comprobante', $num_comprobante)
+            ->where('date_deposito', $date_deposito)
+            ->first();
+    }
 }

@@ -54,6 +54,11 @@ class CreateTableDeposits extends Migration
                 'constraint' => ['Pendiente', 'Aprobado', 'Rechazado'],
                 'default' => 'Pendiente',
             ],
+            'motivo_rechazo' => [
+                'type' => 'VARCHAR',
+                'constraint' => '250',
+                'null' => true,
+            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => false,
