@@ -25,7 +25,7 @@ if (!function_exists('send_email_with_pdf')) {
 
         // Configurar y enviar el correo electrónico
         $email = \Config\Services::email();
-        $email->setFrom('inscripciones@test.com', 'TEST');
+        // $email->setFrom('apps@istel.edu.ec', 'TEST');
         $email->setTo($to);
         $email->setSubject($subject);
         $email->setMessage($message);
@@ -53,7 +53,7 @@ if (!function_exists('send_email_with_pdf_from_path')) {
     {
         // Configurar y enviar el correo electrónico
         $email = \Config\Services::email();
-        $email->setFrom('inscripciones@test.com', 'TEST');
+        // $email->setFrom('inscripciones@test.com', 'TEST');
         $email->setTo($to);
         $email->setSubject($subject);
         $email->setMessage($message);

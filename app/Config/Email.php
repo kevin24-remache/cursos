@@ -6,6 +6,17 @@ use CodeIgniter\Config\BaseConfig;
 
 class Email extends BaseConfig
 {
+    public function __construct()
+    {
+        $this->SMTPHost = getenv('SMTP_HOST') ?? '';
+        $this->SMTPPort = getenv('SMTP_PORT') ?? '';
+        $this->SMTPUser = getenv('SMTP_USER') ?? '';
+        $this->SMTPPass = getenv('SMTP_PASSWORD') ?? '';
+
+        $this->fromEmail = getenv('SMTP_HOST') ?? '';
+        $this->fromName = getenv('SMTP_NAME') ?? '';
+    }
+
     public string $fromEmail  = '';
     public string $fromName   = '';
     public string $recipients = '';
@@ -28,22 +39,22 @@ class Email extends BaseConfig
     /**
      * SMTP Server Hostname
      */
-    public string $SMTPHost = 'mail.mundomascotasec.com';
+    public string $SMTPHost = '';
 
     /**
      * SMTP Username
      */
-    public string $SMTPUser = 'info@mundomascotasec.com';
+    public string $SMTPUser = '';
 
     /**
      * SMTP Password
      */
-    public string $SMTPPass = 'Mundomascotas1@';
+    public string $SMTPPass = '';
 
     /**
      * SMTP Port
      */
-    public int $SMTPPort = 465;
+    public int $SMTPPort = 25;
 
     /**
      * SMTP Timeout (in seconds)
