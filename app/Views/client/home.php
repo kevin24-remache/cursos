@@ -77,11 +77,6 @@
                 <a class="navbar-brand col" style="margin-left: 20px;" href="/login">
                     <h3>PROSERVI-UEB-EP</h3>
                 </a>
-
-                <button class="btn btn-outline-light col" data-bs-toggle="modal" data-bs-target="#modalDeposito"
-                    type="button" style="width:100%;">
-                    Realizar Depósito
-                </button>
             </div>
         </nav>
         <div class="mb-4">
@@ -131,10 +126,13 @@
                                                 style="width:100%;">
                                                 Más Información
                                             </button>
-                                            <button class="btn btn-danger" data-bs-toggle="modal"
+                                            <button class="btn btn-danger mb-2" data-bs-toggle="modal"
                                                 data-bs-target="#modalInscripcion" data-evento="<?= $event->event_name ?>"
                                                 data-event-id="<?= $event->id ?>" type="button" style="width:100%;">
                                                 Inscribirse
+                                            </button>
+                                            <button class="btn btn-outline-person mb-2" type="button" data-bs-toggle="modal" data-bs-target="#modalDeposito" style="width:100%;">
+                                                Realizar Depósito
                                             </button>
                                         </section>
                                     </section>
@@ -307,17 +305,21 @@
                             <div class="mb-3 col-md-6 col-lg-6 col-xl-6">
                                 <label for="codigoPago" class="form-label">Código de pago <span
                                         class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="codigoPago" name="codigoPago" value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'codigoPago') : '' ?>" required>
+                                <input type="number" class="form-control" id="codigoPago" name="codigoPago"
+                                    value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'codigoPago') : '' ?>"
+                                    required>
                                 <span class="text-danger">
-                                <?= (isset($validation) && ($last_action ?? null) == 'insert') ? display_data($validation, 'codigoPago') : '' ?>
-                            </span>
+                                    <?= (isset($validation) && ($last_action ?? null) == 'insert') ? display_data($validation, 'codigoPago') : '' ?>
+                                </span>
                             </div>
                             <div class="mb-3 col-md-6 col-lg-6 col-xl-6">
                                 <label for="depositoCedula" class="form-label">Número de cédula <span
                                         class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="depositoCedula" name="depositoCedula" value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'depositoCedula') : '' ?>" required>
-                                    <span class="text-danger">
-                                <?= (isset($validation) && ($last_action ?? null) == 'insert') ? display_data($validation, 'depositoCedula') : '' ?>
+                                <input type="number" class="form-control" id="depositoCedula" name="depositoCedula"
+                                    value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'depositoCedula') : '' ?>"
+                                    required>
+                                <span class="text-danger">
+                                    <?= (isset($validation) && ($last_action ?? null) == 'insert') ? display_data($validation, 'depositoCedula') : '' ?>
                                 </span>
                             </div>
                         </div>
@@ -326,24 +328,30 @@
                             <div class="mb-3 col-md-6 col-lg-6 col-xl-6">
                                 <label for="comprobante" class="form-label">Número de comprobante <span
                                         class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="comprobante" name="comprobante" value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'comprobante') : '' ?>" required>
+                                <input type="number" class="form-control" id="comprobante" name="comprobante"
+                                    value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'comprobante') : '' ?>"
+                                    required>
                                 <span class="text-danger">
-                                <?= (isset($validation) && ($last_action ?? null) == 'insert') ? display_data($validation, 'comprobante') : '' ?>
+                                    <?= (isset($validation) && ($last_action ?? null) == 'insert') ? display_data($validation, 'comprobante') : '' ?>
                                 </span>
                             </div>
                             <div class="mb-3 col-md-6 col-lg-6 col-xl-6">
                                 <label for="dateDeposito" class="form-label">Fecha del deposito <span
                                         class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="dateDeposito" name="dateDeposito" value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'dateDeposito') : '' ?>" required>
+                                <input type="date" class="form-control" id="dateDeposito" name="dateDeposito"
+                                    value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'dateDeposito') : '' ?>"
+                                    required>
                                 <span class="text-danger">
-                                <?= (isset($validation) && ($last_action ?? null) == 'insert') ? display_data($validation, 'dateDeposito') : '' ?>
+                                    <?= (isset($validation) && ($last_action ?? null) == 'insert') ? display_data($validation, 'dateDeposito') : '' ?>
                                 </span>
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="montoDeposito" class="form-label">Monto del Depósito</label>
-                            <input type="text" class="form-control" id="montoDeposito" name="montoDeposito" value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'montoDeposito') : '' ?>" readonly>
+                            <input type="text" class="form-control" id="montoDeposito" name="montoDeposito"
+                                value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'montoDeposito') : '' ?>"
+                                readonly>
                         </div>
                         <div class="mb-3">
                             <label for="comprobantePago" class="form-label">Subir Comprobante de Pago <span
@@ -351,9 +359,9 @@
                             <input type="file" class="form-control" id="comprobantePago" name="comprobantePago"
                                 accept="image/*,application/pdf" required>
 
-                                <span class="text-danger">
+                            <span class="text-danger">
                                 <?= (isset($validation) && ($last_action ?? null) == 'insert') ? display_data($validation, 'comprobantePago') : '' ?>
-                                </span>
+                            </span>
                         </div>
                         <div class="float-end">
                             <button type="submit" class="btn btn-success me-1">Realizar Depósito</button>

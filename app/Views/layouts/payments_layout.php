@@ -145,6 +145,12 @@
                             <span class="pull-right-container"></span>
                         </a>
                     </li>
+                    <li> <a href="<?= base_url("/punto/pago/depositos") ?>">
+                            <i class="fa fa-credit-card" aria-hidden="true"></i>
+                            <span>Depósitos</span>
+                            <span class="pull-right-container"></span>
+                        </a>
+                    </li>
                 </ul>
             </div>
             <!-- /.sidebar -->

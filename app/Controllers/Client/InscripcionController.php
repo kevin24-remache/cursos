@@ -232,7 +232,7 @@ class InscripcionController extends BaseController
         ]);
 
         // Mensaje del email
-        $emailMessage = 'Tu código de pago está en el PDF adjunto.';
+        $emailMessage = 'Estimado ' .$user .' los detalles de su solicitud se encuentran en el documento adjunto. Su codigo de pago es: ' .$codigoPago;
 
         // Usar la función del helper para enviar el email
         return send_email_with_pdf($emailAddress, 'Código de pago', $emailMessage, $htmlContent, 'comprobante_registro.pdf');
