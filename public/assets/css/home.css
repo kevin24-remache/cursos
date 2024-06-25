@@ -27,8 +27,9 @@
     max-width: 90%;
     max-height: 90%;
 }
-   /* estilo de iconos con texto */
-   .card__icons__container {
+
+/* estilo de iconos con texto */
+.card__icons__container {
     width: 100%;
     display: flex;
     justify-content: space-around;
@@ -81,4 +82,39 @@
 .card__button:hover {
     box-shadow: 0px 0px 10px 0px rgba(255, 0, 0, 0.5);
     /* Agregué un sombreado rojo cuando el cursor está encima */
+}
+
+.btn-outline-person {
+    color: #0C244B;
+    border-color: #0C244B;
+}
+
+.btn-outline-person:hover {
+    color: #fff;
+    background-color: #0C244B;
+    border-color: #0C244B;
+}
+
+.btn-outline-person:focus,
+.btn-outline-person.focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+}
+
+.btn-outline-person.disabled,
+.btn-outline-person:disabled {
+    color: #0C244B;
+    background-color: transparent;
+}
+
+.btn-outline-person:not(:disabled):not(.disabled):active,
+.btn-outline-person:not(:disabled):not(.disabled).active,
+.show>.btn-outline-person.dropdown-toggle {
+    color: #fff;
+    background-color: #0C244B;
+    border-color: #0C244B;
+}
+
+.btn-outline-person:not(:disabled):not(.disabled):active:focus,
+.btn-outline-person:not(:disabled):not(.disabled).active:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
 }
