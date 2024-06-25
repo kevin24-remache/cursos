@@ -46,6 +46,7 @@ $routes->group('punto/pago', static function ($routes) {
     $routes->get('pdf/(:hash)', 'Payments\InscripcionesController::demoPDF/$1');
     $routes->post('pago/', 'Payments\InscripcionesController::pago');
     $routes->post('buscar', 'Payments\FiltrosController::buscarPorCedula');
+    $routes->get('depositos/', 'Payments\DepositosController::index');
 });
 
 $routes->post('validar_cedula', 'Client\InscripcionController::validarCedula');
