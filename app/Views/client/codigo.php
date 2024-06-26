@@ -80,11 +80,11 @@
                 <td class="text-success">$<?= number_format($precio, 2) ?></td>
             </tr>
             <tr>
-                <th class="highlight">Código de Pago:</th>
+                <th>Código de Pago:</th>
                 <td class="highlight-cell"><?= $codigoPago ?></td>
             </tr>
             <tr>
-                <th class="highlight">Fecha Límite de Pago:</th>
+                <th>Fecha Límite de Pago:</th>
                 <td class="highlight-cell"><?= $fechaLimitePago ?></td>
             </tr>
             <tr>
@@ -92,10 +92,9 @@
                 <td><?= $fechaEmision ?></td>
             </tr>
         </table>
-        <p class="important">Por favor, acércate a realizar el pago antes de la fecha límite utilizando el código de
-            pago proporcionado.<br> Es <span class="important">necesario</span> completar el pago para que el proceso de
-            registro se complete.</p>
-        <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
+        <p class="important">Por favor, realiza el pago antes de la fecha límite
+        utilizando el código de pago proporcionado.<br> Tu <span class="important">inscripción</span> al evento no estará completa hasta que verifiquemos correctamente tu pago.</p>
+        <p>Al validar tu pago recibirás el comprobante del mismo.</p>
         <hr>
         <div class="footer">
             <p>Gracias por tu participación.</p>
