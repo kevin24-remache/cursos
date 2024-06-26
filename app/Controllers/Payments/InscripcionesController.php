@@ -13,37 +13,8 @@ use PaymentStatus;
 
 class InscripcionesController extends BaseController
 {
-    public function demoPDF($num_autorizacion)
+    private function generatePDF($payment)
     {
-        $paymentsModel = new PaymentsModel();
-        $payment = $paymentsModel->getPaymentByNumAutorizacion($num_autorizacion);
-        if (!$payment) {
-            return "Registro no encontrado";
-        }
-
-        // Extraer los datos del pago
-        $user = $payment['user'];
-        $user_ic = $payment['user_ic'];
-        $fecha_emision = $payment['fecha_emision'];
-        $precio_unitario = $payment['precio_unitario'];
-        $valor_total = $payment['valor_total'];
-        $sub_total = $payment['sub_total'];
-        $sub_total_0 = $payment['sub_total_0'];
-        $sub_total_15 = $payment['sub_total_15'];
-        $iva = $payment['iva'];
-        $total = $payment['total'];
-        $email_user = $payment['email_user'];
-        $user_tel = $payment['user_tel'];
-        $operador = $payment['operador'];
-        $valor_total = $payment['valor_total'];
-        $valor_final = $payment['amount_pay'];
-        $send_email = $payment['send_email'];
-
-        // Validar campos obligatorios
-        // if (empty($email_user) || empty($user) || empty($user_ic) || empty($fecha_emision) || empty($precio_unitario) || empty($val_total) || empty($sub_total) || empty($sub_total_0) || empty($sub_total_15) || empty($iva) || empty($total) || empty($operador) || empty($valor_total)) {
-        //     return "Faltan datos obligatorios para generar la factura";
-        // }
-
         // Configurar las opciones de Dompdf
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true);
@@ -55,22 +26,21 @@ class InscripcionesController extends BaseController
 
         // Contenido HTML de la factura
         $html = view('payments/facture', [
-            'num_autorizacion' => $num_autorizacion,
-            'user' => $user,
-            'user_ic' => $user_ic,
-            'fecha_emision' => $fecha_emision,
-            'precio_unitario' => $precio_unitario,
-            'valor_total' => $valor_total,
-            'sub_total' => $sub_total,
-            'sub_total_0' => $sub_total_0,
-            'sub_total_15' => $sub_total_15,
-            'iva' => $iva,
-            'total' => $total,
-            'email_user' => $email_user,
-            'user_tel' => $user_tel,
-            'operador' => $operador,
-            'valor_final' => $valor_final,
-            // 'evento' => $evento,
+            'num_autorizacion' => $payment['num_autorizacion'],
+            'user' => $payment['user'],
+            'user_ic' => $payment['user_ic'],
+            'fecha_emision' => $payment['fecha_emision'],
+            'precio_unitario' => $payment['precio_unitario'],
+            'valor_total' => $payment['valor_total'],
+            'sub_total' => $payment['sub_total'],
+            'sub_total_0' => $payment['sub_total_0'],
+            'sub_total_15' => $payment['sub_total_15'],
+            'iva' => $payment['iva'],
+            'total' => $payment['total'],
+            'email_user' => $payment['email_user'],
+            'user_tel' => $payment['user_tel'],
+            'operador' => $payment['operador'],
+            'valor_final' => $payment['amount_pay'],
         ]);
 
         $pdf->loadHtml($html);
@@ -83,43 +53,61 @@ class InscripcionesController extends BaseController
         $pdf->render();
 
         // Obtener la salida del PDF como una cadena
-        $pdfOutput = $pdf->output();
+        $output = $pdf->output();
 
-        // Guardar el PDF temporalmente en el servidor
-        $tempPdfPath = WRITEPATH . 'uploads/factura.pdf';
-        file_put_contents($tempPdfPath, $pdfOutput);
+        // Devolver tanto el objeto Dompdf como el contenido del PDF
+        return ['pdf' => $pdf, 'output' => $output];
+    }
+
+    private function demoPDF($num_autorizacion)
+    {
+        $paymentsModel = new PaymentsModel();
+        $payment = $paymentsModel->getPaymentByNumAutorizacion($num_autorizacion);
+        if (!$payment) {
+            return 'Registro no encontrado';
+        }
+
+        // Generar el PDF
+        $pdfData = $this->generatePDF($payment);
+        $pdfOutput = $pdfData['output'];
+
+        // Guardar el PDF en una ruta accesible
+        $pdfPath = WRITEPATH . 'uploads/factura_' . $num_autorizacion . '.pdf';
+        file_put_contents($pdfPath, $pdfOutput);
 
         // Verificar si se debe enviar el correo electrónico
-        if (empty($send_email)) {
+        if (empty($payment['send_email'])) {
             helper('email');
             // Enviar correo electrónico con el PDF adjunto
-            $to = $email_user;
+            $to = $payment['email_user'];
             $subject = 'Factura';
             $message = 'Adjunto encontrará su factura.';
-            $result = send_email_with_pdf_from_path($to, $subject, $message, $tempPdfPath);
+            $result = send_email_with_pdf_from_path($to, $subject, $message, $pdfPath);
 
             if ($result === 'success') {
                 // Actualizar el campo send_email en la base de datos
                 $paymentsModel->update($payment['id'], ['send_email' => 1]);
+                // Eliminar el archivo PDF temporal
+                unlink($pdfPath);
+                return 'success';
             } else {
                 // Ocurrió un error al enviar el correo
-                echo $result;
+                return $result;
             }
         }
 
-        // Enviar el PDF al navegador
-        $pdf->stream('factura.pdf', ['Attachment' => false]);
-
-        // Eliminar el archivo temporal
-        unlink($tempPdfPath);
+        // Eliminar el archivo PDF temporal
+        unlink($pdfPath);
+        return 'success';
     }
 
-    private function redirectView($validation = null, $flashMessages = null, $last_data = null, $ic = null, $estado = null)
+    private function redirectView($validation = null, $flashMessages = null, $last_data = null, $ic = null, $estado = null, $uniqueCode = null)
     {
         return redirect()->to('/punto/pago/inscripciones/' . $ic . '/' . $estado)->
             with('flashValidation', isset($validation) ? $validation->getErrors() : null)->
             with('flashMessages', $flashMessages)->
-            with('last_data', $last_data);
+            with('last_data', $last_data)->
+            with('uniqueCode', $uniqueCode);
     }
 
     private function redirectError($validation = null, $flashMessages = null, $last_data = null)
@@ -129,6 +117,23 @@ class InscripcionesController extends BaseController
             with('flashMessages', $flashMessages)->
             with('last_data', $last_data);
     }
+
+    public function showPDF($num_autorizacion)
+    {
+        $paymentsModel = new PaymentsModel();
+        $payment = $paymentsModel->getPaymentByNumAutorizacion($num_autorizacion);
+        if (!$payment) {
+            return "Registro no encontrado";
+        }
+
+        // Generar el PDF
+        $pdfData = $this->generatePDF($payment);
+        $pdf = $pdfData['pdf'];
+
+        // Enviar el PDF al navegador
+        $pdf->stream('factura.pdf', ['Attachment' => false]);
+    }
+
     public function pago()
     {
         helper('ramdom');
@@ -163,8 +168,8 @@ class InscripcionesController extends BaseController
         $sub_total_0 = 0.00; // Si no hay subtotales exentos o a 0%
         $subtotal_15 = $subtotal;
         $iva_15 = $subtotal * 0.15;
-        $total_pago = $subtotal + $iva_15;
-        $pago_final = $precio + $total_pago;
+        // $total_pago = $subtotal + $iva_15;
+        $pago_final = $precio;
         $total = $precio_unitario + $iva_15;
         $datosPago = [
             "num_autorizacion" => $uniqueCode,
@@ -178,11 +183,11 @@ class InscripcionesController extends BaseController
             "iva" => $iva_15,
             "valor_total" => $valor_total,
             "total" => $total,
-            "payment_method_id"=>2,
+            "payment_method_id" => 2,
         ];
 
         // Verificar si el campo num_autorizacion ya tiene un valor
-        if (isset($payment['num_autorizacion']) && !empty($payment['num_autorizacion'])&&($payment['payment_status'] !== 2)) {
+        if (isset($payment['num_autorizacion']) && !empty($payment['num_autorizacion']) && ($payment['payment_status'] !== 2)) {
             // El campo num_autorizacion ya tiene un valor, usar el existente
             $uniqueCode = $payment['num_autorizacion'];
             $paymentsModel->update($id_pago, ["payment_status" => 2, "payment_method_id" => 2]);
@@ -195,9 +200,15 @@ class InscripcionesController extends BaseController
                 return $this->redirectView(null, [['Error en la creación del pdf:' . $e->getMessage(), 'warning']], null, $cedula, $estado_pago);
             }
         }
+        // Llamar al método demoPDF() para generar y enviar el PDF
+        $result = $this->demoPDF($uniqueCode);
 
-        // Redirigir a la ruta de PDF con el hash
-        return redirect()->to(base_url("punto/pago/pdf/$uniqueCode"));
+        // Verificar el resultado de demoPDF()
+        if ($result === 'success') {
+            return $this->redirectView(null, [['Email enviado con el PDF correctamente', 'success', $uniqueCode]], null, $cedula, 'Completado', $uniqueCode);
+        } else {
+            return $this->redirectView(null, [['Error al enviando el email ', 'error']], null, $cedula, $estado_pago);
+        }
     }
 
     public function index($cedula = null, $estado = null)

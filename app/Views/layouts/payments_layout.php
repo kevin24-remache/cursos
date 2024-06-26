@@ -204,13 +204,21 @@
     <!-- <script src="<?= base_url('assets/js/flashMessages.js') ?>"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // Función para mostrar la alerta SweetAlert2
-        function showAlert(type, message) {
+        var base_url = "<?= base_url() ?>"
+        var current_url = "<?= uri_string() ?>";
+    </script>
+
+    <script>
+        function showAlert(type, message, uniqueCode = null) {
             if (type === 'success') {
+                let html = `<div>${message}</div>`;
+                if (uniqueCode) {
+                    html += `<div class="mt-3"><a class="btn btn-outline-danger" href="${base_url}punto/pago/pdf/${uniqueCode}" target="_blank"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Ver PDF</a></div>`;
+                }
                 Swal.fire({
                     title: "<strong>¡Éxito!</strong>",
                     icon: "success",
-                    html: `<div>${message}</div>`,
+                    html: html,
                     showCloseButton: true,
                     showCancelButton: false,
                     focusConfirm: false,
@@ -233,20 +241,14 @@
         // Verificar si hay mensajes de éxito, advertencia o error
         <?php if (session()->has('flashMessages')): ?>
             <?php foreach (session('flashMessages') as $message): ?>
-                <?php $type = $message[1]; ?>
-                <?php $msg = $message[0]; ?>
-                showAlert('<?= $type ?>', '<?= $msg ?>');
+                <?php
+                $type = $message[1];
+                $msg = $message[0];
+                $uniqueCode = isset($message[2]) ? $message[2] : null;
+                ?>
+                showAlert('<?= $type ?>', '<?= $msg ?>', '<?= $uniqueCode ?>');
             <?php endforeach; ?>
         <?php endif; ?>
-    </script>
-    <script>
-        // var flashMessages = <?= getFlashMessages(isset($flashMessages) ? $flashMessages : null, true) ?>;
-        // for (let element in flashMessages) {
-        //     showFlashMessage(flashMessages[element][0], flashMessages[element][1]);
-        // }
-        // Global variables
-        var base_url = "<?= base_url() ?>"
-        var current_url = "<?= uri_string() ?>";
     </script>
     <script>
         // Asegurarse de que el preloader se muestre inmediatamente
