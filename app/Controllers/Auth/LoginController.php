@@ -29,6 +29,8 @@ class LoginController extends BaseController
                 $session = session();
                 $session->set('id', $user['id']);
                 $session->set('user_email', $user['email']);
+                $session->set('first_name', $user['first_name']);
+                $session->set('last_name', $user['last_name']);
                 $session->set('rol', $user['rol_id']); // Establecer el rol del usuario
 
                 // Redirigir al usuario según su rol

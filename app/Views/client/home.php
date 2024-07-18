@@ -131,7 +131,8 @@
                                                 data-event-id="<?= $event->id ?>" type="button" style="width:100%;">
                                                 Inscribirse
                                             </button>
-                                            <button class="btn btn-outline-person mb-2" type="button" data-bs-toggle="modal" data-bs-target="#modalDeposito" style="width:100%;">
+                                            <button class="btn btn-outline-person mb-2" type="button" data-bs-toggle="modal"
+                                                data-bs-target="#modalDeposito" style="width:100%;">
                                                 Realizar Depósito
                                             </button>
                                         </section>
@@ -349,9 +350,17 @@
 
                         <div class="mb-3">
                             <label for="montoDeposito" class="form-label">Monto del Depósito</label>
-                            <input type="text" class="form-control" id="montoDeposito" name="montoDeposito"
+                            <input type="text" class="form-control mb-3" id="montoDeposito" name="montoDeposito"
                                 value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'montoDeposito') : '' ?>"
                                 readonly>
+                            <div id="tabla_depositos" style="display: none;"></div>
+                            <p id="mensaje_estado" style="display: none;">Estado: <span class="text-danger"></span></p>
+                            <p id="mensaje_original" style="display: none;">Monto original: <span
+                                    class="text-danger"></span></p>
+                            <p id="mensaje_pagado" style="display: none;">Monto pagado: <span
+                                    class="text-danger"></span></p>
+                            <p id="mensaje_nuevo" style="display: none;">Nuevo monto a pagar: <span
+                                    class="text-danger"></span></p>
                         </div>
                         <div class="mb-3">
                             <label for="comprobantePago" class="form-label">Subir Comprobante de Pago <span
@@ -398,46 +407,11 @@
     <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-firestore.js"></script>
     <script src="<?php echo base_url('assets/js/firebase.js'); ?>"></script>
 
-    <!-- Mueve el código JavaScript aquí -->
-    <script>
-        const imagenes = document.querySelectorAll('.imagen-pequena');
-        const imagenAmpliada = document.getElementById('imagen-ampliada');
-        const imagenAmpliadaImg = imagenAmpliada.querySelector('img');
-
-        imagenes.forEach(imagen => {
-            imagen.addEventListener('click', () => {
-                imagenAmpliadaImg.src = imagen.src;
-                imagenAmpliada.style.display = 'flex';
-            });
-        });
-
-        // Cierra la imagen ampliada al hacer clic fuera de ella
-        imagenAmpliada.addEventListener('click', () => {
-            imagenAmpliada.style.display = 'none';
-        });
-        // Capturar el nombre del evento al abrir el modal
-        var myModal = document.getElementById('modalInscripcion');
-        myModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget;
-            var evento = button.getAttribute('data-evento');
-            var eventId = button.getAttribute('data-event-id');
-
-            var modalEvento = myModal.querySelector('#nombreEvento');
-            modalEvento.value = evento;
-
-            var hiddenEventoId = myModal.querySelector('#eventoId');
-            hiddenEventoId.value = eventId;
-        });
-    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        if ('insert' == "<?= $last_action ?? '' ?>") {
-            var myModal = new bootstrap.Modal(document.getElementById('modalDeposito'))
-            myModal.show()
-        }
-    </script>
+    <script src="<?= base_url("assets/js/home/main.js") ?>"></script>
+    <!-- Mantenga las funciones específicas aquí -->
     <script>
         // Función para mostrar la alerta SweetAlert2
         function showAlert(type, message) {
@@ -452,7 +426,30 @@
                     confirmButtonText: `<i class="fa fa-thumbs-up"></i> ¡Genial!`,
                     confirmButtonAriaLabel: "Thumbs up, great!",
                 });
-            } else {
+            }
+            else if(type === 'error'){
+                Swal.fire({
+                    title: "<strong>Error</strong>",
+                    icon: "error",
+                    html: `<div>${message}</div>`,
+                    showCloseButton: true,
+                    showCancelButton: false,
+                    focusConfirm: false,
+                    confirmButtonText: `<i class="fa fa-thumbs-up"></i> OK`,
+                });
+            }
+            else if(type === 'pdf'){
+                Swal.fire({
+                    title: "<strong>Completado</strong>",
+                    icon: "success",
+                    html: `<div>${message}</div>`,
+                    showCloseButton: true,
+                    showCancelButton: false,
+                    focusConfirm: false,
+                    confirmButtonText: `<i class="fa fa-thumbs-up"></i> OK`,
+                });
+            }
+            else {
                 Swal.fire({
                     icon: type,
                     title: message,
@@ -472,6 +469,12 @@
                 <?php $msg = $message[0]; ?>
                 showAlert('<?= $type ?>', '<?= $msg ?>');
             <?php endforeach; ?>
+        <?php endif; ?>
+
+        // Mostrar el modal de depósito si es necesario
+        <?php if ('insert' == ($last_action ?? '')): ?>
+            var myModal = new bootstrap.Modal(document.getElementById('modalDeposito'))
+            myModal.show()
         <?php endif; ?>
     </script>
     <script src="<?= base_url("assets/js/home/home.js") ?>"></script>

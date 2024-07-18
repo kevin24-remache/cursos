@@ -51,12 +51,12 @@ class CreateTableDeposits extends Migration
             ],
             'status' => [
                 'type' => 'ENUM',
-                'constraint' => ['Pendiente', 'Aprobado', 'Rechazado'],
+                'constraint' => ['Pendiente', 'Incompleto', 'Aprobado', 'Rechazado'],
                 'default' => 'Pendiente',
             ],
-            'motivo_rechazo' => [
-                'type' => 'VARCHAR',
-                'constraint' => '250',
+            'approved_by' => [
+                'type' => 'INT',
+                'unsigned' => true,
                 'null' => true,
             ],
             'created_at' => [
@@ -71,6 +71,7 @@ class CreateTableDeposits extends Migration
 
         $this->forge->addKey('id', true);
         $this->forge->addForeignKey('payment_id', 'payments', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('approved_by', 'users', 'id', 'SET NULL', 'CASCADE');
         $this->forge->createTable('deposits');
     }
 

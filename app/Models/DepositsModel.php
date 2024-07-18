@@ -78,4 +78,67 @@ class DepositsModel extends Model
             ->where('payments.payment_status', 4)
             ->findAll();
     }
+
+    public function getDepositsByPaymentId($id_pago)
+    {
+        return $this->select('id,codigo_pago, monto_deposito, comprobante_pago, num_comprobante, date_deposito, status, deposit_cedula')
+            ->where('payment_id', $id_pago)
+            ->findAll();
+    }
+
+    public function verifyDepositAmounts($paymentId)
+    {
+        $depositos = $this->select('SUM(monto_deposito) as totalDepositos')
+            ->where('payment_id', $paymentId)
+            ->first();
+
+        if ($depositos) {
+            $totalDepositos = $depositos['totalDepositos'];
+
+            $category = $this->db->table('categories')
+                ->select('categories.cantidad_dinero')
+                ->join('registrations', 'registrations.cat_id = categories.id')
+                ->join('payments', 'payments.id_register = registrations.id')
+                ->where('payments.id', $paymentId)
+                ->get()
+                ->getRowArray();
+
+            if ($category) {
+                $montoCategoria = $category['cantidad_dinero'];
+                return $totalDepositos == $montoCategoria;
+            }
+        }
+
+        return false;
+    }
+
+    public function isPaymentCompletedWithAuthorization($paymentId)
+    {
+        // Verificar si el monto total de los depósitos coincide con el monto de la categoría
+        $depositos = $this->select('SUM(monto_deposito) as totalDepositos')
+            ->where('payment_id', $paymentId)
+            ->first();
+
+        if ($depositos) {
+            $totalDepositos = $depositos['totalDepositos'];
+
+            $category = $this->db->table('categories')
+                ->select('categories.cantidad_dinero, payments.num_autorizacion')
+                ->join('registrations', 'registrations.cat_id = categories.id')
+                ->join('payments', 'payments.id_register = registrations.id')
+                ->where('payments.id', $paymentId)
+                ->get()
+                ->getRowArray();
+
+            if ($category) {
+                $montoCategoria = $category['cantidad_dinero'];
+                if ($totalDepositos >= $montoCategoria) {
+                    return ['completed' => true, 'num_autorizacion' => $category['num_autorizacion']];
+                }
+            }
+        }
+
+        return ['completed' => false, 'num_autorizacion' => null];
+    }
+
 }

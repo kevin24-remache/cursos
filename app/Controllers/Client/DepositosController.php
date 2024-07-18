@@ -5,10 +5,11 @@ use App\Controllers\BaseController;
 use App\Models\RegistrationsModel;
 use App\Models\PaymentsModel;
 use App\Models\DepositsModel;
+use PaymentStatus;
 
 class DepositosController extends BaseController
 {
-    private function redirectView($validation = null, $flashMessages = null, $last_data = null, $last_action=null)
+    private function redirectView($validation = null, $flashMessages = null, $last_data = null, $last_action = null)
     {
         return redirect()->to('/')->
             with('flashValidation', isset($validation) ? $validation->getErrors() : null)->
@@ -62,7 +63,7 @@ class DepositosController extends BaseController
         ]);
 
         if (!$validation->run($data)) {
-            return $this->redirectView($validation, [['Error en los datos enviados', 'warning']],$data,'insert');
+            return $this->redirectView($validation, [['Error en los datos enviados', 'warning']], $data, 'insert');
         }
 
         $registrationsModel = new RegistrationsModel();
@@ -75,7 +76,7 @@ class DepositosController extends BaseController
 
         try {
             // Consulta JOIN para obtener el registro, el pago correspondiente y el precio de la categoría
-            $query = $registrationsModel->select('registrations.id as registration_id, registrations.ic, payments.id as payment_id, payments.payment_cod, categories.cantidad_dinero as category_price')
+            $query = $registrationsModel->select('registrations.id as registration_id, registrations.ic, payments.id as payment_id, payments.payment_cod')
                 ->join('payments', 'payments.id_register = registrations.id', 'left')
                 ->join('categories', 'categories.id = registrations.cat_id', 'left')
                 ->where('registrations.ic', $depositoCedula)
@@ -89,14 +90,28 @@ class DepositosController extends BaseController
 
             if ($depositosModel->existsPendingDeposit($codigoPago)) {
                 $db->transRollback();
-                return $this->redirectView(null, [['El código de pago ingresado está siendo evaluado ', 'warning']]);
+                return $this->redirectView(null, [['Existe un deposito ya ingresado que esta siendo verificado, espere hasta que termine de ser verificado', 'error']]);
+            }
+
+            // Verificar si el pago ya está completado con el nuevo método
+            $result = $depositosModel->isPaymentCompletedWithAuthorization($query['payment_id']);
+            if ($result['completed']) {
+                $db->transRollback();
+                return $this->redirectView(null, [['El pago no puede recibir mas depósitos ', 'warning']]);
+            }
+            // Verificar si el estado del pago es 'completado' (2) con el nuevo método
+            $paymentStatus = $paymentsModel->isPaymentStatusCompleted($query['payment_id']);
+            if ($paymentStatus['completed']) {
+                $db->transRollback();
+                return $this->redirectView(null, [['El pago ya está completado. ' . $paymentStatus['num_autorizacion'], 'pdf']]);
             }
 
             // Verificar si el número de comprobante y la fecha del depósito ya existen
             if ($depositosModel->existsComprobanteAndDate($comprobante, $dateDeposito)) {
                 $db->transRollback();
-                return $this->redirectView(null, [['El número de comprobante ya a sido ingresado', 'warning']]);
+                return $this->redirectView(null, [['El número de comprobante ya ha sido ingresado', 'warning']]);
             }
+
             // Validar si el archivo subido es una imagen
             if (!$comprobantePago->isValid() || !in_array($comprobantePago->getMimeType(), ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'])) {
                 $db->transRollback();
@@ -104,7 +119,7 @@ class DepositosController extends BaseController
             }
 
             // Actualizar el estado del pago a 'En proceso' (4)
-            $paymentsModel->update($query['payment_id'], ['payment_status' => 4]);
+            $paymentsModel->update($query['payment_id'], ['payment_status' => PaymentStatus::EnProceso]);
 
             // Guardar el monto del depósito y el comprobante de pago en la tabla inscripcion_pagos
             $nombreComprobante = $comprobantePago->getRandomName();
@@ -117,7 +132,6 @@ class DepositosController extends BaseController
                     'payment_id' => $query['payment_id'],
                     'deposit_cedula' => $depositoCedula,
                     'codigo_pago' => $codigoPago,
-                    'monto_deposito' => $query['category_price'],
                     'comprobante_pago' => $rutaComprobante,
                     'num_comprobante' => $comprobante,
                     'date_deposito' => $dateDeposito,
@@ -126,7 +140,7 @@ class DepositosController extends BaseController
                 $depositosModel->insert($deposits);
                 $db->transComplete(); // Confirmar la transacción
 
-                return $this->redirectView(null, [['El depósito se ha registrado correctamente', 'success']]);
+                return $this->redirectView(null, [['El depósito pasará por un proceso de verificación, cuando se verifique el depósito se te enviará el comprobante a tu correo electrónico', 'success']]);
             } else {
                 $db->transRollback(); // Revertir la transacción en caso de error al mover la imagen
                 return $this->redirectView(null, [['No se pudo guardar el comprobante de pago', 'danger']]);
@@ -140,25 +154,39 @@ class DepositosController extends BaseController
 
     public function fetchMontoDeposito()
     {
-        $request = $this->request->getJSON(); // Obtener datos JSON enviados desde el cliente
+        $request = $this->request->getJSON();
         $depositoCedula = $request->cedula ?? null;
         $codigoPago = $request->codigoPago ?? null;
-        if (!$depositoCedula) {
-            return $this->response->setJSON(['error' => 'cedula no enviada'], 404);
+
+        if (!$depositoCedula || !$codigoPago) {
+            return $this->response->setJSON(['error' => 'Datos incompletos'], 400);
         }
-        if (!$codigoPago) {
-            return $this->response->setJSON(['error' => 'codigo no enviada'], 404);
-        }
+
         $registrationsModel = new RegistrationsModel();
-        $cod = $registrationsModel->getAmountByPaymentCode($depositoCedula, $codigoPago);
+
         try {
-            if ($cod) {
-                return $this->response->setJSON(['monto' => $cod]);
+            $result = $registrationsModel->getAmountByPaymentCode($depositoCedula, $codigoPago);
+            if ($result) {
+                if ($result['cancelado']) {
+                    return $this->response->setJSON([
+                        'monto' => $result['monto'],
+                        'montoOriginal' => number_format($result['montoOriginal'], 2),
+                        'montoPagado' => number_format($result['montoPagado'], 2),
+                        'nuevoMonto' => number_format($result['monto'], 2),
+                        'cancelado' => true,
+                        'deposits' => $result['deposits']
+                    ]);
+                } else {
+                    return $this->response->setJSON([
+                        'monto' => number_format($result['monto'], 2),
+                        'cancelado' => false,
+                        'deposits' => $result['deposits']
+                    ]);
+                }
             } else {
                 return $this->response->setJSON(['error' => 'Datos no encontrados'], 404);
             }
         } catch (\Exception $e) {
-            // Aquí capturamos cualquier excepción y devolvemos un mensaje de error claro
             return $this->response->setJSON(['error' => 'Error al procesar la solicitud: ' . $e->getMessage()], 500);
         }
     }

@@ -71,6 +71,114 @@ if (!function_exists('send_email_with_pdf_from_path')) {
     }
 }
 
+if (!function_exists('send_rejection_email')) {
+    function send_rejection_email($to, $subject, $rejectionReason, $names, $view, $valor_pendiente = null)
+    {
+        // Configurar y enviar el correo electrónico
+        $email = \Config\Services::email();
+        $email->setTo($to);
+        $email->setSubject($subject);
+
+        // Adjuntar las imágenes y obtener sus CIDs
+        $cids = [];
+        $images = [
+            'logo-ep.png',
+            'bg_top.jpg',
+            'twitter2x.png',
+            'instagram2x.png',
+            'facebook.png',
+            '5.png'
+        ];
+
+        foreach ($images as $image) {
+            $path = FCPATH . 'assets/images/email/' . $image;
+            if (file_exists($path)) {
+                $email->attach($path, 'inline');
+                $cids[$image] = $email->setAttachmentCID($path);
+            }
+        }
+
+        // Preparar datos para la vista
+        $data = [
+            'rejectionReason' => $rejectionReason,
+            'names' => $names,
+            'cids' => $cids
+        ];
+
+        // Solo agregar 'valor_pendiente' si está definido
+        if ($valor_pendiente !== null) {
+            $data['valor_pendiente'] = $valor_pendiente;
+        }
+
+        // Cargar la vista con el contenido HTML del email
+        $htmlContent = view($view, $data);
+        $email->setMessage($htmlContent);
+
+        // Intentar enviar el correo
+        if ($email->send()) {
+            return "success";
+        } else {
+            // Obtener cualquier error del correo
+            $error = $email->printDebugger(['headers']);
+            log_message('error', 'Error enviando correo de rechazo: ' . $error);
+            return $error;
+        }
+    }
+
+}
+
+
+if (!function_exists('email_rechazo_general')) {
+    function email_rechazo_general($to, $subject, $rejectionReason, $names, $view)
+    {
+        // Configurar y enviar el correo electrónico
+        $email = \Config\Services::email();
+        $email->setTo($to);
+        $email->setSubject($subject);
+
+        // Adjuntar las imágenes y obtener sus CIDs
+        $cids = [];
+        $images = [
+            'logo-ep.png',
+            'bg_top.jpg',
+            'twitter2x.png',
+            'instagram2x.png',
+            'facebook.png',
+            '5.png'
+        ];
+
+        foreach ($images as $image) {
+            $path = FCPATH . 'assets/images/email/' . $image;
+            if (file_exists($path)) {
+                $email->attach($path, 'inline');
+                $cids[$image] = $email->setAttachmentCID($path);
+            }
+        }
+
+        // Preparar datos para la vista
+        $data = [
+            'rejectionReason' => $rejectionReason,
+            'names' => $names,
+            'cids' => $cids
+        ];
+
+        // Cargar la vista con el contenido HTML del email
+        $htmlContent = view($view, $data);
+        $email->setMessage($htmlContent);
+
+        // Intentar enviar el correo
+        if ($email->send()) {
+            return "success";
+        } else {
+            // Obtener cualquier error del correo
+            $error = $email->printDebugger(['headers']);
+            log_message('error', 'Error enviando correo de rechazo: ' . $error);
+            return $error;
+        }
+    }
+
+}
+
 if (!function_exists('mask_email')) {
     function mask_email($email)
     {

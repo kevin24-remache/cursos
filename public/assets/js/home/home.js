@@ -314,6 +314,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function fetchMontoDeposito() {
     const cedula = document.getElementById('depositoCedula').value;
     const codigoPago = document.getElementById('codigoPago').value;
+    const montoDeposito = document.getElementById('montoDeposito');
 
     if (cedula && codigoPago) {
       fetch('monto_pago', {
@@ -325,17 +326,105 @@ document.addEventListener("DOMContentLoaded", function () {
       })
         .then(response => response.json())
         .then(data => {
-          const montoDeposito = document.getElementById('montoDeposito');
-          if (data.monto && data.monto.cantidad_dinero) {
-            montoDeposito.value = "$ "+data.monto.cantidad_dinero;
+          const mensajeEstado = document.querySelector('#mensaje_estado');
+          const mensajeEstadoSpan = mensajeEstado.querySelector('span');
+          const mensajeOriginal = document.querySelector('#mensaje_original');
+          const mensajeOriginalSpan = mensajeOriginal.querySelector('span');
+          const mensajePagado = document.querySelector('#mensaje_pagado');
+          const mensajePagadoSpan = mensajePagado.querySelector('span');
+          const mensajeNuevo = document.querySelector('#mensaje_nuevo');
+          const mensajeNuevoSpan = mensajeNuevo.querySelector('span');
+          const tablaDepositos = document.querySelector('#tabla_depositos');
+
+          if (data.error) {
+            montoDeposito.value = '';
+            mensajeEstadoSpan.textContent = data.error;
+            mensajeEstado.style.display = 'block';
+            [mensajeOriginal, mensajePagado, mensajeNuevo, tablaDepositos].forEach(elem => elem.style.display = 'none');
+          } else if (data.cancelado) {
+            montoDeposito.value = `$ ${data.nuevoMonto}`;
+            mensajeEstadoSpan.textContent = 'El pago anterior fue cancelado.';
+            mensajeOriginalSpan.textContent = `$ ${data.montoOriginal}`;
+            mensajePagadoSpan.textContent = `$ ${data.montoPagado}`;
+            mensajeNuevoSpan.textContent = `$ ${data.nuevoMonto}`;
+            [mensajeEstado, mensajeOriginal, mensajePagado, mensajeNuevo].forEach(elem => elem.style.display = 'block');
+            mostrarTablaDepositos(data.deposits);
           } else {
-            montoDeposito.value = '$ 00.00';
+            montoDeposito.value = `$ ${data.monto}`;
+            [mensajeEstado, mensajeOriginal, mensajePagado, mensajeNuevo].forEach(elem => {
+              elem.querySelector('span').textContent = '';
+              elem.style.display = 'none';
+            });
+            mostrarTablaDepositos(data.deposits);
           }
         })
         .catch(error => {
           console.error('Error:', error);
-          document.getElementById('montoDeposito').value = '';
+          montoDeposito.value = '';
+          const mensajeEstado = document.querySelector('#mensaje_estado');
+          mensajeEstado.querySelector('span').textContent = 'Error al obtener el monto';
+          mensajeEstado.style.display = 'block';
+          [mensajeOriginal, mensajePagado, mensajeNuevo, tablaDepositos].forEach(elem => elem.style.display = 'none');
         });
+    } else {
+      montoDeposito.value = '';
+      const mensajeEstado = document.querySelector('#mensaje_estado');
+      const mensajeOriginal = document.querySelector('#mensaje_original');
+      const mensajePagado = document.querySelector('#mensaje_pagado');
+      const mensajeNuevo = document.querySelector('#mensaje_nuevo');
+      const tablaDepositos = document.querySelector('#tabla_depositos');
+      [mensajeEstado, mensajeOriginal, mensajePagado, mensajeNuevo, tablaDepositos].forEach(elem => {
+        if (elem.querySelector('span')) {
+          elem.querySelector('span').textContent = '';
+        }
+        elem.style.display = 'none';
+      });
+    }
+  }
+
+  function mostrarTablaDepositos(deposits) {
+    const tablaDepositos = document.querySelector('#tabla_depositos');
+    tablaDepositos.innerHTML = ''; // Limpiar la tabla existente
+
+    if (deposits && deposits.length > 0) {
+      const tablaResponsiva = document.createElement('div');
+      tablaResponsiva.classList.add('table-responsive');
+
+      const tabla = document.createElement('table');
+      tabla.classList.add('table', 'table-striped', 'table-hover', 'table-bordered');
+
+      // Crear encabezado
+      const thead = document.createElement('thead');
+      thead.innerHTML = `
+            <tr>
+                <th>N° Comprobante</th>
+                <th>Monto</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+            </tr>
+        `;
+      tabla.appendChild(thead);
+
+      // Crear cuerpo de la tabla
+      const tbody = document.createElement('tbody');
+      deposits.forEach(deposit => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+                <td>${deposit.num_comprobante}</td>
+                <td>$ ${deposit.monto_deposito}</td>
+                <td>${deposit.date_deposito}</td>
+                <td>${deposit.status}</td>
+            `;
+        tbody.appendChild(tr);
+      });
+      tabla.appendChild(tbody);
+
+      tablaResponsiva.appendChild(tabla);
+      tablaDepositos.appendChild(tablaResponsiva);
+      tablaDepositos.style.display = 'block';
+    } else {
+      tablaDepositos.innerHTML = '<p class="text-muted">No hay depósitos registrados.</p>';
+      tablaDepositos.style.display = 'block';
     }
   }
 });

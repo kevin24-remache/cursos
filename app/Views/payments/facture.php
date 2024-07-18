@@ -127,7 +127,7 @@
                 <h1> $ <?=$valor_final?></h1>
             </div>
             <div class="section">
-                <div>En breve será emitida su factura electrónica, en caso de no estar en la bandeja principal, revisar
+                <div>En breve será emitido su comprobante electrónico, en caso de no estar en la bandeja principal, revisar
                     en la bandeja de spam.</div>
             </div>
         </div>

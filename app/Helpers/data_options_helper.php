@@ -34,6 +34,7 @@ class PaymentStatus
     const Fallido = 3;
     const EnProceso = 4;
     const Cancelado = 5;
+    const Rechazado = 6;
 }
 if (!function_exists('getPaymentStatusText')) {
     function getPaymentStatusText($status)
@@ -72,4 +73,24 @@ if (!function_exists('mapEstadoToValue')) {
                 return null; // Estado inválido
         }
     }
+}
+if (!function_exists('mapValueToEstado')) {
+    function mapValueToEstado($value)
+    {
+        switch ($value) {
+            case PaymentStatus::Pendiente:
+                return 'pendiente';
+            case PaymentStatus::Completado:
+                return 'completado';
+            case PaymentStatus::Fallido:
+                return 'fallido';
+            case PaymentStatus::EnProceso:
+                return 'enproceso';
+            case PaymentStatus::Cancelado:
+                return 'cancelado';
+            default:
+                return 'desconocido';
+        }
+    }
+
 }

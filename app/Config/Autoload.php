@@ -92,6 +92,7 @@ class Autoload extends AutoloadConfig
      */
     public $helpers = [
         'data_options' => 'data_options',
+        'status' => 'status',
         'form_validation' => 'form_validation',
         'auth' => 'auth_helper',
     ];

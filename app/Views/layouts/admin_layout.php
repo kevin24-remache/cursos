@@ -50,8 +50,7 @@
                     <ul class="nav navbar-nav">
                         <!-- User Account: style can be found in dropdown.less -->
                         <li class="dropdown user user-menu p-ph-res"> <a href="#" class="dropdown-toggle"
-                                data-toggle="dropdown"><span class="hidden-xs">Alexander
-                                    Pierce</span> </a>
+                                data-toggle="dropdown"><span class="hidden-xs"><?= session('first_name')?></span> </a>
                             <ul class="dropdown-menu">
                                 <li><a href="#"><i class="icon-profile-male"></i> Mi perfil</a></li>
                                 <li role="separator" class="divider"></li>

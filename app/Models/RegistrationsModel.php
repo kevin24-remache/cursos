@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use PaymentStatus;
 
 class RegistrationsModel extends Model
 {
@@ -141,8 +142,11 @@ class RegistrationsModel extends Model
     {
         // Consulta JOIN para obtener el registro, el pago correspondiente y el precio de la categoría
         $query = $this->select('
-        categories.cantidad_dinero
-        ')
+        categories.cantidad_dinero,
+        payments.payment_status,
+        payments.amount_pay,
+        payments.id as payment_id
+    ')
             ->join('payments', 'payments.id_register = registrations.id', 'left')
             ->join('categories', 'categories.id = registrations.cat_id', 'left')
             ->where('registrations.ic', $depositoCedula)
@@ -150,7 +154,32 @@ class RegistrationsModel extends Model
             ->first();
 
         if ($query) {
-            return $query;
+            // Obtener los depósitos relacionados con este pago directamente de la tabla deposits
+            $deposits = $this->db->table('deposits')
+                ->select('id, codigo_pago, monto_deposito, comprobante_pago, num_comprobante, date_deposito, status, deposit_cedula')
+                ->where('payment_id', $query['payment_id'])
+                ->get()
+                ->getResultArray();
+
+            if ($query['payment_status'] == PaymentStatus::Cancelado) {
+                // Calcular la diferencia entre cantidad_dinero y amount_pay
+                $diferencia = $query['cantidad_dinero'] - $query['amount_pay'];
+                // Asegurarse de que la diferencia no sea negativa
+                $montoAPagar = max(0, $diferencia);
+                return [
+                    'monto' => $montoAPagar,
+                    'cancelado' => true,
+                    'montoOriginal' => $query['cantidad_dinero'],
+                    'montoPagado' => $query['amount_pay'],
+                    'deposits' => $deposits
+                ];
+            } else {
+                return [
+                    'monto' => $query['cantidad_dinero'],
+                    'cancelado' => false,
+                    'deposits' => $deposits
+                ];
+            }
         } else {
             return null;
         }

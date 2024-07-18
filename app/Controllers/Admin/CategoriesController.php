@@ -3,6 +3,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\CategoryModel;
+use App\Models\ConfigModel;
 use ModulosAdmin;
 
 class CategoriesController extends BaseController
@@ -44,10 +45,17 @@ class CategoriesController extends BaseController
         $short_description = $this->request->getPost('short_description');
         $category_value = $this->request->getPost('category_value');
 
+        // Obtener el valor adicional de la configuración
+        $configModel = new ConfigModel();
+        $additionalCharge = $configModel->getAdditionalCharge();
+
+        // Sumar el valor adicional al precio de la categoría
+        $total_value = floatval($category_value) + floatval($additionalCharge);
+
         $data = [
             'category_name' => trim($category_name),
             'short_description' => trim($short_description),
-            'cantidad_dinero' => $category_value,
+            'cantidad_dinero' => $total_value,
         ];
 
         try {
