@@ -7,20 +7,19 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("preloader").style.display = "none";
   }
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-
   async function obtenerUsuario(userId) {
     try {
       showPreloader();
-      const doc = await db.collection("Usuarios").doc(userId).get();
+      const response = await fetch('validar_cedula', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ cedula: userId }),
+      });
+      const data = await response.json();
       hidePreloader();
-      if (doc.exists) {
-        //console.log(doc.data());
-        return doc.data();
-      } else {
-        return null;
-      }
+      return data.exists ? data.persona : null;
     } catch (error) {
       hidePreloader();
       console.log("Error getting document:", error);
@@ -36,15 +35,13 @@ document.addEventListener("DOMContentLoaded", function () {
       const allowedChars = "0123456789";
       const inputValue = event.key;
 
-      // Check if the input value is not a valid number or is outside the range
       if (
         !allowedChars.includes(inputValue) ||
         (inputValue === "0" && numeroCedulaInput.value.length === 0)
       ) {
-        event.preventDefault(); // Prevent character insertion
+        event.preventDefault();
       }
 
-      // Check if the input value exceeds the maximum length (15)
       if (numeroCedulaInput.value.length === 15 && inputValue !== "Backspace") {
         event.preventDefault();
       }
@@ -57,257 +54,199 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("apellidosPersona").textContent = persona.apellidos;
     document.getElementById("emailPersona").textContent = persona.email;
   }
-  document
-    .getElementById("formRegistroUsuario")
-    .addEventListener("submit", function (event) {
-      event.preventDefault();
-      showPreloader();
-      let cedula = document.getElementById("numeroCedula").value;
-      let nombres = document.getElementById("nombres").value;
-      let apellidos = document.getElementById("apellidos").value;
-      let telefono = document.getElementById("telefono").value;
-      let email = document.getElementById("email").value;
-      let direccion = document.getElementById("direccion").value;
+  document.getElementById("formRegistroUsuario").addEventListener("submit", async function (event) {
+    event.preventDefault();
+    showPreloader();
+    let formData = new FormData(this);
+    let jsonData = {};
+    formData.forEach((value, key) => (jsonData[key] = value));
 
-      // Datos del usuario
-      const usuarioData = {
-        cedula,
-        nombres,
-        apellidos,
-        telefono,
-        email,
-        direccion,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp(), // Marca de tiempo opcional
-      };
-
-      insertarUsuario(cedula, usuarioData);
-    });
-  async function insertarUsuario(userId, data) {
     try {
-      await db.collection("Usuarios").doc(userId).set(data);
-      console.log("Document successfully written with ID: ", userId);
+      const response = await fetch("registrar_usuario", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(jsonData),
+      });
+      const data = await response.json();
+      hidePreloader();
+      if (data.success) {
+        $("#modalRegistroUsuario").modal("hide");
+        $("#modalInscripcion").modal("show");
+        Swal.fire({
+          title: "<strong>Usuario registrado correctamente!</strong>",
+          icon: "success",
+          html: `
+                    <p>Ahora puede inscribirse al evento.</p>
+                `,
+          showCloseButton: true,
+          confirmButtonText: 'Ok',
+        });
+      } else {
+        let errorMessage = "Error al registrar el usuario.";
+        if (typeof data.message === 'object') {
+          errorMessage = '<div class="alert alert-danger" role="alert"><ul class="list-unstyled">';
+          for (let key in data.message) {
+            errorMessage += `<li>${data.message[key]}</li>`;
+          }
+          errorMessage += '</ul></div>';
+        } else {
+          errorMessage = `<div class="alert alert-danger" role="alert"><p>${data.message}</p></div>`;
+        }
+
+        Swal.fire({
+          title: "<strong>Error</strong>",
+          icon: "error",
+          html: errorMessage,
+          showCloseButton: true,
+          confirmButtonText: 'Ok',
+        });
+      }
     } catch (error) {
-      console.error("Error adding document: ", error);
+      hidePreloader();
+      console.error("Error:", error);
+      Swal.fire({
+        title: "<strong>Error</strong>",
+        icon: "error",
+        html: `
+                <div class="alert alert-danger" role="alert">
+                    <p>Ocurrió un error al registrar el usuario. Por favor, intente nuevamente más tarde.</p>
+                </div>
+            `,
+        showCloseButton: true,
+        confirmButtonText: 'Ok',
+      });
     }
-  }
+  });
+
   document.getElementById("numeroCedula").value = "0250072444";
 
   document
     .getElementById("formInscripcion")
-    .addEventListener("submit", function (event) {
+    .addEventListener("submit", async function (event) {
       event.preventDefault();
       let numeroCedula = document.getElementById("numeroCedula").value;
       let eventoId = document.getElementById("eventoId").value;
-      obtenerUsuario(numeroCedula)
-        .then((user) => {
-          if (user != null) {
-            fetch("validar_cedula", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ user: user }),
-            })
-              .then((response) => response.json())
-              .then((data) => {
-                if (data.exists) {
-                  if (data.persona) {
-                    console.log(data.persona);
-                    llenarCamposPersona(data.persona);
-                    fetch("obtener_datos_evento", {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify({ eventoId: eventoId }),
-                    })
-                      .then((response) => response.json())
-                      .then((eventData) => {
-                        if (eventData) {
-                          // Llenar el segundo modal con datos del evento
-                          document.getElementById("titleEvent").textContent =
-                            eventData.event_name;
-                          document.getElementById("descripcionEvento").value =
-                            eventData.short_description;
 
-                          // Verificar si hay categorías disponibles
-                          if (eventData.category_ids) {
-                            // Convertir las cadenas de categorías en arrays
-                            let categoryIds = eventData.category_ids.split(",");
-                            let categoryNames = eventData.categories.split(",");
-                            let categoryPagos = eventData.cantidad_dinero.split(",");
+      const user = await obtenerUsuario(numeroCedula);
+      if (user) {
+        llenarCamposPersona(user);
+        try {
+          const response = await fetch("obtener_datos_evento", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ eventoId: eventoId }),
+          });
+          const eventData = await response.json();
+          if (eventData) {
+            document.getElementById("titleEvent").textContent = eventData.event_name;
+            document.getElementById("descripcionEvento").value = eventData.short_description;
 
-                            // Construir HTML para los radio botones de categorías
-                            let categoriaHtml = "";
-                            for (let i = 0; i < categoryIds.length; i++) {
-                              categoriaHtml += `
-                                <div class="form-check form-check-inline">
-                                  <input class="form-check-input" type="radio" name="categoria" value="${categoryIds[i]}" id="categoria${categoryIds[i]}" required>
-                                  <label class="form-check-label" for="categoria${categoryIds[i]}">
-                                    ${categoryNames[i]} - $${categoryPagos[i]}
-                                  </label>
-                                </div>`;
-                            }
+            if (eventData.category_ids) {
+              let categoryIds = eventData.category_ids.split(",");
+              let categoryNames = eventData.categories.split(",");
+              let categoryPagos = eventData.cantidad_dinero.split(",");
 
-                            // Insertar HTML generado en el documento
-                            document.getElementById("categoria").innerHTML = categoriaHtml;
-                          } else {
-                            // Agregar un radio button para indicar que no hay categorías disponibles
-                            document.getElementById("categoria").innerHTML = `
-                                              <div class="form-check form-check-inline">
-                                                  <input class="form-check-input" type="radio" name="categoria" value="0" id="sinCategorias" checked required>
-                                                  <label class="form-check-label" for="sinCategorias">Sin categorías</label>
-                                              </div>`;
-                          }
+              let categoriaHtml = "";
+              for (let i = 0; i < categoryIds.length; i++) {
+                categoriaHtml += `
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="categoria" value="${categoryIds[i]}" id="categoria${categoryIds[i]}" required>
+                    <label class="form-check-label" for="categoria${categoryIds[i]}">
+                      ${categoryNames[i]} - $${categoryPagos[i]}
+                    </label>
+                  </div>`;
+              }
 
-                          // Mostrar el segundo modal
-                          $("#modalInscripcion").modal("hide");
-                          $("#modalDetallesEvento").modal("show");
-                        } else {
-                          swal(
-                            "Ocurrió un error",
-                            "No se encontraron datos del evento",
-                            "warning"
-                          );
-                        }
-                      });
-                  } else {
-                    swal(
-                      "Ocurrió un error",
-                      "No se encontraron datos de la persona",
-                      "warning"
-                    );
-                  }
-                }
-              })
-              .catch((error) => console.error("Error:", error));
-          } else {
-            // Verificar si el eventoId existe
-            if (eventoId) {
-              // Mostrar el modal de registro de usuario
-              document.getElementById("numeroCedulaRegistro").value =
-                numeroCedula;
-              $("#modalInscripcion").modal("hide");
-              $("#modalRegistroUsuario").modal("show");
+              document.getElementById("categoria").innerHTML = categoriaHtml;
             } else {
-              swal(
-                "Ocurrió un error",
-                "El evento seleccionado no existe",
-                "warning"
-              );
+              document.getElementById("categoria").innerHTML = `
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="categoria" value="0" id="sinCategorias" checked required>
+                  <label class="form-check-label" for="sinCategorias">Sin categorías</label>
+                </div>`;
             }
-          }
-        })
-        .catch((error) => {
-          swal("Ocurrió un error", data.message, "warning");
-          console.error("Error al obtener el usuario:", error);
-        });
-    });
 
-  document
-    .getElementById("formRegistroUsuario")
-    .addEventListener("submit", function (event) {
-      event.preventDefault();
-      let formData = new FormData(this);
-      let jsonData = {};
-      formData.forEach((value, key) => (jsonData[key] = value));
-
-      // Registrar el usuario en el controlador
-      fetch("registrar_usuario", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(jsonData),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success) {
-            // Usuario registrado, ahora se puede inscribir al evento
-            $("#modalRegistroUsuario").modal("hide");
-            $("#modalInscripcion").modal("show");
-            alert(
-              "Usuario registrado correctamente. Ahora puede inscribirse al evento."
-            );
+            $("#modalInscripcion").modal("hide");
+            $("#modalDetallesEvento").modal("show");
           } else {
-            alert("Error al registrar el usuario");
+            swal("Ocurrió un error", "No se encontraron datos del evento", "warning");
           }
-        })
-        .catch((error) => console.error("Error:", error));
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      } else {
+        if (eventoId) {
+          document.getElementById("numeroCedulaRegistro").value = numeroCedula;
+          $("#modalInscripcion").modal("hide");
+          $("#modalRegistroUsuario").modal("show");
+        } else {
+          swal("Ocurrió un error", "El evento seleccionado no existe", "warning");
+        }
+      }
     });
 
   document
     .getElementById("formDetallesEvento")
-    .addEventListener("submit", function (event) {
+    .addEventListener("submit", async function (event) {
       event.preventDefault();
       showPreloader();
 
-      // Obtener el id del usuario y el id del evento
-      let idUser = document.getElementById("id_user").value;
+      let numeroCedula = document.getElementById("numeroCedula").value;
       let eventoId = document.getElementById("eventoId").value;
-      let catId = document.querySelector(
-        'input[name="categoria"]:checked'
-      ).value;
+      let catId = document.querySelector('input[name="categoria"]:checked').value;
 
-      // Crear el objeto JSON con solo los datos necesarios
       let jsonData = {
-        id_user: idUser,
+        cedula: numeroCedula,
         eventoId: eventoId,
         catId: catId,
       };
-      fetch("guardar_inscripcion", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(jsonData),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          hidePreloader();
-          if (data.error) {
-            // Mostrar el mensaje de error
-            swal("Ups! Algo salio mal!", data.message, "warning");
-          } else if (data.success) {
-            // Calcular los días restantes para el pago
-            const fechaLimitePago = new Date(data.payment_time_limit);
-            const hoy = new Date();
-            const diferenciaMilisegundos = fechaLimitePago - hoy;
-            const diasRestantes = Math.ceil(
-              diferenciaMilisegundos / (1000 * 60 * 60 * 24)
-            );
-            // Mostrar el mensaje de confirmación y código de pago
-            Swal.fire({
-              title: "<strong>Registro Exitoso!</strong>",
-              icon: "success",
-              html: `
-                <p>Bien, te registraste para el evento.</p>
-                <p>Tu código de pago es: <b>${data.codigoPago}</b></p>
-                <p>Tienes <b>${diasRestantes}</b> días para realizar el pago</p>
-                <p>Comprobante de registro enviado a : <b>${data.email}</b></p>
-              `,
-              showCloseButton: true,
-              confirmButtonText: 'Ok',
-            });
-            $("#modalDetallesEvento").modal("hide");
-          } else {
-            swal(
-              "Ups! Algo salio mal!",
-              "La acción no se pudo realizar correctamente!",
-              "error"
-            );
-          }
-        })
-        .catch((error) => {
-          hidePreloader();
-          console.error("Error:", error);
-          swal(
-            "Ups! Algo salio mal!",
-            "Error al comunicarse con el servidor",
-            "error"
-          );
+
+      try {
+        const response = await fetch("guardar_inscripcion", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(jsonData),
         });
+        const data = await response.json();
+        hidePreloader();
+
+        if (data.error) {
+          swal("Ups! Algo salió mal!", data.message, "warning");
+        } else if (data.success) {
+          const fechaLimitePago = new Date(data.payment_time_limit);
+          const hoy = new Date();
+          const diferenciaMilisegundos = fechaLimitePago - hoy;
+          const diasRestantes = Math.ceil(diferenciaMilisegundos / (1000 * 60 * 60 * 24));
+
+          Swal.fire({
+            title: "<strong>Registro Exitoso!</strong>",
+            icon: "success",
+            html: `
+              <p>Bien, te registraste para el evento.</p>
+              <p>Tu código de pago es: <b>${data.codigoPago}</b></p>
+              <p>Tienes <b>${diasRestantes}</b> días para realizar el pago</p>
+              <p>Comprobante de registro enviado a : <b>${data.email}</b></p>
+            `,
+            showCloseButton: true,
+            confirmButtonText: 'Ok',
+          });
+          $("#modalDetallesEvento").modal("hide");
+        } else {
+          swal("Ups! Algo salió mal!", "La acción no se pudo realizar correctamente!", "error");
+        }
+      } catch (error) {
+        hidePreloader();
+        console.error("Error:", error);
+        swal("Ups! Algo salió mal!", "Error al comunicarse con el servidor", "error");
+      }
     });
+
   document.getElementById('depositoCedula').addEventListener('change', fetchMontoDeposito);
   document.getElementById('codigoPago').addEventListener('change', fetchMontoDeposito);
 
