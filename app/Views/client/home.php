@@ -8,7 +8,7 @@
 
     <!-- Theme style -->
     <link rel="stylesheet" href="<?= base_url("assets/css/styles.css") ?>">
-    <link rel="stylesheet" href="<?= base_url("dist/css/font-awesome/css/font-awesome.min.css") ?>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
     <link rel="stylesheet" href="<?= base_url("assets/css/home.css") ?>">
 </head>
 
@@ -121,11 +121,8 @@
                                             </article>
                                         </section>
                                         <section class="pt-3 pb-4">
-                                            <button class="btn border border-danger mb-2 card__button text-danger"
-                                                data-bs-toggle="modal" data-bs-target="#modalInfo" type="button"
-                                                style="width:100%;">
-                                                Más Información
-                                            </button>
+                                            <!-- <button class="btn border border-danger mb-2 card__button text-danger">
+                                            </button> -->
                                             <button class="btn btn-danger mb-2" data-bs-toggle="modal"
                                                 data-bs-target="#modalInscripcion" data-evento="<?= $event->event_name ?>"
                                                 data-event-id="<?= $event->id ?>" type="button" style="width:100%;">
@@ -194,42 +191,60 @@
                 </div>
                 <div class="modal-body">
                     <form id="formRegistroUsuario">
-                        <div class="mb-3">
-                            <label for="numeroCedulaRegistro" class="form-label">Número de Cédula</label>
-                            <input type="text" class="form-control" id="numeroCedulaRegistro" name="numeroCedula"
-                                readonly>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="numeroCedulaRegistro" class="form-label">Número de Cédula</label>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fas fa-id-card"></i></div>
+                                    <input type="text" class="form-control" id="numeroCedulaRegistro"
+                                        name="numeroCedula" readonly>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label for="nombres" class="form-label">Nombres</label>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fas fa-user"></i></div>
+                                    <input type="text" class="form-control" id="nombres" name="nombres" required>
+                                </div>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="nombres" class="form-label">Nombres</label>
-                            <input type="text" class="form-control" id="nombres" name="nombres" required>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="apellidos" class="form-label">Apellidos</label>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fas fa-user"></i></div>
+                                    <input type="text" class="form-control" id="apellidos" name="apellidos" required>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label for="telefono" class="form-label">Número de teléfono o celular</label>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fas fa-phone"></i></div>
+                                    <input type="text" class="form-control" id="telefono" name="telefono" required>
+                                </div>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="apellidos" class="form-label">Apellidos</label>
-                            <input type="text" class="form-control" id="apellidos" name="apellidos" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="telefono" class="form-label">Número de teléfono o celular</label>
-                            <input type="text" class="form-control" id="telefono" name="telefono" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Correo electrónico</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="direccion" class="form-label">Dirección</label>
-                            <input type="direccion" class="form-control" id="direccion" name="direccion" required>
-                        </div>
-                        <div class="float-start">
-                            <!-- <div class="btn-group" role="group" aria-label="Basic example">
-                                <button type="button" class="btn btn-success" onclick="registrarUsuario()">Registrar</button>
-                                <button type="button" class="btn btn-success" onclick="cerrarYMostrarModal()">Regresar</button>
-                            </div> -->
-                        </div>
-                        <div class="float-end">
-                            <button type="submit" class="btn btn-primary me-1">Registrar</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="email" class="form-label">Correo electrónico</label>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fas fa-envelope"></i></div>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label for="direccion" class="form-label">Dirección</label>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fas fa-map-marker-alt"></i></div>
+                                    <input type="text" class="form-control" id="direccion" name="direccion" required>
+                                </div>
+                            </div>
                         </div>
                     </form>
+                </div>
+                <div class="modal-footer">
+                    <button form="formRegistroUsuario" type="submit" class="btn btn-primary">Registrar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </div>
         </div>
@@ -276,20 +291,6 @@
         </div>
     </div>
 
-    <!-- Modal de información -->
-    <div class="modal fade" id="modalInfo" tabindex="-1" aria-labelledby="modalInfoLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title" id="modalInfoLabel">Congreso para la carrera de [Nombre de la carrera]</h3>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Descripción corta del congreso aquí.</p>
-                </div>
-            </div>
-        </div>
-    </div>
     <!-- Modal de depósito -->
     <div class="modal fade" id="modalDeposito" tabindex="-1" aria-labelledby="modalDepositoLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -301,14 +302,16 @@
                 <div class="modal-body">
                     <form id="formDeposito" method="post" action="<?= base_url("deposito") ?>"
                         enctype="multipart/form-data">
-
                         <div class="row">
                             <div class="mb-3 col-md-6 col-lg-6 col-xl-6">
                                 <label for="codigoPago" class="form-label">Código de pago <span
                                         class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="codigoPago" name="codigoPago"
-                                    value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'codigoPago') : '' ?>"
-                                    required>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fas fa-receipt"></i></div>
+                                    <input type="number" class="form-control" id="codigoPago" name="codigoPago"
+                                        value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'codigoPago') : '' ?>"
+                                        required>
+                                </div>
                                 <span class="text-danger">
                                     <?= (isset($validation) && ($last_action ?? null) == 'insert') ? display_data($validation, 'codigoPago') : '' ?>
                                 </span>
@@ -316,22 +319,27 @@
                             <div class="mb-3 col-md-6 col-lg-6 col-xl-6">
                                 <label for="depositoCedula" class="form-label">Número de cédula <span
                                         class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="depositoCedula" name="depositoCedula"
-                                    value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'depositoCedula') : '' ?>"
-                                    required>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fas fa-id-card"></i></div>
+                                    <input type="number" class="form-control" id="depositoCedula" name="depositoCedula"
+                                        value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'depositoCedula') : '' ?>"
+                                        required>
+                                </div>
                                 <span class="text-danger">
                                     <?= (isset($validation) && ($last_action ?? null) == 'insert') ? display_data($validation, 'depositoCedula') : '' ?>
                                 </span>
                             </div>
                         </div>
                         <div class="row">
-
                             <div class="mb-3 col-md-6 col-lg-6 col-xl-6">
                                 <label for="comprobante" class="form-label">Número de comprobante <span
                                         class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="comprobante" name="comprobante"
-                                    value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'comprobante') : '' ?>"
-                                    required>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fas fa-file-alt"></i></div>
+                                    <input type="number" class="form-control" id="comprobante" name="comprobante"
+                                        value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'comprobante') : '' ?>"
+                                        required>
+                                </div>
                                 <span class="text-danger">
                                     <?= (isset($validation) && ($last_action ?? null) == 'insert') ? display_data($validation, 'comprobante') : '' ?>
                                 </span>
@@ -339,20 +347,25 @@
                             <div class="mb-3 col-md-6 col-lg-6 col-xl-6">
                                 <label for="dateDeposito" class="form-label">Fecha del deposito <span
                                         class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="dateDeposito" name="dateDeposito"
-                                    value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'dateDeposito') : '' ?>"
-                                    required>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fas fa-calendar-alt"></i></div>
+                                    <input type="date" class="form-control" id="dateDeposito" name="dateDeposito"
+                                        value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'dateDeposito') : '' ?>"
+                                        required>
+                                </div>
                                 <span class="text-danger">
                                     <?= (isset($validation) && ($last_action ?? null) == 'insert') ? display_data($validation, 'dateDeposito') : '' ?>
                                 </span>
                             </div>
                         </div>
-
                         <div class="mb-3">
                             <label for="montoDeposito" class="form-label">Monto del Depósito</label>
-                            <input type="text" class="form-control mb-3" id="montoDeposito" name="montoDeposito"
-                                value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'montoDeposito') : '' ?>"
-                                readonly>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fas fa-dollar-sign"></i></div>
+                                <input type="text" class="form-control" id="montoDeposito" name="montoDeposito"
+                                    value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'montoDeposito') : '' ?>"
+                                    readonly>
+                            </div>
                             <div id="tabla_depositos" style="display: none;"></div>
                             <p id="mensaje_estado" style="display: none;">Estado: <span class="text-danger"></span></p>
                             <p id="mensaje_original" style="display: none;">Monto original: <span
@@ -365,9 +378,11 @@
                         <div class="mb-3">
                             <label for="comprobantePago" class="form-label">Subir Comprobante de Pago <span
                                     class="text-danger">*</span></label>
-                            <input type="file" class="form-control" id="comprobantePago" name="comprobantePago"
-                                accept="image/*,application/pdf" required>
-
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fas fa-upload"></i></div>
+                                <input type="file" class="form-control" id="comprobantePago" name="comprobantePago"
+                                    accept="image/*,application/pdf" required>
+                            </div>
                             <span class="text-danger">
                                 <?= (isset($validation) && ($last_action ?? null) == 'insert') ? display_data($validation, 'comprobantePago') : '' ?>
                             </span>
@@ -377,6 +392,7 @@
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         </div>
                     </form>
+
                 </div>
             </div>
         </div>
@@ -427,7 +443,7 @@
                     confirmButtonAriaLabel: "Thumbs up, great!",
                 });
             }
-            else if(type === 'error'){
+            else if (type === 'error') {
                 Swal.fire({
                     title: "<strong>Error</strong>",
                     icon: "error",
@@ -438,7 +454,7 @@
                     confirmButtonText: `<i class="fa fa-thumbs-up"></i> OK`,
                 });
             }
-            else if(type === 'pdf'){
+            else if (type === 'pdf') {
                 Swal.fire({
                     title: "<strong>Completado</strong>",
                     icon: "success",
