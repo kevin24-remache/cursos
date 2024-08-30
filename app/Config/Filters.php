@@ -115,10 +115,7 @@ class Filters extends BaseFilters
         ],
         "SessionPagos" => [
             "before" => [
-                "punto/pago",
-                "punto/pago/inscripciones*",
-                "punto/pago/pago",
-                "punto/pago/buscar",
+                "punto/pago/*",
             ],
         ],
     ];
