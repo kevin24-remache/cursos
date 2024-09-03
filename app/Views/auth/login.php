@@ -8,7 +8,6 @@ Login
 <div class="content-body">
     <div class="auth-wrapper auth-v1 px-2">
         <div class="auth-inner py-2">
-            <!-- Login v1 -->
             <div class="card mb-0">
                 <div class="card-body">
                     <div class="brand-logo">
@@ -21,7 +20,9 @@ Login
                         <div class="form-group">
                             <label for="login-email" class="form-label">Correo electrónico</label>
                             <input type="text" class="form-control" id="login-email" name="login-email"
-                                placeholder="john@example.com" aria-describedby="login-email" tabindex="1" autofocus />
+                                placeholder="Nombre@example.com" aria-describedby="login-email" tabindex="1" autofocus value="<?= isset($last_data) ? display_data($last_data, 'email') : '' ?>"/>
+
+                                <p class="text-danger"><?= isset($validation) ? display_data($validation, 'email') : '' ?></p>
                         </div>
 
                         <div class="form-group">
@@ -34,12 +35,13 @@ Login
                             <div class="input-group input-group-merge form-password-toggle">
                                 <input type="password" class="form-control form-control-merge" id="login-password"
                                     name="login-password" tabindex="2"
-                                    placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                    placeholder="**************"
                                     aria-describedby="login-password" />
                                 <div class="input-group-append">
                                     <span class="input-group-text cursor-pointer"><i data-feather="eye"></i></span>
                                 </div>
                             </div>
+                            <p class="text-danger"><?= isset($validation) ? display_data($validation, 'password') : '' ?></p>
                         </div>
                         <div class="form-group">
                             <div class="custom-control custom-checkbox">
@@ -58,7 +60,6 @@ Login
                     </p>
                 </div>
             </div>
-            <!-- /Login v1 -->
         </div>
     </div>
 
@@ -67,5 +68,5 @@ Login
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
-<script src="<?= base_url() ?>app-assets/js/scripts/pages/page-auth-login.js"></script>
+<script src="<?= base_url("app-assets/js/scripts/pages/page-auth-login.js") ?>"></script>
 <?= $this->endSection() ?>
