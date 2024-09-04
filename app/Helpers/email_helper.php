@@ -25,10 +25,13 @@ if (!function_exists('send_email_with_pdf')) {
 
         // Configurar y enviar el correo electrónico
         $email = \Config\Services::email();
-        // $email->setFrom('apps@istel.edu.ec', 'TEST');
         $email->setTo($to);
         $email->setSubject($subject);
-        $email->setMessage($message);
+
+        // Aquí se adjunta el contenido HTML al mensaje
+        $email->setMessage($message . '<br><br>' . $htmlContent); // Aquí se incluye el contenido HTML
+
+        // Adjuntar el PDF también
         $email->attach($tempPdfPath);
 
         // Intentar enviar el correo
@@ -72,7 +75,7 @@ if (!function_exists('send_email_with_pdf_from_path')) {
 }
 
 if (!function_exists('send_rejection_email')) {
-    function send_rejection_email($to, $subject, $rejectionReason, $names, $view, $valor_pendiente = null)
+    function send_rejection_email($to, $subject, $rejectionReason, $names, $codigoPago, $nombreEvento, $view, $valor_pendiente = null)
     {
         // Configurar y enviar el correo electrónico
         $email = \Config\Services::email();
@@ -102,6 +105,8 @@ if (!function_exists('send_rejection_email')) {
         $data = [
             'rejectionReason' => $rejectionReason,
             'names' => $names,
+            'codigoPago' => $codigoPago,
+            'nombreEvento' => $nombreEvento,
             'cids' => $cids
         ];
 
@@ -129,7 +134,7 @@ if (!function_exists('send_rejection_email')) {
 
 
 if (!function_exists('email_rechazo_general')) {
-    function email_rechazo_general($to, $subject, $rejectionReason, $names, $view)
+    function email_rechazo_general($to, $subject, $rejectionReason, $names, $codigoPago, $nombreEvento, $view)
     {
         // Configurar y enviar el correo electrónico
         $email = \Config\Services::email();
@@ -159,6 +164,8 @@ if (!function_exists('email_rechazo_general')) {
         $data = [
             'rejectionReason' => $rejectionReason,
             'names' => $names,
+            'codigoPago' => $codigoPago,
+            'nombreEvento' => $nombreEvento,
             'cids' => $cids
         ];
 
@@ -208,4 +215,26 @@ if (!function_exists('mask_email')) {
         return $masked_name . '@' . $masked_domain;
     }
 }
+if (!function_exists('mask_phone')) {
+    function mask_phone($phone)
+    {
+        $length = strlen($phone);
+
+        // Mostrar los últimos 4 dígitos
+        $masked_phone = str_repeat('*', max(0, $length - 4)) . substr($phone, -4);
+
+        return $masked_phone;
+    }
+}
+if (!function_exists('payphone_status')) {
+    function payphone_status($status)
+    {
+        if ($status == 'Approved') {
+            return 'Aprobado';
+        } elseif ($status == 'Cancela') {
+            return 'Cancelado';
+        }
+    }
+}
+
 ?>

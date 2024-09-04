@@ -97,13 +97,13 @@ class DepositosController extends BaseController
             $result = $depositosModel->isPaymentCompletedWithAuthorization($query['payment_id']);
             if ($result['completed']) {
                 $db->transRollback();
-                return $this->redirectView(null, [['El pago no puede recibir mas depósitos ', 'warning']]);
+                return $this->redirectView(null, [['El pago de su inscripción ha sido recibido y registrado correctamente. No es necesario subir más comprobantes', 'warning']]);
             }
             // Verificar si el estado del pago es 'completado' (2) con el nuevo método
             $paymentStatus = $paymentsModel->isPaymentStatusCompleted($query['payment_id']);
             if ($paymentStatus['completed']) {
                 $db->transRollback();
-                return $this->redirectView(null, [['El pago ya está completado. ' . $paymentStatus['num_autorizacion'], 'pdf']]);
+                return $this->redirectView(null, [['El pago de su inscripción ya está completado.', 'pdf', $paymentStatus['num_autorizacion']]]);
             }
 
             // Verificar si el número de comprobante y la fecha del depósito ya existen
@@ -169,6 +169,7 @@ class DepositosController extends BaseController
             if ($result) {
                 if ($result['cancelado']) {
                     return $this->response->setJSON([
+                        'success' => true,
                         'monto' => $result['monto'],
                         'montoOriginal' => number_format($result['montoOriginal'], 2),
                         'montoPagado' => number_format($result['montoPagado'], 2),
@@ -178,6 +179,7 @@ class DepositosController extends BaseController
                     ]);
                 } else {
                     return $this->response->setJSON([
+                        'success' => true,
                         'monto' => number_format($result['monto'], 2),
                         'cancelado' => false,
                         'deposits' => $result['deposits']

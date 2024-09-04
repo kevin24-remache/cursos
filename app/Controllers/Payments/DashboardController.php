@@ -2,11 +2,21 @@
 namespace App\Controllers\Payments;
 
 use App\Controllers\BaseController;
+use App\Models\PaymentsModel;
+use ModulosAdminPagos;
 
 class DashboardController extends BaseController
 {
     public function index()
     {
-        return view('payments/index');
+        $paymentsModel = new PaymentsModel();
+
+        $modulo = ModulosAdminPagos::DASHBOARD;
+        $data = [
+            'modulo' => $modulo,
+            'mis_ingresos' => $paymentsModel->getDailyRevenueMy(null,session('id')),
+            'mis_ingresos_totales' => $paymentsModel->getTotalRevenueByUser(session('id')),
+        ];
+        return view('payments/index',$data);
     }
 }

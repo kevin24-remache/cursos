@@ -8,6 +8,8 @@
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1" />
 
+    <link rel="icon" href="<?= base_url("assets/images/payments/logo-p.png"); ?>" type="image/png">
+
     <!-- v4.0.0-alpha.6 -->
     <link rel="stylesheet" href="<?= base_url("dist/bootstrap/css/bootstrap.min.css") ?>">
 
@@ -31,6 +33,10 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
     <link rel="stylesheet" href="<?= base_url("assets/css/rounded.css") ?>">
+
+    <!-- tooltip -->
+    <link rel="stylesheet" href="<?= base_url('dist/plugins/tooltip/tooltip.css') ?>">
+    <link rel="stylesheet" href="<?= base_url("assets/css/datatables.css") ?>">
     <?= $this->renderSection('css'); ?>
     <style>
         body {
@@ -101,12 +107,10 @@
                     <ul class="nav navbar-nav">
                         <!-- User Account: style can be found in dropdown.less -->
                         <li class="dropdown user user-menu p-ph-res"> <a href="#" class="dropdown-toggle"
-                                data-toggle="dropdown"><span class="hidden-xs">Alexander
-                                    Pierce</span> </a>
+                                data-toggle="dropdown"><span class="hidden-xs"><?= session('first_name') ?></span> </a>
                             <ul class="dropdown-menu">
-                                <li><a href="#"><i class="icon-profile-male"></i> Mi perfil</a></li>
+                                <li><a href="<?= base_url('punto/pago/user')?>"><i class="icon-profile-male"></i> Mi perfil</a></li>
                                 <li role="separator" class="divider"></li>
-                                <li><a href="#"><i class="icon-gears"></i>Configuración</a></li>
                                 <li role="separator" class="divider"></li>
                                 <li><a href="<?= base_url("logout") ?>"><i class="fa fa-power-off"></i>Cerrar Sesión</a>
                                 </li>
@@ -119,37 +123,56 @@
         <aside class="main-sidebar">
             <div class="sidebar">
 
-                <!-- <div class="user-panel">
-                    <h1 class="mb-3">Saldo</h1>
-                    <div class="image text-center mb-3">
-                        <img src="dist/img/img1.jpg" class="img-circle" alt="User Image">
+
+                <div class="user-panel">
+                    <div class="image text-center">
+                        <img src="<?=base_url('assets/images/user_pagos.jpg')?>" class="img-circle"
+                            alt="User Image">
                     </div>
-                    <div class="info mb-3">
-                        <p>Alexander Pierce</p>
-                        <a href="#"><i class="fa fa-cog"></i></a>
-                        <a href="#"><i class="fa fa-envelope-o"></i></a>
-                        <a href="#"><i class="fa fa-power-off"></i></a>
+                    <div class="info text-black">
+                        <p><?= session('first_name') ?></p> <a
+                            href="<?= base_url("logout") ?>" title="Cerrar Sesión"><i class="fa fa-lg fa-power-off"></i></a>
                     </div>
-                </div> -->
+                </div>
                 <ul class="sidebar-menu" data-widget="tree">
-                    <li class="header">PERSONAL</li>
-                    <li class="treeview"> <a href="#"> <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+
+                    <li class="header">
+
+                        <a class="px-0 py-1" href="<?= base_url("/punto/pago/inscripciones") ?>">
+                            <i class="fa fa-usd" aria-hidden="true"></i><span>Cobrar</span> <span
+                                class="pull-right-container"> </span>
+                        </a>
+                    </li>
+                    <li class="treeview <?= (isset($modulo) && checkActiveModule($modulo, ModulosAdminPagos::DASHBOARD)) ? 'active' : '' ?>"> <a href="#"> <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                             <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class=""><a href="<?= base_url("punto/pago") ?>">Dashboard</a></li>
+                            <li class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdminPagos::DASHBOARD)) ? 'active' : '' ?>"><a href="<?= base_url("punto/pago") ?>">Dashboard</a></li>
                         </ul>
                     </li>
-                    <li> <a href="<?= base_url("/punto/pago/inscripciones") ?>"> <i class="fa fa-university"></i>
-                            <span>Inscripciones</span>
-                            <span class="pull-right-container"></span>
-                        </a>
-                    </li>
-                    <li> <a href="<?= base_url("/punto/pago/depositos") ?>">
-                            <i class="fa fa-credit-card" aria-hidden="true"></i>
-                            <span>Depósitos</span>
-                            <span class="pull-right-container"></span>
-                        </a>
+                    <li
+                        class="treeview  <?= (isset($modulo) && in_array($modulo, [ModulosAdminPagos::PAGOS, ModulosAdminPagos::PAGOS_COMPLETOS, ModulosAdminPagos::PAGOS_RECHAZADOS, ModulosAdminPagos::PAGOS_INCOMPLETOS])) ? 'active' : '' ?>">
+                        <a href="#"> <i class="fa fa-credit-card-alt" aria-hidden="true"></i> <span>Pagos con
+                                depósitos</span> <span class="pull-right-container"> <i
+                                    class="fa fa-angle-left pull-right"></i> </span> </a>
+                        <ul class="treeview-menu">
+                            <li
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdminPagos::PAGOS)) ? 'active' : '' ?>">
+                                <a href="<?= base_url("punto/pago/depositos") ?>">Ingresados</a>
+                            </li>
+                            <li
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdminPagos::PAGOS_COMPLETOS)) ? 'active' : '' ?>">
+                                <a href="<?= base_url('punto/pago/depositos/completados') ?>">Completados</a>
+                            </li>
+                            <li
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdminPagos::PAGOS_RECHAZADOS)) ? 'active' : '' ?>">
+                                <a href="<?= base_url('punto/pago/depositos/rechazados') ?>">Rechazados</a>
+                            </li>
+                            <li
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdminPagos::PAGOS_INCOMPLETOS)) ? 'active' : '' ?>">
+                                <a href="<?= base_url('punto/pago/depositos/incompletos') ?>">Incompletos</a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -203,6 +226,11 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <!-- <script src="<?= base_url('assets/js/flashMessages.js') ?>"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <!-- tooltip -->
+    <script src="<?= base_url('dist/plugins/tooltip/tooltip.js') ?>"></script>
+    <script src="<?= base_url('dist/plugins/tooltip/script.js') ?>"></script>
     <script>
         var base_url = "<?= base_url() ?>"
         var current_url = "<?= uri_string() ?>";
@@ -213,7 +241,7 @@
             if (type === 'success') {
                 let html = `<div>${message}</div>`;
                 if (uniqueCode) {
-                    html += `<div class="mt-3"><a class="btn btn-outline-danger" href="${base_url}punto/pago/pdf/${uniqueCode}" target="_blank"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Ver PDF</a></div>`;
+                    html += `<div class="mt-3"><a class="btn btn-outline-danger" href="${base_url}pdf/${uniqueCode}" target="_blank"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Ver PDF</a></div>`;
                 }
                 Swal.fire({
                     title: "<strong>¡Éxito!</strong>",
@@ -250,6 +278,11 @@
             <?php endforeach; ?>
         <?php endif; ?>
     </script>
+    <!-- DataTable -->
+    <script src="<?= base_url("dist/plugins/datatables/jquery.dataTables.min.js") ?>"></script>
+    <script src="<?= base_url("dist/plugins/datatables/dataTables.bootstrap.min.js") ?>"></script>
+
+    <script src="<?= base_url("assets/js/datatables.js") ?>"></script>
     <script>
         // Asegurarse de que el preloader se muestre inmediatamente
         document.getElementById('preloader').style.display = 'flex';

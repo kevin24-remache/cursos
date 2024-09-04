@@ -68,24 +68,24 @@
         <div>7 de Mayo y Olmedo</div>
         <div>RUC: 0201975844001</div>
         <!-- <div>Factura Nro: 002-201-000000977</div> -->
-        <div>Fecha autorización: <?=$fecha_emision?></div>
+        <div>Fecha autorización: <?= $fecha_emision ?></div>
         <div>Ambiente: PRODUCCIÓN</div>
 
         <hr>
         <div>NÚMERO DE AUTORIZACIÓN:</div>
-        <div class="break-word">0201975844001<?=$num_autorizacion?>140601</div>
+        <div class="break-word">0201975844001<?= $num_autorizacion ?>140601</div>
     </header>
     <main>
         <hr>
         <div class="container">
             <div class="section">
-                <div><strong>Cliente: </strong> <?=$user?></div>
-                <div><strong>C.I/RUC: </strong> <?=$user_ic?></div>
+                <div><strong>Cliente: </strong> <?= $user ?></div>
+                <div><strong>C.I/RUC: </strong> <?= $user_ic ?></div>
                 <?php
                 $timestamp = strtotime($fecha_emision);
                 $fecha_formateada = date('d/m/Y', $timestamp);
                 ?>
-                <div><strong>Fecha Emisión: </strong> <?=$fecha_formateada?></div>
+                <div><strong>Fecha Emisión: </strong> <?= $fecha_formateada ?></div>
             </div>
             <div class="section">
                 <table class="table">
@@ -100,36 +100,46 @@
                     <tbody>
                         <tr>
                             <td>1</td>
-                            <td>Uso de plataforma para el registro en el evento: </td>
-                            <td><?=$precio_unitario?></td>
-                            <td><?=$valor_total?></td>
+                            <td>Uso de plataforma para el registro en el evento: <strong><?= $event_name ?></strong></td>
+                            <td><?= $precio_unitario ?></td>
+                            <td><?= $valor_total ?></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div class="section text-right">
-                <div><strong>Sub Total: $ </strong><?=$sub_total?></div>
-                <div><strong>Sub Total 0: $ </strong><?=$sub_total_0?></div>
-                <div><strong>Sub Total 15%: $ </strong><?=$sub_total_15?></div>
-                <div><strong>IVA 15%: $ </strong><?=$iva?></div>
-                <div><strong>TOTAL: $ </strong><?=$valor_final?></div>
+                <div><strong>Sub Total: $ </strong><?= $sub_total ?></div>
+                <div><strong>Sub Total 0: $ </strong><?= $sub_total_0 ?></div>
+                <div><strong>Sub Total 15%: $ </strong><?= $sub_total_15 ?></div>
+                <div><strong>IVA 15%: $ </strong><?= $iva ?></div>
+                <div><strong>TOTAL: $ </strong><?= $valor_final ?></div>
             </div>
             <div class="section">
-                <div><strong>FORMA DE PAGO:</strong> SIN UTILIZACIÓN DEL SISTEMA FINANCIERO</div>
+                <div>
+                    <strong>FORMA DE PAGO:</strong>
+                </div>
+                <?php if ($metodo_pago == 1): ?>
+                    PAGO ECHO CON DEPOSITO
+                <?php elseif ($metodo_pago == 2): ?>
+                    SIN UTILIZACIÓN DEL SISTEMA FINANCIERO
+                <?php elseif ($metodo_pago == 3): ?>
+                    PAGO ECHO EN LINEA CON TARJETA
+                <?php endif; ?>
             </div>
-            <div class="section">
-                <div><strong>Mail:</strong> <?=$email_user?></div>
-                <div><strong>Contacto:</strong> <?=$user_tel?></div>
-                <div><strong>Operador:</strong> <?=$operador?></div>
-            </div>
-            <div class="title">
-                <strong>VALOR TOTAL PAGADO:</strong>
-                <h1> $ <?=$valor_final?></h1>
-            </div>
-            <div class="section">
-                <div>En breve será emitido su comprobante electrónico, en caso de no estar en la bandeja principal, revisar
-                    en la bandeja de spam.</div>
-            </div>
+        </div>
+        <div class="section">
+            <div><strong>Mail:</strong> <?= $email_user ?></div>
+            <div><strong>Contacto:</strong> <?= $user_tel ?></div>
+            <div><strong>Operador:</strong> <?= $operador ?></div>
+        </div>
+        <div class="title">
+            <strong>VALOR TOTAL PAGADO:</strong>
+            <h1> $ <?= $valor_final ?></h1>
+        </div>
+        <div class="section">
+            <div>En breve será emitido su comprobante electrónico, en caso de no estar en la bandeja principal, revisar
+                en la bandeja de spam.</div>
+        </div>
         </div>
     </main>
 </body>

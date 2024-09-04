@@ -7,7 +7,6 @@ use App\Models\EventsModel;
 use App\Models\PaymentsModel;
 use App\Models\RegistrationsModel;
 use CodeIgniter\I18n\Time;
-use Dompdf\Dompdf;
 
 class InscripcionController extends BaseController
 {
@@ -61,6 +60,7 @@ class InscripcionController extends BaseController
             'phone' => $persona['telefono'],
             'email' => $persona['email'],
             'event_name' => $event['event_name'],
+            'monto_category' => $event['cantidad_dinero'],
         ];
     }
 
@@ -75,7 +75,15 @@ class InscripcionController extends BaseController
 
     public function validarCedula()
     {
-        $cedula = $this->request->getJSON()->cedula;
+        // Obtener los datos JSON
+        $data = $this->request->getJSON();
+
+        // Verificar si $data es null (si el cuerpo de la solicitud no es JSON o está vacío)
+        if (is_null($data) || !isset($data->cedula) || empty($data->cedula)) {
+            return $this->response->setJSON(['error' => 'Cédula requerida']);
+        }
+
+        $cedula = trim($data->cedula);
 
         $firebase = service('firebase');
         $firestore = $firebase->firestore;
@@ -155,6 +163,7 @@ class InscripcionController extends BaseController
         $codigoPago = $this->generarCodigoPagoUnico();
         $fechaInscripcion = Time::now();
         $fechaEvento = new Time($event['event_date']);
+        $event_name = $event['event_name'];
         $fechaLimitePago = $this->calcularFechaLimitePago($fechaInscripcion, $fechaEvento);
 
         // Preparar datos para la inscripción y el pago
@@ -186,6 +195,7 @@ class InscripcionController extends BaseController
             return $this->response->setJSON([
                 'success' => true,
                 'codigoPago' => $codigoPago,
+                'eventName' => $event_name,
                 'email' => $email,
                 'payment_time_limit' => $fechaLimitePago->format('Y-m-d H:i:s')
             ]);
@@ -198,6 +208,14 @@ class InscripcionController extends BaseController
     public function registrarUsuario()
     {
         $data = $this->request->getJSON();
+
+        // Aplicar trim a todos los campos relevantes
+        $data->numeroCedula = trim($data->numeroCedula);
+        $data->nombres = trim($data->nombres);
+        $data->apellidos = trim($data->apellidos);
+        $data->telefono = trim($data->telefono);
+        $data->email = trim($data->email);
+        $data->direccion = trim($data->direccion);
 
         $validation = \Config\Services::validation();
         $validation->setRules(
@@ -248,15 +266,17 @@ class InscripcionController extends BaseController
                     return $this->response->setJSON(['success' => false, 'message' => 'El correo electrónico ya está registrado.']);
                 }
 
+                // Asignar el valor de numeroCedula a cedula
+                $data->cedula = $data->numeroCedula;
+                unset($data->numeroCedula);
 
                 // Añadir campo timestamp como Firebase Timestamp
                 $currentTime = new \DateTime();
                 $timestamp = $currentTime->getTimestamp();
-
                 $data->timestamp = new \Google\Cloud\Core\Timestamp(new \DateTime("@$timestamp"));
 
                 // Si ambas verificaciones pasan, registrar el usuario en Firebase
-                $documentReference = $collection->document($data->numeroCedula);
+                $documentReference = $collection->document($data->cedula);
                 $documentReference->set((array) $data);
 
                 return $this->response->setJSON(['success' => true, 'message' => 'Usuario registrado correctamente.']);

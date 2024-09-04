@@ -56,6 +56,11 @@ class CreateTableRegistrations extends Migration
                 'constraint' => 255,
                 'null' => true,
             ],
+            'monto_category' =>[
+                'type' => 'DECIMAL',
+                'constraint' => '10,2',
+                'null' => false,
+            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => false,

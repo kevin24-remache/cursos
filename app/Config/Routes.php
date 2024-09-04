@@ -12,55 +12,115 @@ $routes->group('admin', static function ($routes) {
 
     $routes->get('dashboard', 'Admin\DashboardController::index');
 
+    $routes->post('buscar', 'Admin\FiltrosController::buscarPorCedula');
+    $routes->get('inscripciones/', 'Admin\FiltrosController::index');
+    $routes->get('inscripciones/(:num)', 'Admin\InscripcionesController::index/$1');
+    $routes->get('inscripciones/(:num)/(:alpha)', 'Admin\InscripcionesController::index/$1/$2');
+    $routes->post('pago/', 'Admin\InscripcionesController::pago');
+
+
+    $routes->get('config', 'Config\ConfigController::index');
+    $routes->post('config/add', 'Config\ConfigController::add');
+    $routes->post('config/update', 'Config\ConfigController::update');
+
+    $routes->group('pagos', static function ($pagos) {
+
+        $pagos->get('/', 'Admin\PagosController::index');
+        $pagos->get('(:num)', 'Admin\DepositosController::index/$1');
+        $pagos->get('getDatosPgDeposito/(:num)', 'Admin\DepositosController::getDatosPagoDeposito/$1');
+        $pagos->post('actualizarEstado/', 'Admin\DepositosController::actualizarEstado');
+        $pagos->get('obtener_depositos/(:num)', 'Admin\DepositosController::obtenerDeposito/$1');
+        $pagos->post('aprobar/', 'Admin\DepositosController::aprobar_deposito');
+        $pagos->post('incompleto/', 'Admin\DepositosController::pago_incompleto');
+        $pagos->post('rechazar/', 'Admin\DepositosController::rechazar');
+        $pagos->get('verificarDepositoRechazado/(:num)', 'Admin\DepositosController::verificarDepositoRechazado/$1');
+        $pagos->get('verificarDepositoIncompleto/(:num)', 'Admin\DepositosController::verificarDepositoIncompleto/$1');
+
+        $pagos->get('completados', 'Admin\PagosController::completados');
+        $pagos->get('rechazados', 'Admin\PagosController::rechazados');
+        $pagos->get('incompletos', 'Admin\PagosController::incompletos');
+    });
+
     $routes->group('event', static function ($categories) {
         $categories->get('/', 'Admin\EventsController::index');
         $categories->get('get/(:num)', 'Admin\EventsController::get/$1');
         $categories->get('new', 'Admin\EventsController::new_event');
+        $categories->get('edit/(:num)', 'Admin\EventsController::edit_event/$1');
         $categories->post('add', 'Admin\EventsController::add');
         $categories->post('update', 'Admin\EventsController::update');
         $categories->post('delete', 'Admin\EventsController::delete');
-        $categories->get('trash', 'Admin\EventsController::trash');
-        $categories->get('get/deleted/(:num)', 'Admin\EventsController::get_deleted/$1');
-        $categories->post('trash/restore/', 'Admin\EventsController::restore');
+
+        $categories->group('inscritos', static function ($inscritos) {
+            $inscritos->get('/', 'Admin\RegistrationsController::index');
+            $inscritos->get('(:num)', 'Admin\RegistrationsController::inscritos/$1');
+            $inscritos->post('(:num)', 'Admin\RegistrationsController::inscritos/$1');
+            $inscritos->post('add', 'Admin\RegistrationsController::add');
+            $inscritos->post('update', 'Admin\RegistrationsController::update');
+            $inscritos->post('delete', 'Admin\RegistrationsController::delete');
+        });
+    });
+
+    $routes->group('users', static function ($categories) {
+        $categories->get('/', 'Admin\UsersController::index');
+        $categories->post('add', 'Admin\UsersController::add');
+        $categories->post('update', 'Admin\UsersController::update');
+        $categories->post('delete', 'Admin\UsersController::delete');
+        $categories->post('recover_password', 'Admin\UsersController::recoverPassword');
+
     });
 
     $routes->group('category', static function ($categories) {
         $categories->get('/', 'Admin\CategoriesController::index');
-        $categories->get('get/(:num)', 'Admin\CategoriesController::get/$1');
-        $categories->get('new', 'Admin\CategoriesController::new_category');
         $categories->post('add', 'Admin\CategoriesController::add');
         $categories->post('update', 'Admin\CategoriesController::update');
         $categories->post('delete', 'Admin\CategoriesController::delete');
-        $categories->get('trash', 'Admin\CategoriesController::trash');
-        $categories->get('get/deleted/(:num)', 'Admin\CategoriesController::get_deleted/$1');
-        $categories->post('trash/restore/', 'Admin\CategoriesController::restore');
     });
 });
 
+//Punto de pago
 $routes->group('punto/pago', static function ($routes) {
 
     $routes->get('/', 'Payments\DashboardController::index');
     $routes->get('inscripciones/', 'Payments\FiltrosController::index');
     $routes->get('inscripciones/(:num)', 'Payments\InscripcionesController::index/$1');
     $routes->get('inscripciones/(:num)/(:alpha)', 'Payments\InscripcionesController::index/$1/$2');
-    $routes->get('pdf/(:hash)', 'Payments\InscripcionesController::showPDF/$1');
     $routes->post('pago/', 'Payments\InscripcionesController::pago');
     $routes->post('aprobar_deposito/', 'Payments\DepositosController::aprobar');
     $routes->post('pago_rechazado/', 'Payments\DepositosController::rechazar');
     $routes->post('pago_incompleto/', 'Payments\DepositosController::pagoIncompleto');
     $routes->post('buscar', 'Payments\FiltrosController::buscarPorCedula');
-    $routes->get('depositos/', 'Payments\DepositosController::index');
-    $routes->get('deposito/(:num)', 'Admin\DepositosController::index/$1');
-    $routes->get('getDatosPgDeposito/(:num)', 'Admin\DepositosController::getDatosPagoDeposito/$1');
-    $routes->post('actualizarEstado/', 'Admin\DepositosController::actualizarEstado');
-    $routes->get('obtener_depositos/(:num)', 'Admin\DepositosController::obtenerDeposito/$1');
-    $routes->post('aprobar/', 'Admin\DepositosController::aprobar_deposito');
-    $routes->post('incompleto/', 'Admin\DepositosController::pago_incompleto');
-    $routes->post('rechazar/', 'Admin\DepositosController::rechazar');
-    $routes->get('verificarDepositoRechazado/(:num)', 'Admin\DepositosController::verificarDepositoRechazado/$1');
-    $routes->get('verificarDepositoIncompleto/(:num)', 'Admin\DepositosController::verificarDepositoIncompleto/$1');
+    $routes->group('depositos', static function ($depositos) {
+        $depositos->get('/', 'Payments\DepositosController::index');
+        $depositos->get('completados', 'Payments\DepositosController::completados');
+        $depositos->get('rechazados', 'Payments\DepositosController::rechazados');
+        $depositos->get('incompletos', 'Payments\DepositosController::incompletos');
+    });
+    $routes->group('user', static function ($depositos) {
+        $depositos->get('/', 'Payments\UserController::index');
+        $depositos->post('update', 'Payments\UserController::update');
+        $depositos->post('recoverPassword', 'Payments\UserController::recoverPassword');
+    });
+    $routes->get('deposito/(:num)', 'Payments\PocesosDepController::index/$1');
+    $routes->get('getDatosPgDeposito/(:num)', 'Payments\PocesosDepController::getDatosPagoDeposito/$1');
+    $routes->post('actualizarEstado/', 'Payments\PocesosDepController::actualizarEstado');
+    $routes->get('obtener_depositos/(:num)', 'Payments\PocesosDepController::obtenerDeposito/$1');
+    $routes->post('aprobar/', 'Payments\PocesosDepController::aprobar_deposito');
+    $routes->post('incompleto/', 'Payments\PocesosDepController::pago_incompleto');
+    $routes->post('rechazar/', 'Payments\PocesosDepController::rechazar');
+    $routes->get('verificarDepositoRechazado/(:num)', 'Payments\PocesosDepController::verificarDepositoRechazado/$1');
+    $routes->get('verificarDepositoIncompleto/(:num)', 'Payments\PocesosDepController::verificarDepositoIncompleto/$1');
 });
 
+//Pdf
+$routes->get('pdf/(:hash)', 'Payments\InscripcionesController::showPDF/$1');
+//Payphone
+$routes->post('payphone', 'Payphone\PayphoneController::index');
+$routes->get('respuesta', 'Payphone\PayphoneController::respuesta');
+$routes->get('completado/(:num)/(:num)', 'Payphone\PayphoneController::completado/$1/$2');
+
+//Client
+$routes->get('/', 'Client\ClientController::index');
+$routes->post('obtener_user', 'Client\ClientController::obtenerUsuario');
 $routes->post('validar_cedula', 'Client\InscripcionController::validarCedula');
 $routes->post('obtener_datos_evento', 'Client\InscripcionController::obtenerDatosEvento');
 $routes->post('guardar_inscripcion', 'Client\InscripcionController::guardarInscripcion');
@@ -68,7 +128,7 @@ $routes->post('registrar_usuario', 'Client\InscripcionController::registrarUsuar
 $routes->post('deposito', 'Client\DepositosController::deposito');
 $routes->post('monto_pago', 'Client\DepositosController::fetchMontoDeposito');
 
-$routes->get('/', 'Client\ClientController::index');
+//Auth
 $routes->get('login', 'Auth\LoginController::index');
 $routes->get('logout', 'Auth\LoginController::logout');
 $routes->post('validate_login', 'Auth\LoginController::login');

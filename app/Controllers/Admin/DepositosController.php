@@ -20,7 +20,7 @@ class DepositosController extends BaseController
         try {
             helper('facture');
             $paymentsModel = $this->paymentsModel;
-            $payment = $paymentsModel->getPaymentByNumAutorizacion($num_autorizacion);
+            $payment = $paymentsModel->numeroAutorizacion($num_autorizacion);
             if (!$payment) {
                 return 'Registro no encontrado';
             }
@@ -30,7 +30,7 @@ class DepositosController extends BaseController
             $pdfOutput = $pdfData['output'];
 
             // Guardar el PDF en una ruta accesible
-            $pdfPath = WRITEPATH . 'uploads/factura.pdf';
+            $pdfPath = WRITEPATH . 'uploads/comprobante_recaudacion.pdf';
             file_put_contents($pdfPath, $pdfOutput);
 
             // Verificar si se debe enviar el correo electrónico
@@ -38,8 +38,8 @@ class DepositosController extends BaseController
                 helper('email');
                 // Enviar correo electrónico con el PDF adjunto
                 $to = $payment['email_user'];
-                $subject = 'Factura';
-                $message = 'Adjunto encontrará su factura.';
+                $subject = 'Comprobante de recaudación';
+                $message = 'Adjunto encontrará su comprobante de recaudación.';
                 $result = send_email_with_pdf_from_path($to, $subject, $message, $pdfPath);
 
                 if ($result === 'success') {
@@ -62,10 +62,9 @@ class DepositosController extends BaseController
         }
     }
 
-
     private function redirectView($validation = null, $flashMessages = null, $last_data = null, $last_action = null, $id = null, $uniqueCode = null)
     {
-        return redirect()->to('/punto/pago/deposito/' . $id)
+        return redirect()->to('/admin/pagos/' . $id)
             ->with('flashValidation', isset($validation) ? $validation->getErrors() : null)
             ->with('flashMessages', $flashMessages)
             ->with('last_data', $last_data)
@@ -102,7 +101,7 @@ class DepositosController extends BaseController
             'flashMessages' => $flashMessages,
             'uniqueCode' => $uniqueCode,
         ];
-        return view('payments/depositos_individuales', $data);
+        return view('admin/pagos/depositos/pagos_depositos_individuales', $data);
     }
     public function getDatosPagoDeposito($id_pago)
     {
@@ -234,12 +233,12 @@ class DepositosController extends BaseController
 
             $paymentCompleted = $this->paymentsModel->isPaymentCompleted($id_pago);
             if ($paymentCompleted) {
-                return $this->redirectView(null, [['El pago no puede aprobarse porque ya se encuentra aprobado', 'error']], null, null, $id_pago);
+                return $this->redirectView(null, [['El pago no puede aprobarse porque ya se encuentra aprobado', 'danger']], null, null, $id_pago);
             }
 
             // Verificar si los depósitos completan el monto del pago
             if (!$this->depositsModel->verifyDepositAmounts($id_pago)) {
-                return $this->redirectView(null, [['El monto de los depósitos no coincide con el monto requerido', 'error']], null, null, $id_pago);
+                return $this->redirectView(null, [['El monto de los depósitos no coincide con el monto requerido', 'danger']], null, null, $id_pago);
             }
 
             $local = $payment_methodModel->paymentLocal(1);
@@ -279,7 +278,7 @@ class DepositosController extends BaseController
             ];
 
             if (($payment['payment_status'] == PaymentStatus::Completado)||($payment['payment_status'] == PaymentStatus::Fallido)) {
-                return $this->redirectView(null, [['El pago no puede ser completado, estado invalido', 'error']], null, null, $id_pago);
+                return $this->redirectView(null, [['El pago no puede ser completado, estado invalido', 'danger']], null, null, $id_pago);
             }
             // Verificar si el campo num_autorizacion ya tiene un valor
             if (isset($payment['num_autorizacion']) && !empty($payment['num_autorizacion']) && ($payment['payment_status'] !== PaymentStatus::Completado)) {
@@ -309,11 +308,11 @@ class DepositosController extends BaseController
                     $uniqueCode
                 );
             } else {
-                return $this->redirectView(null, [['Error al enviar el email', 'error']], null, null, $id_pago);
+                return $this->redirectView(null, [['Error al enviar el email', 'danger']], null, null, $id_pago);
             }
 
         } catch (\Exception $e) {
-            return $this->redirectView(null, [[$e->getMessage(), 'error']], null, $id_pago);
+            return $this->redirectView(null, [[$e->getMessage(), 'danger']], null, $id_pago);
         }
     }
 
@@ -384,15 +383,22 @@ class DepositosController extends BaseController
 
             $paymentCompleted = $this->paymentsModel->isPaymentCompleted($id_pago_rechazo);
             if ($paymentCompleted) {
-                return $this->redirectView(null, [['El pago no puede cambiarse a incompleto por que ya se encuentra aprobado', 'error']], null, null, $id_pago_rechazo);
+                return $this->redirectView(null, [['El pago no puede cambiarse a incompleto por que ya se encuentra aprobado', 'danger']], null, null, $id_pago_rechazo);
             }
 
             $db = \Config\Database::connect();
             $db->transBegin();
 
-            $estado_pago = PaymentStatus::Cancelado;
+            $estado_pago = PaymentStatus::Incompleto;
             $paymentsModel = new PaymentsModel();
             $paymentResult = $paymentsModel->updatePaymentRechazo($id_pago_rechazo, $estado_pago, $id_usuario, $motivo_rechazo, $precio_pagado, 'Incompleto');
+
+
+            $datosInscrito= $this->paymentsModel->datosUserInscrito($id_pago_rechazo);
+            $codigoPago = $datosInscrito['payment_cod'] ?? null;
+            $names = $datosInscrito['nombresInscrito'] ?? null;
+            $email = $datosInscrito['emailInscrito'] ?? null;
+            $nombreEvento = $datosInscrito['nombreEvento']??null;
 
             if (!$paymentResult['update']) {
                 $db->transRollback();
@@ -400,7 +406,7 @@ class DepositosController extends BaseController
             }
 
             // Siempre enviar el correo de rechazo
-            $emailResult = send_rejection_email($email, 'Solicitud Rechazada', $motivo_rechazo, $names, 'email/rechazados', $valor_pendiente);
+            $emailResult = send_rejection_email($email, 'Solicitud Rechazada', $motivo_rechazo, $names, $codigoPago, $nombreEvento, 'email/rechazados', $valor_pendiente);
 
             if ($emailResult !== 'success') {
                 $db->transRollback();
@@ -464,6 +470,11 @@ class DepositosController extends BaseController
             $estado_pago = PaymentStatus::Rechazado;
             $paymentsModel = new PaymentsModel();
             $paymentResult = $paymentsModel->updatePaymentRechazo($id_pago_rechazo, $estado_pago, $id_usuario, $motivo_rechazo);
+            $datosInscrito= $this->paymentsModel->datosUserInscrito($id_pago_rechazo);
+            $codigoPago = $datosInscrito['payment_cod'] ?? null;
+            $names = $datosInscrito['nombresInscrito'] ?? null;
+            $email = $datosInscrito['emailInscrito'] ?? null;
+            $nombreEvento = $datosInscrito['nombreEvento']??null;
 
             if (!$paymentResult['update']) {
                 $db->transRollback();
@@ -474,7 +485,7 @@ class DepositosController extends BaseController
             }
 
             // Enviar el correo de rechazo
-            $emailResult = email_rechazo_general($email, 'Solicitud Rechazada', $motivo_rechazo, $names, 'email/rechazo_general');
+            $emailResult = email_rechazo_general($email, 'Solicitud Rechazada', $motivo_rechazo, $names, $codigoPago,$nombreEvento, 'email/rechazo_general');
 
             if ($emailResult !== 'success') {
                 $db->transRollback();

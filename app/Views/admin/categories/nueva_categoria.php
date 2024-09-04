@@ -28,9 +28,18 @@ Agregar categorías
         <div class="row">
             <div class="col-lg-12">
                 <div class="card shadow-sm">
-                    <div class="card-header bg-gray ">
-                        <h5 class="text-dark m-b-0">Agregar categoría</h5>
+
+                    <div class="card-header bg-gray">
+
+                        <h5 class="pull-left text-dark m-b-0">Agregar categoría</h5>
+                        <div class="pull-right">
+                            <div class="row">
+                                <label class="control-label">Monto de comisión <span class="text-primary">$<?= $additional_charge ?> USD</span></label>
+                            </div>
+                        </div>
+
                     </div>
+
                     <div class="card-body">
 
                         <form action="<?= base_url("admin/category/add") ?>" method="POST"
@@ -63,7 +72,8 @@ Agregar categorías
                                         <label class="control-label">Descripción de la categoría</label>
                                         <textarea class="form-control" name="short_description" id="" rows="4"
                                             placeholder=""><?= isset($last_data) ? display_data($last_data, 'short_description') : '' ?></textarea>
-                                        <span class="text-danger"><?= isset($validation) ? display_data($validation, 'short_description') : '' ?></span>
+                                        <span
+                                            class="text-danger"><?= isset($validation) ? display_data($validation, 'short_description') : '' ?></span>
                                     </div>
                                 </div>
                             </div>

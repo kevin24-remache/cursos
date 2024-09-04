@@ -44,21 +44,12 @@ Filtrado
                                     <div class="form-group has-feedback">
                                         <label for="estado">Estado</label>
                                         <select id="estado" class="form-control" name="estado">
-                                            <option value="" disabled selected>Seleccione una categoría</option>
-                                                <option value="1" <?= isset($last_data['estado'])&&$last_data['estado']==1 ? 'selected' : '' ?>>
+                                            <option value="" disabled>Seleccione una categoría</option>
+                                                <option value="1" selected <?= isset($last_data['estado'])&&$last_data['estado']==1 ? 'selected' : '' ?>>
                                                     Pendiente
                                                 </option>
                                                 <option value="2" <?= isset($last_data['estado'])&&$last_data['estado']==2 ? 'selected' : '' ?>>
                                                     Completado
-                                                </option>
-                                                <option value="3" <?= isset($last_data['estado'])&&$last_data['estado']==3 ? 'selected' : '' ?>>
-                                                    Fallido
-                                                </option>
-                                                <option value="4" <?= isset($last_data['estado'])&&$last_data['estado']==4 ? 'selected' : '' ?>>
-                                                    En proceso
-                                                </option>
-                                                <option value="5" <?= isset($last_data['estado'])&&$last_data['estado']==5 ? 'selected' : '' ?>>
-                                                    Cancelado
                                                 </option>
                                         </select>
                                         <span

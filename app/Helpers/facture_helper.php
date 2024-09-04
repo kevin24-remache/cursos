@@ -16,7 +16,7 @@ if (!function_exists('generate_pdf')) {
         $pdf = new Dompdf($options);
 
         // Contenido HTML de la factura
-        $html = view('payments/facture', [
+        $html = view('email/facture', [
             'num_autorizacion' => $payment['num_autorizacion'],
             'user' => $payment['user'],
             'user_ic' => $payment['user_ic'],
@@ -32,6 +32,8 @@ if (!function_exists('generate_pdf')) {
             'user_tel' => $payment['user_tel'],
             'operador' => $payment['operador'],
             'valor_final' => $payment['amount_pay'],
+            'event_name' => $payment['event_name'],
+            'metodo_pago' => $payment['metodo_pago'],
         ]);
 
         $pdf->loadHtml($html);

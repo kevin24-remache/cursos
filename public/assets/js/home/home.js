@@ -1,4 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // Mostrar el preloader cuando la página comienza a cargarse
+  window.onbeforeunload = function () {
+    showPreloader();
+  };
+
+  // Ocultar el preloader cuando la página ha terminado de cargarse
+  window.onload = function () {
+    hidePreloader();
+  };
+
   function showPreloader() {
     document.getElementById("preloader").style.display = "flex";
   }
@@ -27,26 +37,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  validar_cedula(document.getElementById("numeroCedulaRegistro"));
-  validar_cedula(document.getElementById("numeroCedula"));
-
-  function validar_cedula(numeroCedulaInput) {
-    numeroCedulaInput.addEventListener("keypress", function (event) {
-      const allowedChars = "0123456789";
-      const inputValue = event.key;
-
-      if (
-        !allowedChars.includes(inputValue) ||
-        (inputValue === "0" && numeroCedulaInput.value.length === 0)
-      ) {
-        event.preventDefault();
-      }
-
-      if (numeroCedulaInput.value.length === 15 && inputValue !== "Backspace") {
-        event.preventDefault();
-      }
+  // Función para validar que el campo solo acepte 10 dígitos
+  function validarCedulaLongitud(input) {
+    input.addEventListener("input", function () {
+      this.value = this.value.slice(0, 10); // Limitar a 10 caracteres
     });
   }
+
+  // Aplicar la validación al campo con ID "numeroCedula"
+  const numeroCedulaInput = document.getElementById("numeroCedula");
+  validarCedulaLongitud(numeroCedulaInput);
+
 
   function llenarCamposPersona(persona) {
     document.getElementById("id_user").value = persona.id;
@@ -120,205 +121,306 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  document.getElementById("numeroCedula").value = "0250072444";
 
-  document
-    .getElementById("formInscripcion")
-    .addEventListener("submit", async function (event) {
-      event.preventDefault();
-      let numeroCedula = document.getElementById("numeroCedula").value;
-      let eventoId = document.getElementById("eventoId").value;
-
-      const user = await obtenerUsuario(numeroCedula);
-      if (user) {
-        llenarCamposPersona(user);
-        try {
-          const response = await fetch("obtener_datos_evento", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ eventoId: eventoId }),
-          });
-          const eventData = await response.json();
-          if (eventData) {
-            document.getElementById("titleEvent").textContent = eventData.event_name;
-            document.getElementById("descripcionEvento").value = eventData.short_description;
-
-            if (eventData.category_ids) {
-              let categoryIds = eventData.category_ids.split(",");
-              let categoryNames = eventData.categories.split(",");
-              let categoryPagos = eventData.cantidad_dinero.split(",");
-
-              let categoriaHtml = "";
-              for (let i = 0; i < categoryIds.length; i++) {
-                categoriaHtml += `
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="categoria" value="${categoryIds[i]}" id="categoria${categoryIds[i]}" required>
-                    <label class="form-check-label" for="categoria${categoryIds[i]}">
-                      ${categoryNames[i]} - $${categoryPagos[i]}
-                    </label>
-                  </div>`;
-              }
-
-              document.getElementById("categoria").innerHTML = categoriaHtml;
-            } else {
-              document.getElementById("categoria").innerHTML = `
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="categoria" value="0" id="sinCategorias" checked required>
-                  <label class="form-check-label" for="sinCategorias">Sin categorías</label>
-                </div>`;
-            }
-
-            $("#modalInscripcion").modal("hide");
-            $("#modalDetallesEvento").modal("show");
-          } else {
-            swal("Ocurrió un error", "No se encontraron datos del evento", "warning");
-          }
-        } catch (error) {
-          console.error("Error:", error);
-        }
-      } else {
-        if (eventoId) {
-          document.getElementById("numeroCedulaRegistro").value = numeroCedula;
-          $("#modalInscripcion").modal("hide");
-          $("#modalRegistroUsuario").modal("show");
-        } else {
-          swal("Ocurrió un error", "El evento seleccionado no existe", "warning");
-        }
-      }
-    });
-
-  document
-    .getElementById("formDetallesEvento")
-    .addEventListener("submit", async function (event) {
-      event.preventDefault();
-      showPreloader();
-
-      let numeroCedula = document.getElementById("numeroCedula").value;
-      let eventoId = document.getElementById("eventoId").value;
-      let catId = document.querySelector('input[name="categoria"]:checked').value;
-
-      let jsonData = {
-        cedula: numeroCedula,
-        eventoId: eventoId,
-        catId: catId,
-      };
-
+  document.getElementById("formInscripcion").addEventListener("submit", async function (event) {
+    event.preventDefault();
+    let numeroCedula = document.getElementById("numeroCedula").value;
+    let eventoId = document.getElementById("eventoId").value;
+    if (numeroCedula.length !== 10) {
+      event.preventDefault(); // Evitar el envío del formulario
+      Swal.fire({
+        title: "Error",
+        text: "La cédula debe tener exactamente 10 dígitos.",
+        icon: "error",
+        confirmButtonText: "Entendido",
+      });
+      return;
+    }
+    const user = await obtenerUsuario(numeroCedula);
+    if (user) {
+      llenarCamposPersona(user);
       try {
-        const response = await fetch("guardar_inscripcion", {
+        const response = await fetch("obtener_datos_evento", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(jsonData),
+          body: JSON.stringify({ eventoId: eventoId }),
         });
-        const data = await response.json();
-        hidePreloader();
+        const eventData = await response.json();
+        if (eventData) {
+          document.getElementById("titleEvent").textContent = eventData.event_name;
+          document.getElementById("descripcionEvento").value = eventData.short_description;
 
-        if (data.error) {
-          swal("Ups! Algo salió mal!", data.message, "warning");
-        } else if (data.success) {
-          const fechaLimitePago = new Date(data.payment_time_limit);
-          const hoy = new Date();
-          const diferenciaMilisegundos = fechaLimitePago - hoy;
-          const diasRestantes = Math.ceil(diferenciaMilisegundos / (1000 * 60 * 60 * 24));
+          if (eventData.category_ids) {
+            let categoryIds = eventData.category_ids.split(",");
+            let categoryNames = eventData.categories.split(",");
+            let categoryPagos = eventData.cantidad_dinero.split(",");
 
-          Swal.fire({
-            title: "<strong>Registro Exitoso!</strong>",
-            icon: "success",
-            html: `
-              <p>Bien, te registraste para el evento.</p>
+            let categoriaHtml = "<div class='row'><div class='modalContainer col'><div class='row'>";
+            for (let i = 0; i < categoryIds.length; i++) {
+              categoriaHtml += `
+                <div class="col-md-6 col-lg-6">
+                  <div class="radio">
+                    <label>
+                      <input type="radio" name="categoria" value="${categoryIds[i]}" id="categoria${categoryIds[i]}" required>
+                      <span>${categoryNames[i]} - $${categoryPagos[i]}</span>
+                    </label>
+                  </div>
+                </div>
+            `;
+            }
+
+            categoriaHtml += "</div></div></div>";
+            document.getElementById("categoria").innerHTML = categoriaHtml;
+          } else {
+            document.getElementById("categoria").innerHTML = `
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="categoria" value="0" id="sinCategorias" checked required>
+                  <label class="form-check-label" for="sinCategorias">Sin categorías</label>
+                </div>`;
+          }
+
+          $("#modalInscripcion").modal("hide");
+          $("#modalDetallesEvento").modal("show");
+        } else {
+          swal("Ocurrió un error", "No se encontraron datos del evento", "warning");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    } else {
+      if (eventoId) {
+        document.getElementById("numeroCedulaRegistro").value = numeroCedula;
+        $("#modalInscripcion").modal("hide");
+        $("#modalRegistroUsuario").modal("show");
+      } else {
+        swal("Ocurrió un error", "El evento seleccionado no existe", "warning");
+      }
+    }
+  });
+
+  document.getElementById("formDetallesEvento").addEventListener("submit", async function (event) {
+    event.preventDefault();
+    showPreloader();
+
+    let numeroCedula = document.getElementById("numeroCedula").value;
+    let eventoId = document.getElementById("eventoId").value;
+    let catId = document.querySelector('input[name="categoria"]:checked').value;
+
+    let jsonData = {
+      cedula: numeroCedula,
+      eventoId: eventoId,
+      catId: catId,
+    };
+
+    try {
+      const response = await fetch("guardar_inscripcion", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(jsonData),
+      });
+      const data = await response.json();
+      hidePreloader();
+
+      if (data.error) {
+        swal("Ups! Algo salió mal!", data.message, "warning");
+      } else if (data.success) {
+        const fechaLimitePago = new Date(data.payment_time_limit);
+        const hoy = new Date();
+        const diferenciaMilisegundos = fechaLimitePago - hoy;
+        const diasRestantes = Math.ceil(diferenciaMilisegundos / (1000 * 60 * 60 * 24));
+
+        Swal.fire({
+          title: "<strong>Registro Exitoso!</strong>",
+          icon: "success",
+          html: `
+              <p>Te registraste para el evento: </br><b>${data.eventName}</b></p>
               <p>Tu código de pago es: <b>${data.codigoPago}</b></p>
               <p>Tienes <b>${diasRestantes}</b> días para realizar el pago</p>
               <p>Comprobante de registro enviado a : <b>${data.email}</b></p>
             `,
-            showCloseButton: true,
-            confirmButtonText: 'Ok',
-          });
-          $("#modalDetallesEvento").modal("hide");
-        } else {
-          swal("Ups! Algo salió mal!", "La acción no se pudo realizar correctamente!", "error");
-        }
-      } catch (error) {
+          showCloseButton: true,
+          confirmButtonText: 'Entendido',
+        });
+        $("#modalDetallesEvento").modal("hide");
+      } else {
+        swal("Ups! Algo salió mal!", "La acción no se pudo realizar correctamente!", "error");
+      }
+    } catch (error) {
+      hidePreloader();
+      console.error("Error:", error);
+      swal("Ups! Algo salió mal!", "Error al comunicarse con el servidor", "error");
+    }
+  });
+
+  document.getElementById('formMetodo').addEventListener('submit', function (event) {
+    event.preventDefault();
+    showPreloader();
+
+    const codigoPago = document.getElementById('codigoPagoMetodo').value;
+    const cedula = document.getElementById('depositoCedulaMetodo').value;
+    const metodoPago = document.querySelector('input[name="metodoPago"]:checked').value;
+
+    let url, data;
+    if (metodoPago === 'deposito') {
+      url = 'monto_pago';
+      data = { codigoPago, cedula };
+    } else if (metodoPago === 'tarjeta') {
+      url = 'payphone';
+      data = { codigoPago, cedula };
+    }
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
+    })
+      .then(response => response.json())
+      .then(data => {
         hidePreloader();
-        console.error("Error:", error);
-        swal("Ups! Algo salió mal!", "Error al comunicarse con el servidor", "error");
+        if (data.success) {
+          if (metodoPago === 'deposito') {
+            mostrarModalDeposito(data, cedula, codigoPago);
+          } else if (metodoPago === 'tarjeta') {
+            const payphoneData = data.data;
+            mostrarOpcionPayphone(payphoneData);
+          }
+        } else {
+          Swal.fire({
+            title: "Error",
+            text: data.error || "No se pudo obtener la información de pago",
+            icon: "warning",
+            confirmButtonText: `Entendido`,
+          });
+        }
+      })
+      .catch(error => {
+        hidePreloader();
+        console.error('Error:', error);
+        Swal.fire({
+          title: "Error",
+          text: "Hubo un problema al procesar su solicitud",
+          icon: "error"
+        });
+      });
+  });
+
+  $('#modalDeposito').on('hidden.bs.modal', function () {
+    // Limpiar la tabla de depósitos
+    const tablaDepositos = document.querySelector('#tabla_depositos');
+    tablaDepositos.innerHTML = '';
+
+    // Restablecer los campos del formulario
+    document.getElementById('codigoPagoDep').value = '';
+    document.getElementById('depositoCedulaDep').value = '';
+    document.getElementById('montoDeposito').value = '';
+    document.getElementById('comprobante').value = '';
+    document.getElementById('dateDeposito').value = '';
+    document.getElementById('comprobantePago').value = '';
+
+    // Ocultar y limpiar los mensajes
+    const mensajes = ['mensaje_estado', 'mensaje_original', 'mensaje_pagado', 'mensaje_nuevo'];
+    mensajes.forEach(id => {
+      const elemento = document.getElementById(id);
+      elemento.style.display = 'none';
+      if (elemento.querySelector('span')) {
+        elemento.querySelector('span').textContent = '';
       }
     });
+  });
 
-  document.getElementById('depositoCedula').addEventListener('change', fetchMontoDeposito);
-  document.getElementById('codigoPago').addEventListener('change', fetchMontoDeposito);
+  $('#modalMetodo').on('hidden.bs.modal', function () {
+    // Restablecer los campos del formulario
+    document.getElementById('codigoPagoMetodo').value = '';
+    document.getElementById('depositoCedulaMetodo').value = '';
+  });
 
-  function fetchMontoDeposito() {
-    const cedula = document.getElementById('depositoCedula').value;
-    const codigoPago = document.getElementById('codigoPago').value;
-    const montoDeposito = document.getElementById('montoDeposito');
+  // Selecciona todos los inputs con la clase "numTex"
+  const numTexInputs = document.querySelectorAll('input.numTex');
 
-    if (cedula && codigoPago) {
-      fetch('monto_pago', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ cedula: cedula, codigoPago: codigoPago })
-      })
-        .then(response => response.json())
-        .then(data => {
-          const mensajeEstado = document.querySelector('#mensaje_estado');
-          const mensajeEstadoSpan = mensajeEstado.querySelector('span');
-          const mensajeOriginal = document.querySelector('#mensaje_original');
-          const mensajeOriginalSpan = mensajeOriginal.querySelector('span');
-          const mensajePagado = document.querySelector('#mensaje_pagado');
-          const mensajePagadoSpan = mensajePagado.querySelector('span');
-          const mensajeNuevo = document.querySelector('#mensaje_nuevo');
-          const mensajeNuevoSpan = mensajeNuevo.querySelector('span');
-          const tablaDepositos = document.querySelector('#tabla_depositos');
+  numTexInputs.forEach(input => {
+    // Cambia el tipo a "text"
+    input.type = 'text';
 
-          if (data.error) {
-            montoDeposito.value = '';
-            mensajeEstadoSpan.textContent = data.error;
-            mensajeEstado.style.display = 'block';
-            [mensajeOriginal, mensajePagado, mensajeNuevo, tablaDepositos].forEach(elem => elem.style.display = 'none');
-          } else if (data.cancelado) {
-            montoDeposito.value = `$ ${data.nuevoMonto}`;
-            mensajeEstadoSpan.textContent = 'El pago anterior fue cancelado.';
-            mensajeOriginalSpan.textContent = `$ ${data.montoOriginal}`;
-            mensajePagadoSpan.textContent = `$ ${data.montoPagado}`;
-            mensajeNuevoSpan.textContent = `$ ${data.nuevoMonto}`;
-            [mensajeEstado, mensajeOriginal, mensajePagado, mensajeNuevo].forEach(elem => elem.style.display = 'block');
-            mostrarTablaDepositos(data.deposits);
-          } else {
-            montoDeposito.value = `$ ${data.monto}`;
-            [mensajeEstado, mensajeOriginal, mensajePagado, mensajeNuevo].forEach(elem => {
-              elem.querySelector('span').textContent = '';
-              elem.style.display = 'none';
-            });
-            mostrarTablaDepositos(data.deposits);
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          montoDeposito.value = '';
-          const mensajeEstado = document.querySelector('#mensaje_estado');
-          mensajeEstado.querySelector('span').textContent = 'Error al obtener el monto';
-          mensajeEstado.style.display = 'block';
-          [mensajeOriginal, mensajePagado, mensajeNuevo, tablaDepositos].forEach(elem => elem.style.display = 'none');
-        });
-    } else {
-      montoDeposito.value = '';
-      const mensajeEstado = document.querySelector('#mensaje_estado');
-      const mensajeOriginal = document.querySelector('#mensaje_original');
-      const mensajePagado = document.querySelector('#mensaje_pagado');
-      const mensajeNuevo = document.querySelector('#mensaje_nuevo');
-      const tablaDepositos = document.querySelector('#tabla_depositos');
-      [mensajeEstado, mensajeOriginal, mensajePagado, mensajeNuevo, tablaDepositos].forEach(elem => {
-        if (elem.querySelector('span')) {
-          elem.querySelector('span').textContent = '';
-        }
-        elem.style.display = 'none';
-      });
+    // Agrega un event listener para el evento "input"
+    input.addEventListener('input', function (e) {
+      // Reemplaza cualquier carácter que no sea un número
+      this.value = this.value.replace(/[^0-9]/g, '');
+    });
+
+    // Opcional: previene la entrada de 'e' (que puede ser usado para notación científica en inputs numéricos)
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'e') {
+        e.preventDefault();
+      }
+    });
+  });
+
+  function mostrarModalDeposito(data, cedula, codigo) {
+    document.getElementById('codigoPagoDep').value = codigo;
+    document.getElementById('depositoCedulaDep').value = cedula;
+    document.getElementById('montoDeposito').value = `$ ${data.monto}`;
+
+    const mensajeEstado = document.querySelector('#mensaje_estado');
+    const mensajeOriginal = document.querySelector('#mensaje_original');
+    const mensajePagado = document.querySelector('#mensaje_pagado');
+    const mensajeNuevo = document.querySelector('#mensaje_nuevo');
+    const tablaDepositos = document.querySelector('#tabla_depositos');
+
+    // Resetear todos los mensajes
+    [mensajeEstado, mensajeOriginal, mensajePagado, mensajeNuevo].forEach(elem => {
+      if (elem.querySelector('span')) {
+        elem.querySelector('span').textContent = '';
+      }
+      elem.style.display = 'none';
+    });
+
+    if (data.error) {
+      mensajeEstado.querySelector('span').textContent = data.error;
+      mensajeEstado.style.display = 'block';
+    } else if (data.cancelado) {
+      mensajeEstado.querySelector('span').textContent = 'El pago anterior fue cancelado.';
+      mensajeOriginal.querySelector('span').textContent = `$ ${data.montoOriginal}`;
+      mensajePagado.querySelector('span').textContent = `$ ${data.montoPagado}`;
+      mensajeNuevo.querySelector('span').textContent = `$ ${data.nuevoMonto}`;
+      [mensajeEstado, mensajeOriginal, mensajePagado, mensajeNuevo].forEach(elem => elem.style.display = 'block');
     }
+
+    if (data.deposits) {
+      mostrarTablaDepositos(data.deposits);
+    } else {
+      tablaDepositos.innerHTML = '<p class="text-muted">No hay depósitos registrados.</p>';
+      tablaDepositos.style.display = 'block';
+    }
+
+    $('#modalMetodo').modal('hide');
+    $('#modalDeposito').modal('show');
+  }
+
+  function mostrarOpcionPayphone(data) {
+    $('#modalMetodo').modal('hide');
+    $('#payModal').modal('show');
+    showPaymentBox(data);
+  }
+
+  function showPaymentBox(payphoneData) {
+    ppb = new PPaymentButtonBox({
+      token: payphoneData.token,
+      storeId: payphoneData.store,
+      clientTransactionId: payphoneData.clientTransactionId,
+      amount: payphoneData.amount,
+      amountWithoutTax: payphoneData.amountWithoutTax,
+      amountWithTax: payphoneData.amountWithTax,
+      tax: payphoneData.tax,
+      reference: payphoneData.reference,
+      service: payphoneData.service,
+      tip: payphoneData.tip
+    }).render('pp-button');
   }
 
   function mostrarTablaDepositos(deposits) {
@@ -326,11 +428,8 @@ document.addEventListener("DOMContentLoaded", function () {
     tablaDepositos.innerHTML = ''; // Limpiar la tabla existente
 
     if (deposits && deposits.length > 0) {
-      const tablaResponsiva = document.createElement('div');
-      tablaResponsiva.classList.add('table-responsive');
-
       const tabla = document.createElement('table');
-      tabla.classList.add('table', 'table-striped', 'table-hover', 'table-bordered');
+      tabla.classList.add('table', 'table-sm', 'table-striped', 'table-hover', 'table-bordered');
 
       // Crear encabezado
       const thead = document.createElement('thead');
@@ -358,12 +457,55 @@ document.addEventListener("DOMContentLoaded", function () {
       });
       tabla.appendChild(tbody);
 
-      tablaResponsiva.appendChild(tabla);
-      tablaDepositos.appendChild(tablaResponsiva);
-      tablaDepositos.style.display = 'block';
+      tablaDepositos.appendChild(tabla);
     } else {
       tablaDepositos.innerHTML = '<p class="text-muted">No hay depósitos registrados.</p>';
-      tablaDepositos.style.display = 'block';
+    }
+    tablaDepositos.style.display = 'block';
+  }
+
+  async function obtenerDatosUsuarioParaRegistro(cedula) {
+    showPreloader(); // Mostrar el preloader antes de hacer la petición
+
+    try {
+      const response = await fetch('obtener_user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ cedula: cedula }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        // Llenar los campos del formulario con los datos del usuario
+        document.getElementById("numeroCedulaRegistro").value = cedula;
+        document.getElementById("nombres").value = data.persona.name || '';
+        document.getElementById("apellidos").value = data.persona.surname || '';
+        document.getElementById("telefono").value = data.persona.mobile || '';
+        document.getElementById("email").value = data.persona.email || '';
+        document.getElementById("direccion").value = data.persona.direccion || '';
+      } else {
+        // Si no se encuentra el usuario, solo llenamos la cédula
+        document.getElementById("numeroCedulaRegistro").value = cedula;
+      }
+    } catch (error) {
+      console.error("Error al obtener los datos del usuario:", error);
+      document.getElementById("numeroCedulaRegistro").value = cedula;
+    } finally {
+      hidePreloader(); // Ocultar el preloader después de procesar los datos
+      $("#modalRegistroUsuario").modal("show"); // Mostrar el modal después de cargar los datos
     }
   }
+
+  // Llamar esta función cuando se muestra el modal
+  document.getElementById("modalRegistroUsuario").addEventListener("show.bs.modal", function () {
+    const cedula = document.getElementById("numeroCedulaRegistro").value;
+    obtenerDatosUsuarioParaRegistro(cedula);
+  });
+
+  // Aplicar la misma validación al input con ID "numeroCedulaRegistro"
+  const numeroCedulaRegistroInput = document.getElementById("numeroCedulaRegistro");
+  validarCedulaLongitud(numeroCedulaRegistroInput);
+
 });

@@ -39,24 +39,24 @@ class EventsModel extends Model
     protected $beforeDelete = ['setDeletedBy'];
     protected $afterDelete = [];
 
+    public function getAllEventsWithCategories()
+    {
+        return $this->select('events.*, GROUP_CONCAT(DISTINCT categories.category_name) AS categories, GROUP_CONCAT(DISTINCT categories.cantidad_dinero) AS prices')
+            ->join('event_category', 'event_category.event_id = events.id', 'left')
+            ->join('categories', 'categories.id = event_category.cat_id', 'left')
+            ->groupBy('events.id')
+            ->findAll();
+    }
 
-    // protected function setCreatedBy($data)
-    // {
-    //     $data['data']['created_by'] = session('id') ?? 1;
-    //     return $data;
-    // }
-
-    // protected function setUpdatedBy($data)
-    // {
-    //     $data['data']['updated_by'] = session('id') ?? 1;
-    //     return $data;
-    // }
-
-    // protected function setDeletedBy($data)
-    // {
-    //     $this->set(['deleted_by' => session('id') ?? 1])->update($data['id']);
-    //     return $data;
-    // }
+    public function getActiveAndCurrentEvents()
+    {
+        return $this->select('events.*, GROUP_CONCAT(categories.category_name) AS categories')
+            ->join('event_category', 'event_category.event_id = events.id', 'left')
+            ->join('categories', 'categories.id = event_category.cat_id', 'left')
+            ->where('events.event_status', 'Activo')
+            ->groupBy('events.id')
+            ->findAll();
+    }
 
     public function getEventById($id)
     {
@@ -78,5 +78,65 @@ class EventsModel extends Model
             ->first();
     }
 
+    public function getEventDetailsById($id)
+    {
+        return $this->select('events.id, events.event_name, events.short_description, events.event_date, events.modality, events.event_duration, events.address, events.registrations_start_date, events.registrations_end_date, events.event_status, events.image, GROUP_CONCAT(categories.id) AS category_ids, GROUP_CONCAT(categories.category_name) AS category_names')
+            ->join('event_category', 'event_category.event_id = events.id', 'left')
+            ->join('categories', 'categories.id = event_category.cat_id', 'left')
+            ->where('events.id', $id)
+            ->groupBy('events.id')
+            ->first();
+    }
 
+    public function updateEvent($id, $data, $categories, $newImagePath = null, $oldImagePath = null)
+    {
+        $db = \Config\Database::connect();
+        $db->transStart();
+        try {
+            // Actualizar los datos del evento
+            $this->update($id, $data);
+
+            // Eliminar las categorías actuales
+            $eventCategoryModel = new EventCategoryModel();
+            $eventCategoryModel->where('event_id', $id)->delete();
+
+            // Guardar las nuevas categorías
+            foreach ($categories as $category_id) {
+                $eventCategoryModel->insert([
+                    'event_id' => $id,
+                    'cat_id' => $category_id,
+                ]);
+            }
+
+            // Manejar la actualización de la imagen si se proporciona
+            if ($newImagePath !== null) {
+                $this->update($id, ['image' => $newImagePath]);
+            }
+
+            $db->transComplete();
+            if ($db->transStatus() === false) {
+                throw new \Exception('Error en la transacción de la base de datos');
+            }
+
+            // Eliminar la imagen anterior solo si la transacción se completó con éxito
+            if ($oldImagePath && file_exists(ROOTPATH . 'public/' . $oldImagePath) && $newImagePath !== null) {
+                if (!unlink(ROOTPATH . 'public/' . $oldImagePath)) {
+                    log_message('error', 'No se pudo eliminar la imagen anterior: ' . $oldImagePath);
+                    // Aquí podrías considerar lanzar una excepción si la eliminación de la imagen es crítica
+                }
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            $db->transRollback();
+            log_message('error', 'Error al actualizar el evento: ' . $e->getMessage());
+
+            // Si hubo un error, eliminar la nueva imagen si se subió
+            if ($newImagePath && file_exists(ROOTPATH . 'public/' . $newImagePath)) {
+                unlink(ROOTPATH . 'public/' . $newImagePath);
+            }
+
+            return false;
+        }
+    }
 }

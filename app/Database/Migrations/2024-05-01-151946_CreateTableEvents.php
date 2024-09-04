@@ -28,12 +28,12 @@ class CreateTableEvents extends Migration
                 'type' => 'DATE',
                 'null' => true,
             ],
-            'modality'=>[
-                'type'=>'INT',
-                'null'=>true,
+            'modality' => [
+                'type' => 'ENUM',
+                'constraint' => ['Presencial', 'Virtual', 'Hibrida'],
             ],
-            'event_time' =>[
-                'type' => 'TIME',
+            'event_duration' =>[
+                'type' => 'INT',
                 'null' => true,
             ],
             'address' =>[
@@ -49,10 +49,9 @@ class CreateTableEvents extends Migration
                 'null' => true,
             ],
             'event_status' =>[
-                'type' => 'VARCHAR',
-                'constraint' => 20,
-                'comment' => 'Estado del evento (Activo,Cancelado,Completado)',
-                'null' => true,
+                'type' => 'ENUM',
+                'constraint' => ['Activo', 'Desactivado'],
+                'default' => 'Desactivado',
             ],
             'image' =>[
                 'type' => 'TEXT',

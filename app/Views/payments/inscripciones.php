@@ -4,12 +4,6 @@
 Pagos
 <?= $this->endSection() ?>
 
-
-<?= $this->section('css') ?>
-<!-- DataTables -->
-<link rel="stylesheet" href="<?= base_url("dist/plugins/datatables/css/dataTables.bootstrap.min.css") ?>">
-<?= $this->endSection() ?>
-
 <?= $this->section('content') ?>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -25,7 +19,7 @@ Pagos
     <div class="content">
         <div class="info-box">
             <div class="table-responsive">
-                <table id="example2" class="table table-bordered table-hover" data-name="cool-table">
+                <table id="pagos" class="table datatable table-bordered table-hover" data-name="cool-table">
                     <thead>
                         <tr>
                             <th>Código de pago</th>
@@ -47,7 +41,8 @@ Pagos
                             $numAutorizacion = $registration['num_autorizacion'];
                             helper('payment_status');
                             ?>
-                            <tr data-id-pago="<?= $registration["id_pago"] ?>" data-ic="<?= $registration["cedula"] ?>" data-estado-pago="<?= $registration["estado_pago"] ?>"
+                            <tr data-id-pago="<?= $registration["id_pago"] ?>" data-ic="<?= $registration["cedula"] ?>"
+                                data-estado-pago="<?= $registration["estado_pago"] ?>"
                                 data-codigo-pago="<?= $registration["codigo_pago"] ?>"
                                 data-nombres="<?= $registration["nombres"] ?>" data-evento="<?= $registration["evento"] ?>"
                                 data-categoria="<?= $registration["categoria"] ?>"
@@ -71,9 +66,12 @@ Pagos
                                             <i class="fa fa-credit-card-alt" aria-hidden="true"></i> Cobrar
                                         </button>
                                     <?php elseif ($registration['estado_pago'] == 'Completado'): ?>
-                                        <a class="btn btn-outline-danger"
-                                            href="<?= base_url("punto/pago/pdf/$numAutorizacion") ?>" title="PDF">
-                                            <i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF
+
+                                        <a class="js-mytooltip btn btn-outline-danger m-1" target="_blank"
+                                            href="<?= base_url("pdf/$numAutorizacion") ?>"
+                                            data-mytooltip-custom-class="align-center" data-mytooltip-direction="top"
+                                            data-mytooltip-theme="danger" data-mytooltip-content="PDF" title="PDF">
+                                            <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                                         </a>
                                     <?php endif ?>
                                 </td>
@@ -144,116 +142,8 @@ Pagos
 
 <?= $this->section('scripts') ?>
 
-<!-- DataTable -->
-<script src="<?= base_url("dist/plugins/datatables/jquery.dataTables.min.js") ?>"></script>
-<script src="<?= base_url("dist/plugins/datatables/dataTables.bootstrap.min.js") ?>"></script>
-
 <script>
     $(document).ready(function () {
-
-
-        $("#example2").DataTable({
-            columnDefs: [
-                { targets: 'exclude-view', visible: false },
-                {
-                    className: 'dtr-control bg-white',
-                }
-            ],
-            language: {
-                buttons: {
-                    sLengthMenu: "Mostrar _MENU_ resultados",
-                    pageLength: {
-                        _: "Mostrar %d resultados",
-                    },
-                },
-                zeroRecords: "No hay coincidencias",
-                info: "Mostrando _END_ resultados de _MAX_",
-                infoEmpty: "No hay datos disponibles",
-                infoFiltered: "(Filtrado de _MAX_ registros totales)",
-                search: "Buscar",
-                emptyTable: "No existen registros",
-                paginate: {
-                    first: "Primero",
-                    previous: "Anterior",
-                    next: "Siguiente",
-                    last: "Último",
-                },
-            },
-            colReorder: true,
-            responsive: false,
-            dom: "Bfrtip",
-            buttons: [
-                {
-                    extend: "pageLength",
-                    className: "",
-                },
-
-                {
-                    extend: 'colvis',
-                    text: '<i class="fa fa-columns" aria-hidden="true"></i> Columnas visibles',
-                    columnText: function (dt, idx, title) {
-                        return (idx + 1) + ': ' + title;
-                    },
-
-                    className: "bg-success",
-                },
-                // {
-                //     extend: 'collection',
-                //     text: '<i class="fa fa-download"></i> Exportar',
-                //     buttons: [
-                //         {
-                //             extend: 'copyHtml5',
-                //             text: '<i class="fa fa-files-o text-info"></i> Copiar',
-                //             titleAttr: 'Copiar'
-                //         },
-                //         {
-                //             extend: 'excelHtml5',
-                //             text: '<i class="fa fa-file-excel-o text-success"></i> Excel',
-                //             titleAttr: 'Excel'
-                //         },
-                //         {
-                //             extend: 'csvHtml5',
-                //             text: '<i class="fa fa-file-text-o text-primary"></i> CSV',
-                //             titleAttr: 'CSV'
-                //         },
-                //         {
-                //             extend: 'pdfHtml5',
-                //             text: '<i class="fa fa-file-pdf-o text-red"></i> PDF',
-                //             titleAttr: 'PDF'
-                //         },
-                //         {
-                //             extend: 'colvis',
-                //             text: 'Columnas visibles',
-                //             columnText: function (dt, idx, title) {
-                //                 // Verifica si la columna es la primera (índice 0) o tiene una clase específica
-                //                 if (idx === 0 || dt.column(idx).nodes().to$().hasClass('clase-a-excluir')) {
-                //                     return null; // Retorna null para excluir la columna de la lista
-                //                 }
-                //                 return (idx) + ': ' + title;
-                //             }
-                //         }
-                //     ]
-                // },
-
-                // {
-                //     text: '<i class="fa fa-lg fas fa-plus-circle"></i> Agregar',
-                //     titleAttr: 'Agregar',
-                //     className: 'bg-success text-white',
-                //     action: function () {
-                //         window.location.href = base_url + "admin/event/new";
-                //     },
-                // },
-                // {
-                //     text: '<i class="fa-lg fas fa-trash-restore"></i><p class="tooltip-text">Eliminados</p>',
-                //     className: 'd-none',
-
-                //     action: function () {
-                //         $("#createEventModal").modal("show");
-                //     },
-                // },
-            ],
-            lengthMenu: [10, 25, 50, 100],
-        });
         $(".btn-pagar").click(function () {
             var fila = $(this).closest("tr");
             var ic = fila.data("ic");

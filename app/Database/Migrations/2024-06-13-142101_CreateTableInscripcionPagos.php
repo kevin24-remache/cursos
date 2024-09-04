@@ -22,7 +22,7 @@ class CreateTableInscripcionPagos extends Migration
             'usuario_id' => [
                 'type' => 'INT',
                 'unsigned' => true,
-                'null' => false,
+                'null' => true,
             ],
             'fecha_hora' => [
                 'type' => 'DATETIME',

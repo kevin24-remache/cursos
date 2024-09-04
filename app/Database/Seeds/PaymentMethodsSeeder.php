@@ -14,8 +14,12 @@ class PaymentMethodsSeeder extends Seeder
                 'description' => 'Pago por deposito'
             ],
             [
-                'method_name' => 'Pago fisico',
+                'method_name' => 'Pago físico',
                 'description' => 'Pago en puntos de pago'
+            ],
+            [
+                'method_name' => 'Pago en linea',
+                'description' => 'Pago en el sistema de inscripción'
             ]
         ];
         $this->db->table('payment_methods')->insertBatch($data);

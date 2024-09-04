@@ -30,6 +30,11 @@
     <!-- Notificaciones -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
+    <!-- tooltip -->
+    <link rel="stylesheet" href="<?= base_url('dist/plugins/tooltip/tooltip.css') ?>">
+    <!-- Datatables -->
+    <link rel="stylesheet" href="<?= base_url("dist/plugins/datatables/css/dataTables.bootstrap.min.css") ?>">
+    <link rel="stylesheet" href="<?= base_url("assets/css/datatables.css") ?>">
     <?= $this->renderSection('css'); ?>
 
 </head>
@@ -40,7 +45,7 @@
             <!-- Logo -->
             <a href="index.html" class="logo blue-bg">
                 <span class="logo-mini"><img src="<?= base_url("dist/img/logo-n.png") ?>" alt=""></span>
-                <span class="logo-lg"><img src="<?= base_url("dist/img/logo.png") ?>" alt=""></span> </a>
+                <span class="logo-lg"><img style="width:120px; background:white; border-radius:10px;" src="<?= base_url("assets/images/logo-ep.png") ?>" alt=""></span> </a>
             <nav class="navbar blue-bg navbar-static-top">
                 <!-- Sidebar toggle button-->
                 <ul class="nav navbar-nav pull-left">
@@ -49,14 +54,29 @@
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
                         <!-- User Account: style can be found in dropdown.less -->
-                        <li class="dropdown user user-menu p-ph-res"> <a href="#" class="dropdown-toggle"
-                                data-toggle="dropdown"><span class="hidden-xs"><?= session('first_name')?></span> </a>
+                        <li class="dropdown user user-menu p-ph-res">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <img
+                                    src="<?= base_url('assets/images/admin_letter.jpeg') ?>" class="user-image"
+                                    alt="User Image"> <span class="hidden-xs"><?= session('first_name') ?></span> </a>
                             <ul class="dropdown-menu">
+
+                                <li class="user-header">
+                                    <div class="pull-left user-img"><img
+                                            src="<?= base_url('assets/images/admin_letter.jpeg') ?>"
+                                            class="img-responsive" alt="User"></div>
+                                    <p class="text-left"><?= session('first_name') . ' ' . session('last_name') ?>
+                                        <small><?= session('user_email') ?></small>
+                                    </p>
+                                    <div class="view-link text-left"><a href="#">Ver perfil</a> </div>
+                                </li>
+                                <hr>
                                 <li><a href="#"><i class="icon-profile-male"></i> Mi perfil</a></li>
                                 <li role="separator" class="divider"></li>
-                                <li><a href="#"><i class="icon-gears"></i>Configuración</a></li>
+                                <li><a href="<?= base_url("admin/config") ?>"><i class="icon-gears"></i>
+                                        Configuración</a></li>
                                 <li role="separator" class="divider"></li>
-                                <li><a href="<?= base_url("logout") ?>"><i class="fa fa-power-off"></i>Cerrar Sesión</a>
+                                <li><a href="<?= base_url("logout") ?>"><i title="Cerrar Sesión"
+                                            class="fa fa-power-off"></i>Cerrar Sesión</a>
                                 </li>
                             </ul>
                         </li>
@@ -66,44 +86,92 @@
         </header>
         <aside class="main-sidebar">
             <div class="sidebar">
+
+                <div class="user-panel">
+                    <div class="image text-center">
+                        <img src="<?= base_url('assets/images/admin_letter.jpeg') ?>" class="img-circle"
+                            alt="User Image">
+                    </div>
+                    <div class="info text-black">
+                        <p><?= session('first_name') ?></p>
+                        <a href="<?= base_url("admin/config") ?>"><i class="fa fa-lg fa-cog"></i></a> <a
+                            href="<?= base_url("logout") ?>"><i class="fa fa-lg fa-power-off"></i></a>
+                    </div>
+                </div>
                 <ul class="sidebar-menu" data-widget="tree">
-                    <li class="header">PERSONAL</li>
+                    <li class="header">
+
+                        <a class="px-0 py-1" href="<?= base_url('admin/inscripciones') ?>">
+                        <i class="fa fa-usd" aria-hidden="true"></i><span>Cobrar</span> <span
+                                class="pull-right-container"> </span>
+                        </a>
+                    </li>
                     <li class="treeview"> <a href="#"> <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                             <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
                         <ul class="treeview-menu">
                             <li class=""><a href="<?= base_url("admin/dashboard") ?>">Dashboard</a></li>
                         </ul>
                     </li>
-                    <li class="treeview"> <a href="#"> <i class="fa fa-user-o"></i> <span>Usuarios</span> <span
+                    <li
+                        class="treeview <?= (isset($modulo) && in_array($modulo, [ModulosAdmin::USERS])) ? 'active' : '' ?>">
+                        <a href="#"> <i class="fa fa-user-o"></i> <span>Usuarios</span> <span
                                 class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
                         <ul class="treeview-menu">
-                            <li><a href="apps-calendar.html">Agregar</a></li>
-                            <li><a href="apps-support-ticket.html">Lista</a></li>
+                            <li
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::USERS)) ? 'active' : '' ?>">
+                                <a href="<?= base_url('admin/users'); ?>">Lista</a>
+                            </li>
                         </ul>
                     </li>
                     <li
-                        class="treeview <?= (isset($modulo) && in_array($modulo, [ModulosAdmin::EVENTS,ModulosAdmin::EVENTS_LIST, ModulosAdmin::EVENTS_ADD])) ? 'active' : '' ?>">
+                        class="treeview <?= (isset($modulo) && in_array($modulo, [ModulosAdmin::EVENTS, ModulosAdmin::EVENTS_LIST, ModulosAdmin::EVENTS_ADD])) ? 'active' : '' ?>">
                         <a href="#"> <i class="fa fa-ticket"></i> <span>Eventos</span> <span
                                 class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
                         <ul class="treeview-menu">
-                            <li class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::EVENTS_ADD)) ? 'active' : '' ?>"><a href="<?= base_url("admin/event/new") ?>">Agregar</a></li>
-                            <li class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::EVENTS_LIST)) ? 'active' : '' ?>"><a href="<?= base_url("admin/event") ?>" >Lista</a></li>
+                            <li
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::EVENTS_ADD)) ? 'active' : '' ?>">
+                                <a href="<?= base_url("admin/event/new") ?>">Agregar</a>
+                            </li>
+                            <li
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::EVENTS_LIST)) ? 'active' : '' ?>">
+                                <a href="<?= base_url("admin/event") ?>">Lista</a>
+                            </li>
                         </ul>
                     </li>
 
                     <li
-                        class="treeview <?= (isset($modulo) && in_array($modulo, [ModulosAdmin::CATEGORIES,ModulosAdmin::CATEGORY_LIST, ModulosAdmin::CATEGORY_ADD])) ? 'active' : '' ?>">
+                        class="treeview <?= (isset($modulo) && in_array($modulo, [ModulosAdmin::CATEGORIES, ModulosAdmin::CATEGORY_LIST, ModulosAdmin::CATEGORY_ADD])) ? 'active' : '' ?>">
                         <a href="#"> <i class="fa fa-list-ul"></i> <span>Categorías</span> <span
                                 class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
                         <ul class="treeview-menu">
-                            <li class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::CATEGORY_ADD)) ? 'active' : '' ?>"><a href="<?= base_url("admin/category/new") ?>">Agregar</a></li>
-                            <li class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::CATEGORY_LIST)) ? 'active' : '' ?>"><a href="<?= base_url("admin/category") ?>" >Lista</a></li>
+                            <li
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::CATEGORY_LIST)) ? 'active' : '' ?>">
+                                <a href="<?= base_url("admin/category") ?>">Lista</a>
+                            </li>
                         </ul>
                     </li>
-                    <li class="treeview"> <a href="#"> <i class="fa fa-university"></i> <span>Inscripciones</span> <span
-                                class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
+                    <li
+                        class="treeview  <?= (isset($modulo) && in_array($modulo, [ModulosAdmin::PAGOS, ModulosAdmin::PAGOS_COMPLETOS, ModulosAdmin::PAGOS_RECHAZADOS, ModulosAdmin::PAGOS_INCOMPLETOS])) ? 'active' : '' ?>">
+                        <a href="#"> <i class="fa fa-credit-card-alt" aria-hidden="true"></i> <span>Pagos con
+                                depósitos</span> <span class="pull-right-container"> <i
+                                    class="fa fa-angle-left pull-right"></i> </span> </a>
                         <ul class="treeview-menu">
-                            <li><a href="apps-calendar.html">Registro</a></li>
+                            <li
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::PAGOS)) ? 'active' : '' ?>">
+                                <a href="<?= base_url('admin/pagos') ?>">Ingresados</a>
+                            </li>
+                            <li
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::PAGOS_COMPLETOS)) ? 'active' : '' ?>">
+                                <a href="<?= base_url('admin/pagos/completados') ?>">Completados</a>
+                            </li>
+                            <li
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::PAGOS_RECHAZADOS)) ? 'active' : '' ?>">
+                                <a href="<?= base_url('admin/pagos/rechazados') ?>">Rechazados</a>
+                            </li>
+                            <li
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::PAGOS_INCOMPLETOS)) ? 'active' : '' ?>">
+                                <a href="<?= base_url('admin/pagos/incompletos') ?>">Incompletos</a>
+                            </li>
                         </ul>
                     </li>
                 </ul>
@@ -156,18 +224,70 @@
 
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
     <script src="<?= base_url('assets/js/flashMessages.js') ?>"></script>
     <script>
-        var flashMessages = <?= getFlashMessages(isset($flashMessages) ? $flashMessages : null, true) ?>;
-        for (let element in flashMessages) {
-            showFlashMessage(flashMessages[element][0], flashMessages[element][1]);
-        }
+        // var flashMessages = <?= getFlashMessages(isset($flashMessages) ? $flashMessages : null, true) ?>;
+        // for (let element in flashMessages) {
+        //     showFlashMessage(flashMessages[element][0], flashMessages[element][1]);
+        // }
         // Global variables
         var base_url = "<?= base_url() ?>"
         var current_url = "<?= uri_string() ?>";
     </script>
 
+    <!-- tooltip -->
+    <script src="<?= base_url('dist/plugins/tooltip/tooltip.js') ?>"></script>
+    <script src="<?= base_url('dist/plugins/tooltip/script.js') ?>"></script>
+    <!-- sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function showAlert(type, message, uniqueCode = null) {
+            if (type === 'success') {
+                let html = `<div>${message}</div>`;
+                if (uniqueCode) {
+                    html += `<div class="mt-3"><a class="btn btn-outline-danger" href="${base_url}pdf/${uniqueCode}" target="_blank"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Ver PDF</a></div>`;
+                }
+                Swal.fire({
+                    title: "<strong>¡Éxito!</strong>",
+                    icon: "success",
+                    html: html,
+                    showCloseButton: true,
+                    showCancelButton: false,
+                    focusConfirm: false,
+                    confirmButtonText: `<i class="fa fa-thumbs-up"></i> Entendido!`,
+                    confirmButtonAriaLabel: "Thumbs up, great!",
+                });
+            } else {
+                Swal.fire({
+                    icon: type,
+                    title: message,
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                });
+            }
+        }
 
+        // Verificar si hay mensajes de éxito, advertencia o error
+        <?php if (session()->has('flashMessages')): ?>
+            <?php foreach (session('flashMessages') as $message): ?>
+                <?php
+                $type = $message[1];
+                $msg = $message[0];
+                $uniqueCode = isset($message[2]) ? $message[2] : null;
+                ?>
+                showAlert('<?= $type ?>', '<?= $msg ?>', '<?= $uniqueCode ?>');
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </script>
+    <!-- DataTable -->
+    <script src="<?= base_url("dist/plugins/datatables/jquery.dataTables.min.js") ?>"></script>
+    <script src="<?= base_url("dist/plugins/datatables/dataTables.bootstrap.min.js") ?>"></script>
+
+    <script src="<?= base_url("assets/js/datatables.js") ?>"></script>
     <?= $this->renderSection('scripts'); ?>
 </body>
 

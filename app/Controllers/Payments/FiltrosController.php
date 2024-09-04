@@ -44,7 +44,7 @@ class FiltrosController extends BaseController
                 PaymentStatus::Completado,
                 PaymentStatus::Fallido,
                 PaymentStatus::EnProceso,
-                PaymentStatus::Cancelado
+                PaymentStatus::Incompleto
             ];
 
             if (in_array($estado, $validStates)) {

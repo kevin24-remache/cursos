@@ -7,6 +7,8 @@ Agregar eventos
 <?= $this->section('css') ?>
 <!-- Select 2 -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<!-- select -->
+<link rel="stylesheet" href="<?= base_url('assets/css/select.css') ?>">
 <!-- dropify -->
 <link rel="stylesheet" href="<?= base_url("dist/plugins/dropify/dropify.min.css"); ?>">
 <?= $this->endSection() ?>
@@ -43,7 +45,7 @@ Agregar eventos
                                         <label class="control-label">Nombre del evento</label>
                                         <input class="form-control" name="event_name" placeholder=""
                                             value="<?= isset($last_data) ? display_data($last_data, 'event_name') : '' ?>"
-                                            type="text">
+                                            type="text" required>
                                         <span
                                             class="text-danger"><?= isset($validation) ? display_data($validation, 'event_name') : '' ?></span>
                                     </div>
@@ -52,7 +54,8 @@ Agregar eventos
                                     <div class="form-group has-feedback">
                                         <label class="control-label">Fecha del evento</label>
                                         <input class="form-control" name="event_date" placeholder="" type="date"
-                                            value="<?= isset($last_data) ? display_data($last_data, 'event_date') : '' ?>">
+                                            value="<?= isset($last_data) ? display_data($last_data, 'event_date') : '' ?>"
+                                            required>
                                         <span
                                             class="text-danger"><?= isset($validation) ? display_data($validation, 'event_date') : '' ?></span>
                                     </div>
@@ -60,14 +63,30 @@ Agregar eventos
                                 <div class="col-md-4">
                                     <div class="form-group has-feedback">
                                         <label class="control-label">Modalidad</label>
-                                        <select class="form-select" name="modality">
+                                        <select class="form-select" name="modality" id="modality" required>
                                             <option value="" disabled selected>Seleccione la modalidad del evento
                                             </option>
-                                            <option value="1" <?= isset($last_data) && $last_data['modality'] == '1' ? 'selected' : '' ?>>Presencial</option>
-                                            <option value="2" <?= isset($last_data) && $last_data['modality'] == '2' ? 'selected' : '' ?>>Virtual</option>
+                                            <option value="Presencial" <?= isset($last_data) && $last_data['modality'] == 'Presencial' ? 'selected' : '' ?>>Presencial
+                                            </option>
+                                            <option value="Virtual" <?= isset($last_data) && $last_data['modality'] == 'Virtual' ? 'selected' : '' ?>>Virtual</option>
+                                            <option value="Hibrida" <?= isset($last_data) && $last_data['modality'] == 'Hibrida' ? 'selected' : '' ?>>Híbrida</option>
                                         </select>
                                         <span
                                             class="text-danger"><?= isset($validation) ? display_data($validation, 'modality') : '' ?></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4"></div>
+                                <div class="col-md-4"></div>
+                                <!-- Nuevo campo para la dirección del evento -->
+                                <div class="col-md-4" id="event-duration-container" style="display: none;">
+                                    <div class="form-group has-feedback">
+                                        <label class="control-label">Duración del evento</label>
+                                        <input class="form-control" name="event_duration" id="event_duration"
+                                            type="number"
+                                            value="<?= isset($last_data) ? display_data($last_data, 'event_duration') : '' ?>">
+                                        <span
+                                            class="text-danger"><?= isset($validation) ? display_data($validation, 'event_duration') : '' ?></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -84,11 +103,12 @@ Agregar eventos
                                         <label class="control-label">Categorías del evento</label>
 
                                         <select id="id_cat" class="form-control select2" name="id_cat[]"
-                                            multiple="multiple" style="100%">
+                                            multiple="multiple" style="width: 100%">
                                             <option value="" disabled>Seleccione una categoría</option>
                                             <?php foreach ($categories as $key => $category): ?>
                                                 <option value="<?= $category["id"] ?>" <?= isset($last_data['categories']) && in_array($category["id"], $last_data['categories']) ? 'selected' : '' ?>>
-                                                    <?= $category["category_name"] ?>
+                                                    <?= $category["category_name"] ?> -
+                                                    $<?= number_format($category["cantidad_dinero"], 2) ?>
                                                 </option>
                                             <?php endforeach ?>
                                         </select>
@@ -135,7 +155,7 @@ Agregar eventos
                                         class="text-danger"><?= isset($validation) ? display_data($validation, 'image') : '' ?></span>
                                 </div>
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-success">Submit</button>
+                                    <button type="submit" class="btn btn-success">Agregar evento</button>
                                 </div>
                             </div>
                         </form>
@@ -198,6 +218,21 @@ Agregar eventos
                 drDestroy.init();
             }
         })
+
+        // Manejo de la visibilidad y limpieza del campo de duración del evento
+        $('#modality').change(function () {
+            var selectedModality = $(this).val();
+            if (selectedModality === 'Virtual' || selectedModality === 'Hibrida') {
+                $('#event-duration-container').show();
+            } else {
+                $('#event-duration-container').hide();
+                $('#event_duration').val(''); // Limpiar el campo de duración del evento
+            }
+        });
+
+        // Trigger the change event on page load to set the initial state
+        $('#modality').trigger('change');
+
         $('.select2').select2();
     });
 </script>

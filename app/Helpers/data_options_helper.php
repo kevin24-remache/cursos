@@ -3,8 +3,8 @@ class RolesOptions
 {
     const AdminPrincipal = 1;
     const AdministradorDePagos = 2;
-    const AdministradorDeEventos = 3;
-    const UsuarioPublico = 4;
+    // const AdministradorDeEventos = 3;
+    // const UsuarioPublico = 4;
 }
 
 class ModulosAdmin
@@ -15,16 +15,27 @@ class ModulosAdmin
     const EVENTS = 'EVENTS';
     const EVENTS_LIST = 'EVENTS_LIST';
     const EVENTS_ADD = 'EVENTS_ADD';
+    const PAGOS = 'PAGOS';
+    const PAGOS_COMPLETOS = 'PAGOS_COMPLETOS';
+    const PAGOS_RECHAZADOS = 'PAGOS_RECHAZADOS';
+    const PAGOS_INCOMPLETOS = 'PAGOS_INCOMPLETOS';
+    const USERS = 'USERS';
 }
 
 class ModulosAdminPagos
 {
+    const DASHBOARD = 'DASHBOARD';
     const INSCRIPCIONES = 'INSCRIPCIONES';
     const CATEGORY_LIST = 'CATEGORY_LIST';
     const CATEGORY_ADD = 'CATEGORY_ADD';
     const EVENTS = 'EVENTS';
     const EVENTS_LIST = 'EVENTS_LIST';
     const EVENTS_ADD = 'EVENTS_ADD';
+    const PAGOS = 'PAGOS';
+    const PAGOS_COMPLETOS = 'PAGOS_COMPLETOS';
+    const PAGOS_RECHAZADOS = 'PAGOS_RECHAZADOS';
+    const PAGOS_INCOMPLETOS = 'PAGOS_INCOMPLETOS';
+    const USERS = 'USERS';
 }
 
 class PaymentStatus
@@ -33,9 +44,18 @@ class PaymentStatus
     const Completado = 2;
     const Fallido = 3;
     const EnProceso = 4;
-    const Cancelado = 5;
+    const Incompleto = 5;
     const Rechazado = 6;
 }
+
+class Modalidad
+{
+    const Presencial = 'Presencial';
+    const Virtual = 'Virtual';
+    const Hibrida = 'Hibrida';
+
+}
+
 if (!function_exists('getPaymentStatusText')) {
     function getPaymentStatusText($status)
     {
@@ -48,10 +68,33 @@ if (!function_exists('getPaymentStatusText')) {
                 return 'Fallido';
             case PaymentStatus::EnProceso:
                 return 'EnProceso';
-            case PaymentStatus::Cancelado:
-                return 'Cancelado';
+            case PaymentStatus::Incompleto:
+                return 'Incompleto';
+            case PaymentStatus::Rechazado:
+                return 'Rechazado';
             default:
                 return 'Desconocido';
+        }
+    }
+}
+if (!function_exists('style_estado')) {
+    function style_estado($estado_pago)
+    {
+        switch (strtolower($estado_pago)) {
+            case PaymentStatus::Pendiente:
+                return 'label label-primary';
+            case PaymentStatus::Completado:
+                return 'label label-success';
+            case PaymentStatus::Fallido:
+                return 'label label-danger';
+            case PaymentStatus::EnProceso:
+                return 'label label-info';
+            case PaymentStatus::Incompleto:
+                return 'label label-warning text-black';
+            case PaymentStatus::Rechazado:
+                return 'label label-danger';
+            default:
+                return '';
         }
     }
 }
@@ -67,8 +110,8 @@ if (!function_exists('mapEstadoToValue')) {
                 return PaymentStatus::Fallido;
             case 'enproceso':
                 return PaymentStatus::EnProceso;
-            case 'cancelado':
-                return PaymentStatus::Cancelado;
+            case 'Incompleto':
+                return PaymentStatus::Incompleto;
             default:
                 return null; // Estado inválido
         }
@@ -86,11 +129,23 @@ if (!function_exists('mapValueToEstado')) {
                 return 'fallido';
             case PaymentStatus::EnProceso:
                 return 'enproceso';
-            case PaymentStatus::Cancelado:
-                return 'cancelado';
+            case PaymentStatus::Incompleto:
+                return 'Incompleto';
             default:
                 return 'desconocido';
         }
     }
 
+}
+
+if (!function_exists('getRolesOptions')) {
+    function getRolesOptions()
+    {
+        return [
+            RolesOptions::AdminPrincipal => 'Admin Principal',
+            RolesOptions::AdministradorDePagos => 'Administrador de Pagos',
+            // RolesOptions::AdministradorDeEventos => 'Administrador de Eventos',
+            // RolesOptions::UsuarioPublico => 'Usuario Público',
+        ];
+    }
 }

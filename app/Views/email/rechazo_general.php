@@ -174,7 +174,7 @@
 													<table class="heading_block block-1" width="100%" border="0" cellpadding="10" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #fff;">
 														<tr>
 															<td class="pad">
-																<h1 style="margin: 0; color: #0c244b; direction: ltr; font-family: Tahoma, Verdana, Segoe, sans-serif; font-size: 22px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: left; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 26.4px;"><span class="tinyMce-placeholder">Estimado Cliente, <?= $names ?></span></h1>
+																<h1 style="margin: 0; color: #0c244b; direction: ltr; font-family: Tahoma, Verdana, Segoe, sans-serif; font-size: 22px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: left; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 26.4px;"><span class="tinyMce-placeholder">Estimado(a) Cliente, <?= $names ?></span></h1>
 															</td>
 														</tr>
 													</table>
@@ -198,7 +198,7 @@
 														<tr>
 															<td class="pad">
 																<div style="color:#555555;direction:ltr;font-family:Tahoma, Verdana, Segoe, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:19.2px;">
-																	<p style="margin: 0; margin-bottom: 16px;">Lamentamos informarle que su pago ha sido rechazado.</p>
+																	<p style="margin: 0; margin-bottom: 16px;">Lamentamos informarle que su pago para el evento: <strong><?= $nombreEvento?></strong> ha sido rechazado</p>
 																	<p style="margin: 0;">Motivo del rechazo:&nbsp;</p>
 																	<p><strong><?= $rejectionReason ?></strong></p>
 																</div>
@@ -273,7 +273,7 @@
 														<tr>
 															<td class="pad">
 																<div style="color:#555555;direction:ltr;font-family:Tahoma, Verdana, Segoe, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:19.2px;">
-																	<p style="margin: 0;">Realiza de nuevo el pago con el mismo codigo de pago y te llegara el comprobante electronico a este correo electronico</p>
+																	<p style="margin: 0;">Realiza de nuevo el pago con el mismo código de pago <strong><?= $codigoPago?></strong> seleccionando la opción registrar deposito y te llegara el comprobante electrónico a este correo electrónico</p>
 																</div>
 															</td>
 														</tr>

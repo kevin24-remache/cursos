@@ -161,7 +161,7 @@ class RegistrationsModel extends Model
                 ->get()
                 ->getResultArray();
 
-            if ($query['payment_status'] == PaymentStatus::Cancelado) {
+            if ($query['payment_status'] == PaymentStatus::Incompleto) {
                 // Calcular la diferencia entre cantidad_dinero y amount_pay
                 $diferencia = $query['cantidad_dinero'] - $query['amount_pay'];
                 // Asegurarse de que la diferencia no sea negativa
@@ -184,4 +184,71 @@ class RegistrationsModel extends Model
             return null;
         }
     }
+
+    public function getTotalRegistrations()
+    {
+        return $this->countAllResults();
+    }
+    public function getRegistrationsByPaymentStatus()
+    {
+        return $this->select('payments.payment_status, COUNT(*) as count')
+            ->join('payments', 'payments.id_register = registrations.id')
+            ->groupBy('payments.payment_status')
+            ->get()
+            ->getResultArray();
+    }
+
+    public function getInscriptionsByEventWithFilters($eventId, $status = null, $categoryId = null, $metodoPago = null, $fechaRegistro = null)
+    {
+        $builder = $this->select('
+        registrations.*,
+        categories.category_name,
+        categories.cantidad_dinero,
+        payments.payment_status,
+        IFNULL(payment_methods.method_name, "Sin método de pago") AS metodo_pago
+    ')
+            ->join('categories', 'registrations.cat_id = categories.id', 'left')
+            ->join('payments', 'payments.id_register = registrations.id', 'left')
+            ->join('payment_methods', 'payments.payment_method_id = payment_methods.id', 'left')
+            ->where('registrations.event_cod', $eventId);
+
+        if ($status !== null && $status !== '') {
+            $builder->where('payments.payment_status', $status);
+        }
+
+        if ($categoryId !== null && $categoryId !== '') {
+            $builder->where('registrations.cat_id', $categoryId);
+        }
+
+        if ($metodoPago !== null && $metodoPago !== '') {
+            $builder->where('payments.payment_method_id', $metodoPago);
+        }
+
+        if ($fechaRegistro !== null && $fechaRegistro !== '') {
+            $builder->where('DATE(registrations.created_at)', $fechaRegistro); // Filtrar por fecha de registro
+        }
+
+        return $builder->findAll();
+    }
+
+
+    public function MountPayphone($cedula, $codigoPago)
+    {
+
+        // Consulta JOIN para obtener el registro, el pago correspondiente y el precio de la categoría
+        $query = $this->select('
+            categories.cantidad_dinero,
+            payments.payment_status,
+            payments.amount_pay,
+            payments.id as payment_id
+                ')
+            ->join('payments', 'payments.id_register = registrations.id', 'left')
+            ->join('categories', 'categories.id = registrations.cat_id', 'left')
+            ->where('registrations.ic', $cedula)
+            ->where('payments.payment_cod', $codigoPago)
+            ->first();
+
+        return $query;
+    }
+
 }

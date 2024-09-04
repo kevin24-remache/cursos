@@ -18,7 +18,7 @@ class InscripcionesController extends BaseController
     {
         helper('facture');
         $paymentsModel = new PaymentsModel();
-        $payment = $paymentsModel->getPaymentByNumAutorizacion($num_autorizacion);
+        $payment = $paymentsModel->numeroAutorizacion($num_autorizacion);
         if (!$payment) {
             return 'Registro no encontrado';
         }
@@ -28,7 +28,7 @@ class InscripcionesController extends BaseController
         $pdfOutput = $pdfData['output'];
 
         // Guardar el PDF en una ruta accesible
-        $pdfPath = WRITEPATH . 'uploads/factura.pdf';
+        $pdfPath = WRITEPATH . 'uploads/comprobante_recaudacion.pdf';
         file_put_contents($pdfPath, $pdfOutput);
 
         // Verificar si se debe enviar el correo electrónico
@@ -36,8 +36,8 @@ class InscripcionesController extends BaseController
             helper('email');
             // Enviar correo electrónico con el PDF adjunto
             $to = $payment['email_user'];
-            $subject = 'Factura';
-            $message = 'Adjunto encontrará su factura.';
+            $subject = 'Comprobante de recaudación';
+            $message = 'Adjunto encontrará su comprobante de recaudación.';
             $result = send_email_with_pdf_from_path($to, $subject, $message, $pdfPath);
 
             if ($result === 'success') {
@@ -78,9 +78,9 @@ class InscripcionesController extends BaseController
     {
         helper('facture');
         $paymentsModel = new PaymentsModel();
-        $payment = $paymentsModel->getPaymentByNumAutorizacion($num_autorizacion);
+        $payment = $paymentsModel->numeroAutorizacion($num_autorizacion);
         if (!$payment) {
-            return "Registro no encontrado";
+            return view('errors/html/facture');
         }
 
         // Generar el PDF
@@ -131,7 +131,7 @@ class InscripcionesController extends BaseController
         $datosPago = [
             "num_autorizacion" => $uniqueCode,
             "date_time_payment" => $fecha_emision,
-            "payment_status" => 2,
+            "payment_status" => PaymentStatus::Completado,
             "amount_pay" => $pago_final,
             "precio_unitario" => $precio_unitario,
             "sub_total" => $subtotal,
@@ -190,7 +190,7 @@ class InscripcionesController extends BaseController
             PaymentStatus::Completado,
             PaymentStatus::Fallido,
             PaymentStatus::EnProceso,
-            PaymentStatus::Cancelado
+            PaymentStatus::Incompleto
         ];
 
         // Verificar que el estado sea obligatorio y válido

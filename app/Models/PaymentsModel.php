@@ -45,6 +45,7 @@ class PaymentsModel extends Model
     {
         $query = $this->db->table('payments')
             ->select('
+            events.event_name,
             payments.num_autorizacion,
             payments.id_register,
             registrations.full_name_user AS user,
@@ -72,6 +73,60 @@ class PaymentsModel extends Model
             ->join('users', 'users.id = inscripcion_pagos.usuario_id', 'left')
             ->where('payments.num_autorizacion', $num_autorizacion)
             ->where('payments.payment_status', 2)
+            ->get()
+            ->getRowArray();
+
+        return $query;
+    }
+
+
+    public function numeroAutorizacion($num_autorizacion)
+    {
+        $query = $this->db->table('payments')
+            ->select('
+            payment_methods.id AS metodo_pago,
+            registrations.event_name,
+            payments.num_autorizacion,
+            payments.id_register,
+            registrations.full_name_user AS user,
+            registrations.ic AS user_ic,
+            registrations.monto_category AS cantidad_dinero,
+            payments.date_time_payment AS fecha_emision,
+            payments.precio_unitario,
+            payments.sub_total,
+            payments.sub_total_0,
+            payments.sub_total_15,
+            payments.iva,
+            payments.total,
+            registrations.email AS email_user,
+            registrations.phone AS user_tel,
+            payments.valor_total,
+            payments.send_email,
+            payments.id,
+            payments.amount_pay,
+            users.first_name AS operador
+        ')
+            ->join('registrations', 'payments.id_register = registrations.id', 'left')
+            ->join('payment_methods', 'payments.payment_method_id = payment_methods.id', 'left')
+            ->join('inscripcion_pagos', 'payments.id = inscripcion_pagos.pago_id', 'left')
+            ->join('users', 'inscripcion_pagos.usuario_id = users.id', 'left')
+            ->where('payments.num_autorizacion', $num_autorizacion)
+            ->where('payments.payment_status', 2)
+            ->get()
+            ->getRowArray();
+
+        return $query;
+    }
+
+    public function pagoData($id)
+    {
+        $query = $this->db->table('payments')
+            ->select('
+            registrations.monto_category AS precio,
+            payments.send_email
+        ')
+            ->join('registrations', 'payments.id_register = registrations.id', 'left')
+            ->where('payments.id', $id)
             ->get()
             ->getRowArray();
 
@@ -127,14 +182,26 @@ class PaymentsModel extends Model
                 ];
                 $this->db->table('inscripcion_pagos')->insert($inscripcionPagosData);
 
-                // Actualizar todos los registros en la tabla deposits relacionados con el payment_id
+                // Actualizar solo el último registro en la tabla deposits relacionado con el payment_id
                 $depositData = [
                     'status' => 'Aprobado',
                     'approved_by' => $id_usuario
                 ];
-                $this->db->table('deposits')
+
+                // Obtener el ID del último depósito relacionado con el payment_id
+                $lastDeposit = $this->db->table('deposits')
+                    ->select('id')
                     ->where('payment_id', $id_pago)
-                    ->update($depositData);
+                    ->orderBy('created_at', 'DESC') // Asumiendo que tienes una columna 'created_at' para ordenar
+                    ->get()
+                    ->getRow();
+
+                if ($lastDeposit) {
+                    // Actualizar solo el último depósito
+                    $this->db->table('deposits')
+                        ->where('id', $lastDeposit->id)
+                        ->update($depositData);
+                }
             }
 
             $this->db->transComplete();
@@ -166,14 +233,29 @@ class PaymentsModel extends Model
                 throw new \Exception('Error al actualizar la tabla payments.');
             }
 
-            // Actualizar todos los depósitos asociados al payment_id
-            $updateDeposits = $this->db->table('deposits')
+            // Obtener el ID del último depósito relacionado con el payment_id
+            $lastDeposit = $this->db->table('deposits')
+                ->select('id')
                 ->where('payment_id', $id_pago)
-                ->update(['status' => 'Incompleto']);
+                ->orderBy('created_at', 'DESC') // Asumiendo que tienes una columna 'created_at' para ordenar
+                ->get()
+                ->getRow();
 
-            // Verificar si la actualización de deposits fue exitosa
-            if (!$updateDeposits) {
-                throw new \Exception('Error al actualizar la tabla deposits.');
+            if ($lastDeposit) {
+                // Determinar el estado del depósito basado en el tipo de rechazo
+                $depositStatus = ($tipo_rechazo === 'General') ? 'Rechazado' : 'Incompleto';
+
+                // Actualizar solo el último depósito con el estado correspondiente
+                $updateDeposits = $this->db->table('deposits')
+                    ->where('id', $lastDeposit->id)
+                    ->update(['status' => $depositStatus]);
+
+                // Verificar si la actualización de deposits fue exitosa
+                if (!$updateDeposits) {
+                    throw new \Exception('Error al actualizar el depósito.');
+                }
+            } else {
+                throw new \Exception('No se encontró el último depósito para el payment_id dado.');
             }
 
             // Insertar el registro en la tabla rejection_reasons
@@ -237,6 +319,87 @@ class PaymentsModel extends Model
             ->where('payments.payment_status', 4)
             ->findAll();
     }
+
+    public function getPaymentsCompleted()
+    {
+        return $this->select('
+        payments.id as id_pago,
+        payments.amount_pay,
+        payments.payment_status,
+        payments.payment_cod as codigo_pago,
+        payments.payment_time_limit,
+        payments.num_autorizacion,
+        registrations.full_name_user,
+        registrations.ic,
+        registrations.address,
+        registrations.phone,
+        registrations.email,
+        categories.category_name,
+        categories.cantidad_dinero,
+        events.event_name
+    ')
+            ->distinct()
+            ->join('deposits', 'deposits.payment_id = payments.id', 'inner')
+            ->join('registrations', 'payments.id_register = registrations.id', 'left')
+            ->join('categories', 'registrations.cat_id = categories.id', 'left')
+            ->join('events', 'registrations.event_cod = events.id', 'left')
+            ->where('payments.payment_status', 2)
+            ->findAll();
+    }
+
+    public function getPaymentsRechazados()
+    {
+        return $this->select('
+        payments.id as id_pago,
+        payments.amount_pay,
+        payments.payment_status,
+        payments.payment_cod as codigo_pago,
+        payments.payment_time_limit,
+        payments.num_autorizacion,
+        registrations.full_name_user,
+        registrations.ic,
+        registrations.address,
+        registrations.phone,
+        registrations.email,
+        categories.category_name,
+        categories.cantidad_dinero,
+        events.event_name
+    ')
+            ->distinct()
+            ->join('deposits', 'deposits.payment_id = payments.id', 'inner')
+            ->join('registrations', 'payments.id_register = registrations.id', 'left')
+            ->join('categories', 'registrations.cat_id = categories.id', 'left')
+            ->join('events', 'registrations.event_cod = events.id', 'left')
+            ->where('payments.payment_status', 6)
+            ->findAll();
+    }
+
+    public function getPaymentsIncompletos()
+    {
+        return $this->select('
+        payments.id as id_pago,
+        payments.amount_pay,
+        payments.payment_status,
+        payments.payment_cod as codigo_pago,
+        payments.payment_time_limit,
+        payments.num_autorizacion,
+        registrations.full_name_user,
+        registrations.ic,
+        registrations.address,
+        registrations.phone,
+        registrations.email,
+        categories.category_name,
+        categories.cantidad_dinero,
+        events.event_name
+    ')
+            ->distinct()
+            ->join('deposits', 'deposits.payment_id = payments.id', 'inner')
+            ->join('registrations', 'payments.id_register = registrations.id', 'left')
+            ->join('categories', 'registrations.cat_id = categories.id', 'left')
+            ->join('events', 'registrations.event_cod = events.id', 'left')
+            ->where('payments.payment_status', 5)
+            ->findAll();
+    }
     public function getPaymentUser($id)
     {
         return $this->select('
@@ -290,6 +453,84 @@ class PaymentsModel extends Model
         return ['completed' => false, 'num_autorizacion' => null];
     }
 
+    public function getDailyRevenue($date = null)
+    {
+        $date = $date ?: date('Y-m-d');
+        return $this->select('SUM(amount_pay) as daily_revenue')
+            ->where('DATE(date_time_payment)', $date)
+            ->where('payment_status', 2) // Asumiendo que 2 es el estado de pago completado
+            ->get()
+            ->getRow()
+            ->daily_revenue;
+    }
+    public function getDailyRevenueMy($date = null, $id = null)
+    {
+        $date = $date ?: date('Y-m-d');
+
+        return $this->select('SUM(payments.amount_pay) as daily_revenue')
+            ->join('inscripcion_pagos', 'inscripcion_pagos.pago_id = payments.id', 'inner')
+            ->join('users', 'users.id = inscripcion_pagos.usuario_id', 'inner')
+            ->where('DATE(payments.date_time_payment)', $date)
+            ->where('users.id', $id)
+            ->where('payments.payment_status', 2)
+            ->get()
+            ->getRow()
+            ->daily_revenue;
+    }
 
 
+    public function getTotalRevenue()
+    {
+        return $this->select('SUM(amount_pay) as total_revenue')
+            ->where('payment_status', 2)
+            ->get()
+            ->getRow()
+            ->total_revenue;
+    }
+
+    public function getTotalRevenueByUser($userId)
+    {
+        return $this->select('SUM(payments.amount_pay) as total_revenue')
+            ->join('inscripcion_pagos', 'inscripcion_pagos.pago_id = payments.id', 'inner')
+            ->join('users', 'users.id = inscripcion_pagos.usuario_id', 'inner')
+            ->where('users.id', $userId)
+            ->where('payments.payment_status', 2)
+            ->get()
+            ->getRow()
+            ->total_revenue;
+    }
+
+
+    public function getRevenueByUser($role = 2)
+    {
+        return $this->select('users.id, users.first_name, SUM(payments.amount_pay) as user_revenue')
+            ->join('inscripcion_pagos', 'inscripcion_pagos.pago_id = payments.id')
+            ->join('users', 'users.id = inscripcion_pagos.usuario_id')
+            ->where('users.rol_id', $role)
+            ->where('payments.payment_status', 2)
+            ->groupBy('users.id')
+            ->get()
+            ->getResultArray();
+    }
+
+    public function datosUserInscrito($id_pago)
+    {
+        $query = $this->select('
+                categories.cantidad_dinero,
+                payments.payment_status,
+                payments.amount_pay,
+                payments.id as payment_id,
+                payments.payment_cod as payment_cod,
+                registrations.full_name_user as nombresInscrito,
+                registrations.email as emailInscrito,
+                registrations.event_name as nombreEvento
+            ')
+            ->join('registrations', 'payments.id_register = registrations.id', 'left')
+            ->join('categories', 'registrations.cat_id = categories.id', 'left')
+            ->join('events', 'registrations.event_cod = events.id', 'left')
+            ->where('payments.id', $id_pago)
+            ->first();
+
+        return $query;
+    }
 }

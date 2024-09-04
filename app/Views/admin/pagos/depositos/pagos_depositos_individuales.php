@@ -1,4 +1,4 @@
-<?= $this->extend('layouts/payments_layout'); ?>
+<?= $this->extend('layouts/admin_layout'); ?>
 
 <?= $this->section('title') ?>
 Depósitos individuales
@@ -16,7 +16,7 @@ Depósitos individuales
     <div class="content-header sty-one">
         <h1 class="text-black">Depósitos del usuario <?= $datosPago[0]['name'] ?></h1>
         <ol class="breadcrumb">
-            <li><a href="#">Home</a></li>
+            <li><a href="#">Inicio</a></li>
             <li><i class="fa fa-angle-right"></i>Depósitos individuales</li>
         </ol>
     </div>
@@ -24,11 +24,14 @@ Depósitos individuales
     <!-- Main content -->
     <div class="content">
         <div class="info-box">
-            <h4 class="modal-title" id="myModalLabel">PROCEDER CON EL PAGO</h4>
+            <!-- <h4 class="modal-title" id="myModalLabel">PROCEDER CON EL PAGO</h4> -->
+            <h4 class="modal-title" id="myModalLabel">Estado del pago: <span
+                    class=" <?= style_estado($datosPago[0]['payment_status']) ?> rounded-3 p-1">
+                    <?= getPaymentStatusText($datosPago[0]['payment_status']) ?></span></h4>
 
             <div class="row">
                 <div class="col-md-6">
-                    <form action="<?= base_url("punto/pago/aprobar") ?>" id="formPago" method="post">
+                    <form action="<?= base_url("admin/pagos/aprobar") ?>" id="formPago" method="post">
                         <div class="row mb-3">
                             <div class="col">
                                 <label>Nombre:</label>
@@ -83,23 +86,28 @@ Depósitos individuales
                             </div>
                         </div>
                     </form>
+                    <hr>
+                    <div class="m-0 p-0 mb-2">
 
-                    <div class="table-responsive">
                         <h5>Historial de depósitos</h5>
-                        <table id="depositosTable" class="table table-bordered table-hover rounded-3"
-                            style="border: 3px solid #001a35;">
-                            <thead class="bg-blue">
-                                <tr>
-                                    <th># Comprobante</th>
-                                    <th>Monto deposito</th>
-                                    <th>Fecha</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive mt-0" style="max-height: 250px; overflow-y: auto;">
+                            <table id="depositosTable" class="table table-bordered table-hover rounded-3"
+                                style="border: 3px solid #001a35;">
+                                <thead class="bg-blue">
+                                    <tr>
+                                        <th># Comprobante</th>
+                                        <th>Monto deposito</th>
+                                        <th class="text-center">Fecha<p class="mb-0">(Y-m-d)</p>
+                                        </th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -114,11 +122,13 @@ Depósitos individuales
                         <button id="zoom-reset" class="btn btn-sm btn-secondary">Reiniciar</button>
                     </div>
                 </div>
-
-                <button type="button" class="btn btn-outline-dark" id="btnPagoIncompleto">Pago incompleto</button>
-                <button type="button" class="btn btn-danger" id="btnSoloRechazo">Rechazar</button>
-                <button form="formPago" type="submit" class="btn btn-primary" id="btnAprobar">Aprobar</button>
             </div>
+            <div class="d-flex justify-content-end mt-3">
+                <button type="button" class="btn btn-outline-dark m-2" id="btnPagoIncompleto">Pago incompleto</button>
+                <button type="button" class="btn btn-danger m-2" id="btnSoloRechazo">Rechazar</button>
+                <button form="formPago" type="submit" class="btn btn-primary m-2" id="btnAprobar">Aprobar</button>
+            </div>
+
         </div>
 
     </div>
@@ -154,7 +164,7 @@ Depósitos individuales
         }
     </style>
 
-    <div class="modal fade" id="editDepositModal" tabindex="-1" role="dialog" aria-labelledby="editDepositModalLabel"
+    <!-- <div class="modal fade" id="editDepositModal" tabindex="-1" role="dialog" aria-labelledby="editDepositModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -188,7 +198,7 @@ Depósitos individuales
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- Modal para pagos incompletos -->
     <div class="modal fade" id="modalRechazo" tabindex="-1" role="dialog" aria-labelledby="modalRechazoLabel"
@@ -202,7 +212,7 @@ Depósitos individuales
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="formRechazo" action="<?= base_url("punto/pago/incompleto") ?>" method="post">
+                    <form id="formRechazo" action="<?= base_url("admin/pagos/incompleto") ?>" method="post">
                         <input type="hidden" name="id_pago_rechazo" id="id_pago_rechazo"
                             value="<?= (isset($last_data) && ($last_action ?? null) == 'update') ? display_data($last_data, 'id_pago_rechazo') : '' ?>">
                         <input type="hidden" name="email" class="email_rechazo_incompleto"
@@ -296,7 +306,7 @@ Depósitos individuales
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="formSoloRechazo" action="<?= base_url("punto/pago/rechazar") ?>" method="post">
+                    <form id="formSoloRechazo" action="<?= base_url("admin/pagos/rechazar") ?>" method="post">
                         <input type="hidden" name="id_pago_solo_rechazo" id="id_pago_solo_rechazo">
                         <input type="hidden" name="email" id="email_rechazo" class="email_rechazo_incompleto"
                             value="<?= $datosPago[0]['email'] ?>">
@@ -382,7 +392,7 @@ Depósitos individuales
         myModal.show()
     <?php endif; ?>
 </script>
-<script src="<?= base_url("assets/js/payments/depositos_individuales.js") ?>"></script>
+<script src="<?= base_url("assets/js/admin/pagos_depositos_individuales.js") ?>"></script>
 
 
 <?= $this->endSection() ?>
