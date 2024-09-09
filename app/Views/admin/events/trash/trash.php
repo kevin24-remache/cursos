@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/admin_layout'); ?>
 
 <?= $this->section('title') ?>
-Eventos
+Eventos eliminados
 <?= $this->endSection() ?>
 
 <?= $this->section('css') ?>
@@ -12,24 +12,22 @@ Eventos
 
 <div class="content-wrapper">
     <div class="content-header sty-one">
-        <h1 class="text-black">Eventos</h1>
+        <h1 class="text-black">Eventos eliminados</h1>
         <ol class="breadcrumb">
             <li><a href="#">Casa</a></li>
-            <li class="sub-bread"><i class="fa fa-angle-right"></i> Eventos</li>
-            <li><i class="fa fa-angle-right"></i> Lista</li>
+            <li class="sub-bread"><i class="fa fa-angle-right"></i> Eventos eliminados</li>
         </ol>
     </div>
     <div class="content">
         <div class="info-box">
             <div class="table-responsive">
-                <table id="event" class="table datatable">
+                <table id="eventTrash" class="table datatable">
                     <thead class="thead-light">
                         <tr>
                             <th>Evento</th>
                             <th class="exclude-view">Descripción del evento</th>
                             <th>Fecha del evento</th>
                             <th class="exclude-view">Dirección del evento</th>
-                            <th class="exclude-view">Categorías del evento</th>
                             <th>Fecha de inicio de la inscripción</th>
                             <th>Fecha de finalización de la inscripción</th>
                             <th class="exclude-column">Acciones</th>
@@ -58,40 +56,18 @@ Eventos
                                 <td><?= $event["short_description"] ?></td>
                                 <td><?= $event["event_date"] ?></td>
                                 <td><?= $event["address"] ?></td>
-                                <td>
-                                    <?php
-                                    $categories = explode(',', $event['categories']);
-                                    $prices = explode(',', $event['prices']);
-                                    foreach ($categories as $index => $category) {
-                                        echo $category . ' ($' . ($prices[$index] ?? 'N/A') . ')<br>';
-                                    }
-                                    ?>
-                                </td>
                                 <td><?= $event["registrations_start_date"] ?></td>
                                 <td><?= $event["registrations_end_date"] ?></td>
                                 <td class="d-flex">
-                                    <form action="<?= base_url('admin/event/edit/' . $event['id']) ?>">
-                                        <button class="js-mytooltip btn btn-outline-warning m-1" title="Editar"
-                                            data-mytooltip-custom-class="align-center" data-mytooltip-direction="top"
-                                            data-mytooltip-theme="warning" data-mytooltip-content="Editar"><i
-                                                class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></button>
-                                    </form>
 
-
-                                    <button class="js-mytooltip btn btn-outline-danger btn-delete m-1" title="Eliminar" data-toggle="modal"
-                                        data-target="#delete" data-mytooltip-custom-class="align-center"
-                                        data-mytooltip-direction="top" data-mytooltip-theme="danger"
-                                        data-mytooltip-content="Eliminar" data-event-name="<?= $event['event_name'] ?>"
-                                        data-event-id="<?= $event['id'] ?>">
-                                        <i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
-                                    </button>
-
-                                    <a href="<?= base_url('admin/event/inscritos/' . $event['id']) ?>"
-                                        class="js-mytooltip btn btn-outline-info m-1" title="Ver Inscritos"
+                                    <button class="js-mytooltip btn btn-outline-success m-1 btn-restore" data-toggle="modal"
+                                        data-target="#recover" data-event-name="<?= $event['event_name'] ?>"
+                                        data-event-id="<?= $event['id'] ?>"
                                         data-mytooltip-custom-class="align-center" data-mytooltip-direction="top"
-                                        data-mytooltip-theme="info" data-mytooltip-content="Ver Inscritos">
-                                        <i class="fa fa-users fa-lg" aria-hidden="true"></i>
-                                    </a>
+                                        data-mytooltip-theme="success" data-mytooltip-content="Recuperar" title="Recuperar evento">
+
+                                        <i class="fa fa-recycle fa-lg" aria-hidden="true"></i>
+                                    </button>
 
                                 </td>
                             </tr>
@@ -102,31 +78,29 @@ Eventos
         </div>
     </div>
 
-    <!-- Modal-->
-    <div class="modal fade" id="delete" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="recover" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content rounded-2">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel">Eliminar</h4>
+                    <h4 class="modal-title" id="myModalLabel">Restaurar</h4>
                     <button type="button" class="close" data-dismiss="modal">
                         <span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="<?= base_url("admin/event/delete") ?>" id="formPago" method="post">
+                    <form action="<?= base_url("admin/event/trash/restore") ?>" id="formPago" method="post">
                         <div class="row mb-3">
                             <div class="col">
-                                <p>Estas seguro de eliminar el evento : <span class="text-danger"
-                                        id="text-event"></span></p>
+                                <p>Estas seguro de restaurar el evento : <span class="text-danger"
+                                        id="text-event-restore"></span></p>
                             </div>
                         </div>
-                        <input type="hidden" name="id" id="id_pago">
-                        <input type="hidden" name="cedula" id="cedula">
+                        <input type="hidden" name="id" id="id_event_restore">
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button form="formPago" type="submit" class="btn btn-danger">Eliminar</button>
+                    <button form="formPago" type="submit" class="btn btn-success">Restaurar</button>
                 </div>
             </div>
         </div>
@@ -140,12 +114,12 @@ Eventos
 <?= $this->section('scripts') ?>
 <script>
     $(document).ready(function () {
-        $('.btn-delete').on('click', function () {
+        $('.btn-restore').on('click', function () {
             var eventName = $(this).data('event-name');
             var eventId = $(this).data('event-id');
 
-            $('#text-event').text(eventName);
-            $('#formPago #id_pago').val(eventId);
+            $('#text-event-restore').text(eventName);
+            $('#id_event_restore').val(eventId);
         });
     });
 

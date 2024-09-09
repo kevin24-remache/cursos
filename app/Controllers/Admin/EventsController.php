@@ -370,4 +370,57 @@ class EventsController extends BaseController
             return $this->redirectView(null, [['No se pudo eliminar el evento', 'danger']]);
         }
     }
+
+
+    public function trash()
+    {
+        // get flash data
+        $flashValidation = session()->getFlashdata('flashValidation');
+        $flashMessages = session()->getFlashdata('flashMessages');
+        $last_data = session()->getFlashdata('last_data');
+        $last_action = session()->getFlashdata('last_action');
+
+        $eventModel = new EventsModel();
+
+        $all_events = $eventModel->onlyDeleted()->findAll();
+        // $all_events = $eventModel->getAllEventsWithCategories();
+
+        $data = [
+            'events' => $all_events,
+            'last_action' => $last_action,
+            'last_data' => $last_data,
+            'validation' => $flashValidation,
+            'flashMessages' => $flashMessages
+        ];
+
+        return view('admin/events/trash/trash', $data);
+    }
+
+    private function redirectTrashView($validation = null, $flashMessages = null, $last_data = null,)
+    {
+
+        return redirect()->to('admin/event/trash')->
+            with('flashValidation', isset($validation) ? $validation->getErrors() : null)->
+            with('flashMessages', $flashMessages)->
+            with('last_data', $last_data);
+    }
+
+    public function restore()
+    {
+        try {
+            $category_id = $this->request->getPost('id');
+            $eventsModel = new EventsModel();
+
+            $client = $eventsModel->onlyDeleted()->find($category_id);
+            if (isset($client)) {
+                $eventsModel->withDeleted()->set(['deleted_at' => null])->update($category_id);
+                return $this->redirectTrashView(null, [['Evento restaurada correctamente', 'success']]);
+            }
+            else {
+                return $this->redirectTrashView(null,[['No existe el evento buscado', 'warning']]);
+            }
+        } catch (\Exception $e) {
+            return $this->redirectTrashView(null,[['No fue posible restaurar el evento', 'danger']]);
+        }
+    }
 }

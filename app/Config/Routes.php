@@ -58,6 +58,11 @@ $routes->group('admin', static function ($routes) {
             $inscritos->post('update', 'Admin\RegistrationsController::update');
             $inscritos->post('delete', 'Admin\RegistrationsController::delete');
         });
+
+        $categories->group('trash', static function ($trash) {
+            $trash->get('/', 'Admin\EventsController::trash');
+            $trash->post('restore', 'Admin\EventsController::restore');
+        });
     });
 
     $routes->group('users', static function ($categories) {
