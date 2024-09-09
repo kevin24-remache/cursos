@@ -9,6 +9,7 @@ class RolesOptions
 
 class ModulosAdmin
 {
+    const DASHBOARD = 'DASHBOARD';
     const CATEGORIES = 'CATEGORIES';
     const CATEGORY_LIST = 'CATEGORY_LIST';
     const CATEGORY_ADD = 'CATEGORY_ADD';

@@ -143,11 +143,11 @@
                                 class="pull-right-container"> </span>
                         </a>
                     </li>
-                    <li class="treeview <?= (isset($modulo) && checkActiveModule($modulo, ModulosAdminPagos::DASHBOARD)) ? 'active' : '' ?>"> <a href="#"> <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+                    <li class="treeview <?= (isset($modulo) && checkActiveModule($modulo, ModulosAdminPagos::DASHBOARD)) ? 'active' : '' ?>"> <a href="#"> <i class="fa fa-dashboard"></i> <span>Panel</span>
                             <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdminPagos::DASHBOARD)) ? 'active' : '' ?>"><a href="<?= base_url("punto/pago") ?>">Dashboard</a></li>
+                            <li class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdminPagos::DASHBOARD)) ? 'active' : '' ?>"><a href="<?= base_url("punto/pago") ?>">Estadísticas</a></li>
                         </ul>
                     </li>
                     <li

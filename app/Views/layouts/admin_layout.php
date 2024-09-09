@@ -45,7 +45,8 @@
             <!-- Logo -->
             <a href="index.html" class="logo blue-bg">
                 <span class="logo-mini"><img src="<?= base_url("dist/img/logo-n.png") ?>" alt=""></span>
-                <span class="logo-lg"><img style="width:120px; background:white; border-radius:10px;" src="<?= base_url("assets/images/logo-ep.png") ?>" alt=""></span> </a>
+                <span class="logo-lg"><img style="width:120px; background:white; border-radius:10px;"
+                        src="<?= base_url("assets/images/logo-ep.png") ?>" alt=""></span> </a>
             <nav class="navbar blue-bg navbar-static-top">
                 <!-- Sidebar toggle button-->
                 <ul class="nav navbar-nav pull-left">
@@ -67,10 +68,10 @@
                                     <p class="text-left"><?= session('first_name') . ' ' . session('last_name') ?>
                                         <small><?= session('user_email') ?></small>
                                     </p>
-                                    <div class="view-link text-left"><a href="#">Ver perfil</a> </div>
+                                    <!-- <div class="view-link text-left"><a href="#">Ver perfil</a> </div> -->
                                 </li>
                                 <hr>
-                                <li><a href="#"><i class="icon-profile-male"></i> Mi perfil</a></li>
+                                <!-- <li><a href="#"><i class="icon-profile-male"></i> Mi perfil</a></li> -->
                                 <li role="separator" class="divider"></li>
                                 <li><a href="<?= base_url("admin/config") ?>"><i class="icon-gears"></i>
                                         Configuración</a></li>
@@ -102,14 +103,18 @@
                     <li class="header">
 
                         <a class="px-0 py-1" href="<?= base_url('admin/inscripciones') ?>">
-                        <i class="fa fa-usd" aria-hidden="true"></i><span>Cobrar</span> <span
+                            <i class="fa fa-usd" aria-hidden="true"></i><span>Cobrar</span> <span
                                 class="pull-right-container"> </span>
                         </a>
                     </li>
-                    <li class="treeview"> <a href="#"> <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+                    <li
+                        class="treeview <?= (isset($modulo) && checkActiveModule($modulo, ModulosAdminPagos::DASHBOARD)) ? 'active' : '' ?>">
+                        <a href="#"> <i class="fa fa-dashboard"></i> <span>Panel</span>
                             <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
                         <ul class="treeview-menu">
-                            <li class=""><a href="<?= base_url("admin/dashboard") ?>">Dashboard</a></li>
+                            <li
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdminPagos::DASHBOARD)) ? 'active' : '' ?>">
+                                <a href="<?= base_url("admin/dashboard") ?>">Estadísticas</a></li>
                         </ul>
                     </li>
                     <li
@@ -182,10 +187,10 @@
         <!-- Content Wrapper. Contains page content -->
         <?= $this->renderSection('content'); ?>
         <!-- /.content-wrapper -->
-        <footer class="main-footer">
+        <!-- <footer class="main-footer">
             <div class="pull-right hidden-xs">Version 1.2</div>
             Copyright © 2017 Yourdomian. All rights reserved.
-        </footer>
+        </footer> -->
     </div>
     <!-- ./wrapper -->
 

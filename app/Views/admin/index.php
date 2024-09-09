@@ -21,7 +21,7 @@ Panel
     <div class="content">
         <div class="row">
             <div class="col-lg-4 col-md-6">
-                <a href="<?= base_url('admin/inscritos') ?>" class="info-box btn-outline-info">
+                <a href="" class="info-box btn-outline-info">
                     <span class="info-box-icon bg-primary text-white"><i class="fa fa-italic"
                             aria-hidden="true"></i></span>
                     <div class="info-box-content">
@@ -56,7 +56,7 @@ Panel
                 <a href="" class="info-box  btn-outline-success">
                     <span class="info-box-icon bg-dark"><i class="fa fa-line-chart" aria-hidden="true"></i></span>
                     <div class="info-box-content">
-                        <span class="info-box-text text-black h1">Mi Recaudación Total  por Cobros</span>
+                        <span class="info-box-text text-black h1">Mi Recaudación Total por Cobros</span>
                         <span class="info-box-number">$<?= number_format($mis_ingresos_totales ?? 0, 2) ?></span>
                     </div>
                 </a>
@@ -72,9 +72,16 @@ Panel
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-4">
                 <div class="info-box">
-                    <h5 class="text-black">Ingresos por Usuario (Rol 2)</h5>
+                    <h5 class="text-black">Métodos de pago mas usados</h5>
+                    <canvas id="paymentMethodChart"></canvas>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="info-box col">
+                    <h5 class="text-black">Ingresos por Usuarios (Administrador de pagos )</h5>
                     <table class="table">
                         <thead>
                             <tr>
@@ -94,7 +101,7 @@ Panel
                 </div>
             </div>
 
-            <div class="col-lg-6">
+            <div class="col-lg-4">
                 <div class="info-box">
                     <h5 class="text-black">Registros por Estado de Pago</h5>
                     <table class="table">
@@ -108,7 +115,9 @@ Panel
                             <?php
                             foreach ($registrationsByStatus as $status): ?>
                                 <tr>
-                                    <td><?= getPaymentStatusText($status['payment_status']) ?></td>
+                                    <td><span
+                                            class="<?= style_estado($status["payment_status"]) ?>"><?= getPaymentStatusText($status['payment_status']) ?></span>
+                                    </td>
                                     <td><?= $status['count'] ?></td>
                                 </tr>
                             <?php endforeach; ?>
@@ -116,6 +125,9 @@ Panel
                     </table>
                 </div>
             </div>
+
+        </div>
+        <div class="row">
         </div>
     </div>
 </div>
@@ -128,4 +140,41 @@ Panel
 <script src="<?= base_url("dist/plugins/raphael/raphael-min.js") ?>"></script>
 <script src="<?= base_url("dist/plugins/morris/morris.js") ?>"></script>
 <script src="<?= base_url("dist/plugins/functions/dashboard1.js") ?>"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var ctx = document.getElementById('paymentMethodChart').getContext('2d');
+        var paymentMethodStats = <?= json_encode(isset($paymentMethodStats) ? $paymentMethodStats : '') ?>;
+
+        var labels = paymentMethodStats.map(function (item) { return item.method_name; });
+        var data = paymentMethodStats.map(function (item) { return item.count; });
+
+        var chart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(255, 206, 86, 0.8)',
+                        'rgba(75, 192, 192, 0.8)',
+                        'rgba(153, 102, 255, 0.8)',
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Métodos de Pago Más Utilizados'
+                }
+            }
+        });
+
+
+
+    });
+</script>
 <?= $this->endSection() ?>

@@ -533,4 +533,15 @@ class PaymentsModel extends Model
 
         return $query;
     }
+
+    public function getPaymentMethodStats()
+    {
+        return $this->select('payment_methods.method_name, COUNT(*) as count')
+            ->join('payment_methods', 'payments.payment_method_id = payment_methods.id')
+            ->where('payments.payment_status', 2) // Asumiendo que 2 es el estado de pago completado
+            ->groupBy('payments.payment_method_id')
+            ->orderBy('count', 'DESC')
+            ->get()
+            ->getResultArray();
+    }
 }
