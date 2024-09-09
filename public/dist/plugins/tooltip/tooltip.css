@@ -55,6 +55,13 @@
 .mytooltip.mytooltip-theme-info:after {
 	border-color: #0E7AC4;
 }
+.mytooltip.mytooltip-theme-primary {
+	background: #0C244B;
+}
+.mytooltip.mytooltip-theme-primary:after {
+	border-color: #0C244B;
+}
+
 .mytooltip.mytooltip-theme-info:before {
 	display: none;
 }

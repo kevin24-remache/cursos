@@ -59,3 +59,20 @@
     font-size: 0.7em;
     color: #6c757d;
 }
+
+.dt-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.dt-buttons {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.dt-search {
+    order: 0;
+    padding-top: 12px;
+}

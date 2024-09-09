@@ -7574,3 +7574,14 @@ iframe {
 
 
 }
+
+
+.border-success-start {
+	border-left: 2px solid #198754 !important;
+	border-radius: 0.50rem;
+}
+
+.border-danger-start {
+	border-left: 2px solid #dc3545 !important;
+	border-radius: 0.50rem;
+}

@@ -1,8 +1,27 @@
 $(document).ready(function () {
+    // Lista de tipos de botones de exportación a extender
+    var exportButtonTypes = ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5'];
+
+    // Iterar sobre cada tipo de botón de exportación y extenderlo
+    exportButtonTypes.forEach(function (btnType) {
+        if ($.fn.dataTable.ext.buttons[btnType]) {
+            // Extender el botón con las opciones de exportación deseadas
+            $.fn.dataTable.ext.buttons[btnType] = $.extend(true, {}, $.fn.dataTable.ext.buttons[btnType], {
+                exportOptions: {
+                    columns: function (idx, data, node) {
+                        // Solo exportar las columnas visibles
+                        return $(node).is(':visible') && !$(node).hasClass('exclude-column');
+                    }
+                }
+            });
+        }
+    });
+
+    // Función para inicializar DataTables
     function initializeDataTable(tableId, options) {
         var defaultOptions = {
             columnDefs: [
-                { targets: 'exclude-view', visible: false }
+                { targets: 'exclude-view', visible: false } // Excluye las columnas con clase 'exclude-view'
             ],
             language: {
                 buttons: {
@@ -15,12 +34,12 @@ $(document).ready(function () {
                 info: "Mostrando _END_ resultados de _MAX_",
                 infoEmpty: "No hay datos disponibles",
                 infoFiltered: "(Filtrado de _MAX_ registros totales)",
-                search: "Buscar",
+                search: '<i class="fa fa-search" aria-hidden="true"></i>',
                 emptyTable: "No existen registros",
                 paginate: {
                     first: "Primero",
-                    previous: "Anterior",
-                    next: "Siguiente",
+                    previous: "<",
+                    next: ">",
                     last: "Último",
                 },
             },
@@ -33,10 +52,13 @@ $(document).ready(function () {
             }
         };
 
+        // Combinar las opciones por defecto con las opciones específicas de la tabla
         var mergedOptions = $.extend(true, {}, defaultOptions, options);
 
+        // Inicializar DataTable
         var table = $(tableId).DataTable(mergedOptions);
 
+        // Re-inicializar tooltips después de cada redibujo de la tabla
         table.on('draw', function () {
             $('.js-mytooltip').myTooltip('destroy');
             $('.js-mytooltip').myTooltip();
@@ -138,20 +160,76 @@ $(document).ready(function () {
                     window.location.href = base_url + "admin/event/new";
                 },
             },
-            // {
-            //     text: '<i class="fa fa-lg fa-minus-circle" aria-hidden="true"></i>',
-            //     titleAttr: 'Eliminados',
-            //     className: 'js-mytooltip btn bg-danger',
-            //     attr: {
-            //         'data-mytooltip-custom-class': 'align-center',
-            //         'data-mytooltip-direction': 'right',
-            //         'data-mytooltip-theme': 'danger',
-            //         'data-mytooltip-content': 'Eventos eliminados'
-            //     },
-            //     action: function () {
-            //         window.location.href = base_url + 'admin/event/trash';
-            //     },
-            // }
+            {
+                text: '<i class="fa fa-lg fa-minus-circle" aria-hidden="true"></i>',
+                titleAttr: 'Eliminados',
+                className: 'js-mytooltip btn bg-danger',
+                attr: {
+                    'data-mytooltip-custom-class': 'align-center',
+                    'data-mytooltip-direction': 'right',
+                    'data-mytooltip-theme': 'danger',
+                    'data-mytooltip-content': 'Eventos eliminados'
+                },
+                action: function () {
+                    window.location.href = base_url + 'admin/event/trash';
+                },
+            }
+        ]
+    });
+    let eventTrashTable = initializeDataTable("#eventTrash", {
+        buttons: [
+            {
+                extend: "pageLength",
+                className: "bg-secondary text-white",
+            },
+            {
+                extend: 'collection',
+                text: '<i class="fa fa-download"></i> Exportar',
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        text: '<i class="fa fa-files-o text-info"></i> Copiar',
+                        titleAttr: 'Copiar'
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel-o text-success"></i> Excel',
+                        titleAttr: 'Excel'
+                    },
+                    {
+                        extend: 'csvHtml5',
+                        text: '<i class="fa fa-file-text-o text-primary"></i> CSV',
+                        titleAttr: 'CSV'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: '<i class="fa fa-file-pdf-o text-red"></i> PDF',
+                        titleAttr: 'PDF'
+                    },
+                    {
+                        extend: 'colvis',
+                        text: 'Columnas visibles',
+                        columnText: function (dt, idx, title) {
+                            return (idx) + ': ' + title;
+                        },
+                        className: "btn btn-outline-success",
+                    },
+                ]
+            },
+            {
+                text: '<i class="fa fa-lg fa-arrow-left" aria-hidden="true"></i>',
+                titleAttr: 'Regresar',
+                className: 'js-mytooltip bg-blue',
+                attr: {
+                    'data-mytooltip-custom-class': 'align-center',
+                    'data-mytooltip-direction': 'top',
+                    'data-mytooltip-theme': 'primary',
+                    'data-mytooltip-content': 'Regresar'
+                },
+                action: function () {
+                    window.location.href = base_url + 'admin/event';
+                },
+            },
         ]
     });
 
