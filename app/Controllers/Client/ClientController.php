@@ -3,14 +3,14 @@ namespace App\Controllers\Client;
 
 use App\Controllers\BaseController;
 use App\Models\EventsModel;
-use App\Services\UserService;
+use App\Services\ApiPrivadaService;
 
 class ClientController extends BaseController
 {
-    private $userService;
+    private $apiPrivadaService;
     public function __construct()
     {
-        $this->userService = new UserService();
+        $this->apiPrivadaService = new ApiPrivadaService();
     }
 
     public function index()
@@ -53,25 +53,29 @@ class ClientController extends BaseController
         }
 
         try {
-            $persona = $this->userService->getUserData($cedula);
+            // Usar el servicio para obtener los datos del usuario
+            $persona = $this->apiPrivadaService->getDataUser($cedula);
 
-            if ($persona) {
-                // Función para censurar datos
-                $censurar = function ($str) {
-                    if (!$str)
-                        return null;
-                    $len = strlen($str);
-                    return substr($str, 0, 2) . str_repeat('*', $len - 4) . substr($str, -2);
-                };
+            if ($persona && $persona['success'] && isset($persona['data'])) {
+                // Extraer datos de la respuesta
+                $personaData = $persona['data'];
 
                 // Crear un nuevo array con los datos requeridos y censurados
                 $datosPersona = [
-                    'name' => ($persona['name']),
-                    'surname' => ($persona['surname']),
-                    'full_name' => ($persona['full_name']),
-                    'mobile' => ($persona['mobile']),
-                    'email' => ($persona['email']),
-                    'direccion' => ($persona['direccion'])
+                    'id' => $personaData['id'],
+                    'name' => $personaData['name'],
+                    'surname' => $personaData['surname'],
+                    'full_name' => $personaData['full_name'],
+                    'identification' => $personaData['identification'],
+                    'address' => $personaData['address'],
+                    'mobile' => $personaData['mobile'],
+                    'email' => $personaData['email'],
+                    'place_of_birth' => $personaData['place_of_birth'],
+                    'date_of_birth' => $personaData['date_of_birth'],
+                    'citizen_status' => $personaData['citizen_status'],
+                    'civil_status' => $personaData['civil_status'],
+                    'profession' => $personaData['profession'],
+                    'type_identification' => $personaData['type_identification']
                 ];
 
                 return $this->response->setJSON([
