@@ -2,19 +2,25 @@
 
 namespace App\Services;
 
+use CodeIgniter\HTTP\CURLRequest;
 use InvalidArgumentException;
 
 class PayphoneConfirmService
 {
     private $apiUrl = 'https://pay.payphonetodoesposible.com/api/button/V2/Confirm';
     private $token;
+    private $client;
 
     public function __construct()
     {
+        // Obtener el token desde las variables de entorno
         $this->token = getenv('PAYPHONE_API_TOKEN');
         if (!$this->token) {
             throw new InvalidArgumentException('API token is missing.');
         }
+
+        // Cargar el servicio HTTP de CodeIgniter
+        $this->client = \Config\Services::curlrequest();
     }
 
     public function confirmTransaction($id, $clientTransactionId)
@@ -24,39 +30,28 @@ class PayphoneConfirmService
             return ['success' => false, 'error' => 'Transaction ID and Client Transaction ID are required.'];
         }
 
-        $curl = curl_init();
-
-        curl_setopt_array($curl, [
-            CURLOPT_URL => $this->apiUrl,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => json_encode([
-                'id' => $id,
-                'clientTxId' => $clientTransactionId
-            ]),
-            CURLOPT_HTTPHEADER => [
-                'Authorization: Bearer ' . $this->token,
-                'Content-Type: application/json'
+        // Configuración del request
+        $options = [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $this->token,
+                'Content-Type'  => 'application/json'
             ],
-        ]);
+            'json' => [
+                'id'        => $id,
+                'clientTxId' => $clientTransactionId
+            ],
+            'http_errors' => false, // Para manejar los errores manualmente
+        ];
 
-        $response = curl_exec($curl);
-        $httpStatusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        $err = curl_error($curl);
+        // Realizar la solicitud
+        $response = $this->client->post($this->apiUrl, $options);
+        $httpStatusCode = $response->getStatusCode();
+        $responseBody = $response->getBody();
 
-        curl_close($curl);
+        // Decodificar la respuesta JSON
+        $result = json_decode($responseBody, true);
 
-        if ($err) {
-            return ['success' => false, 'error' => $err];
-        }
-
-        $result = json_decode($response, true);
-
+        // Verificar si hubo un error en la solicitud
         if ($httpStatusCode !== 200) {
             return ['success' => false, 'error' => 'API request failed with status code ' . $httpStatusCode, 'data' => $result];
         }
@@ -65,6 +60,7 @@ class PayphoneConfirmService
             return ['success' => false, 'error' => 'Invalid response from API', 'data' => $result];
         }
 
+        // Retornar el resultado según el estado de la transacción
         return ['success' => $result['transactionStatus'] === 'Approved', 'data' => $result];
     }
 }
