@@ -14,9 +14,9 @@ class ApiPrivadaService
             $client = Services::curlrequest();
 
             if (strlen($id) == 13) {
-                $url = "https://apipersonas.softecsa.com/api/ruc/" . $id;
+                $url = getenv('URL_PERSONAS') . "api/ruc/" . $id;
             } else {
-                $url = "https://apipersonas.softecsa.com/api/ci/" . $id;
+                $url = getenv('URL_PERSONAS') . "api/ci/" . $id;
             }
 
             $token = getenv('API_PERSONAS');
@@ -35,6 +35,37 @@ class ApiPrivadaService
             }
         } catch (\Exception $e) {
             log_message('error', 'Excepción en solicitud', ['id' => $id, 'error' => $e->getMessage()]);
+            return null;
+        }
+    }
+
+    public static function setDataUserCi(array $persona)
+    {
+        // Filtrar los datos no nulos
+        $dataToSend = array_filter($persona, function ($value) {
+            return !is_null($value) && $value !== '';
+        });
+
+        try {
+            // URL y token de la API
+            $url = getenv('URL_PERSONAS') . "api/ci";
+            $token = getenv('API_PERSONAS');
+
+            // Hacer la solicitud POST
+            $response = Services::curlrequest()->post($url, [
+                'headers' => ['Authorization' => 'Bearer ' . $token],
+                'json' => $dataToSend
+            ]);
+
+            // Verificar el éxito de la solicitud
+            if ($response->getStatusCode() === 201) {
+                return json_decode($response->getBody(), true);
+            } else {
+                log_message('warning', $response->getBody(), ['status' => $response->getStatusCode(), 'response' => $response->getBody()]);
+                return null;
+            }
+        } catch (\Exception $e) {
+            log_message('error', $e->getMessage(), ['error' => $e->getMessage()]);
             return null;
         }
     }
