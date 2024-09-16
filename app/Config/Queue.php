@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /**
- * This file is part of Daycry Queues.
+ * This file is part of CodeIgniter Queue.
  *
- * (c) Daycry <daycry9@proton.me>
+ * (c) CodeIgniter Foundation <admin@codeigniter.com>
  *
  * For the full copyright and license information, please view
  * the LICENSE file that was distributed with this source code.
@@ -13,38 +13,97 @@ declare(strict_types=1);
 
 namespace Config;
 
-use CodeIgniter\Config\BaseConfig;
-use Daycry\Queues\Queues\BeanstalkQueue;
-use Daycry\Queues\Queues\RedisQueue;
-use Daycry\Queues\Queues\ServiceBusQueue;
-use Daycry\Queues\Queues\SyncQueue;
+use CodeIgniter\Queue\Config\Queue as BaseQueue;
+use CodeIgniter\Queue\Exceptions\QueueException;
+use CodeIgniter\Queue\Handlers\DatabaseHandler;
+use CodeIgniter\Queue\Handlers\PredisHandler;
+use CodeIgniter\Queue\Handlers\RedisHandler;
+use CodeIgniter\Queue\Interfaces\JobInterface;
+use CodeIgniter\Queue\Interfaces\QueueInterface;
 
-class Queue extends \Daycry\Queues\Config\Queue
+class Queue extends BaseQueue
 {
-    public array $jobTypes = [
-        'command',
-        'shell',
-        'event',
-        'url',
-        'classes',
+    /**
+     * Default handler.
+     */
+    public string $defaultHandler = 'database';
+
+    /**
+     * Available handlers.
+     *
+     * @var array<string, class-string<QueueInterface>>
+     */
+    public array $handlers = [
+        'database' => DatabaseHandler::class,
+        'redis'    => RedisHandler::class,
+        'predis'   => PredisHandler::class,
     ];
-    public array|string $queues        = 'default,dummy';
-    public string $worker              = 'sync';
-    public int $maxAttempts            = 5;
-    public int $waitingTimeBetweenJobs = 2;
-    public array $workers              = [
-        'sync'       => SyncQueue::class,
-        'beanstalk'  => BeanstalkQueue::class,
-        'redis'      => RedisQueue::class,
-        'serviceBus' => ServiceBusQueue::class,
+
+    /**
+     * Database handler config.
+     */
+    public array $database = [
+        'dbGroup'   => 'default',
+        'getShared' => true,
     ];
-    public array $beanstalk = [
-        'host' => '127.0.0.1',
-        'port' => 11300,
+
+    /**
+     * Redis handler config.
+     */
+    public array $redis = [
+        'host'     => '127.0.0.1',
+        'password' => null,
+        'port'     => 6379,
+        'timeout'  => 0,
+        'database' => 0,
+        'prefix'   => '',
     ];
-    public array $serviceBus = [
-        'url'    => '',
-        'issuer' => '',
-        'secret' => '',
+
+    /**
+     * Predis handler config.
+     */
+    public array $predis = [
+        'scheme'   => 'tcp',
+        'host'     => '127.0.0.1',
+        'password' => null,
+        'port'     => 6379,
+        'timeout'  => 5,
+        'database' => 0,
+        'prefix'   => '',
     ];
+
+    /**
+     * Whether to keep the DONE jobs in the queue.
+     */
+    public bool $keepDoneJobs = false;
+
+    /**
+     * Whether to save failed jobs for later review.
+     */
+    public bool $keepFailedJobs = true;
+
+    /**
+     * Default priorities for the queue
+     * if different from the "default".
+     */
+    public array $queueDefaultPriority = [];
+
+    /**
+     * Valid priorities in the order for the queue,
+     * if different from the "default".
+     */
+    public array $queuePriorities = [];
+
+    /**
+     * Your jobs handlers.
+     *
+     * @var array<string, class-string<JobInterface>>
+     */
+    public array $jobHandlers = [
+        // Aquí registras todos tus jobs
+        'email' => \App\Jobs\Email::class,
+    ];
+
+    public string $defaultQueue = 'default';
+
 }
