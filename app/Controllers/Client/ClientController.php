@@ -70,6 +70,8 @@ class ClientController extends BaseController
                     'address' => $personaData['address'],
                     'mobile' => $personaData['mobile'],
                     'email' => $personaData['email'],
+                    'phone' => $personaData['phone'],
+                    'gender' => $personaData['gender'],
                     'place_of_birth' => $personaData['place_of_birth'],
                     'date_of_birth' => $personaData['date_of_birth'],
                     'citizen_status' => $personaData['citizen_status'],
