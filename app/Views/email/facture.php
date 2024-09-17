@@ -100,9 +100,15 @@
                     <tbody>
                         <tr>
                             <td>1</td>
-                            <td>Uso de plataforma para el registro en el evento: <strong><?= $event_name ?></strong></td>
+                            <td>Uso de plataforma </td>
                             <td><?= $precio_unitario ?></td>
                             <td><?= $valor_total ?></td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td colspan="3">Inscripción en el <strong><?= $event_name ?></strong></td>
                         </tr>
                     </tbody>
                 </table>
@@ -117,20 +123,20 @@
             <div class="section">
                 <div>
                     <strong>FORMA DE PAGO:</strong>
+                    <?php if ($metodo_pago == 1): ?>
+                        PAGO CON DEPOSITO
+                    <?php elseif ($metodo_pago == 2): ?>
+                        SIN UTILIZACIÓN DEL SISTEMA FINANCIERO
+                    <?php elseif ($metodo_pago == 3): ?>
+                        PAGO EN LINEA CON TARJETA
+                    <?php endif; ?>
                 </div>
-                <?php if ($metodo_pago == 1): ?>
-                    PAGO ECHO CON DEPOSITO
-                <?php elseif ($metodo_pago == 2): ?>
-                    SIN UTILIZACIÓN DEL SISTEMA FINANCIERO
-                <?php elseif ($metodo_pago == 3): ?>
-                    PAGO ECHO EN LINEA CON TARJETA
-                <?php endif; ?>
             </div>
         </div>
         <div class="section">
             <div><strong>Mail:</strong> <?= $email_user ?></div>
             <div><strong>Contacto:</strong> <?= $user_tel ?></div>
-            <div><strong>Operador:</strong> <?= $operador ?></div>
+            <div><strong>Operador:</strong> <?= isset($operador) ? $operador: 'Payphone' ?></div>
         </div>
         <div class="title">
             <strong>VALOR TOTAL PAGADO:</strong>

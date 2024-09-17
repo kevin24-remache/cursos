@@ -262,12 +262,6 @@
 
         <div class="footer">
             <div>
-                <a href="https://www.facebook.com/"><img src="<?=('public/assets/images/email/facebook.png')?>"
-                        alt="Facebook" width="32"></a>
-                <a href="https://www.instagram.com/"><img src="<?=('public/assets/images/email/instagram2x.png')?>"
-                        alt="Instagram" width="32"></a>
-                <a href="https://www.twitter.com/"><img src="<?=('public/assets/images/email/twitter2x.png')?>"
-                        alt="Twitter" width="32"></a>
             </div>
             <p>© 2024 PROSERVI-UEB-EP | Softec Apps S.A.S. Todos los derechos reservados.</p>
         </div>

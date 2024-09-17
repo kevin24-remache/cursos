@@ -95,8 +95,8 @@
                     </div>
                     <div class="info text-black">
                         <p><?= session('first_name') ?></p>
-                        <a href="<?= base_url("admin/config") ?>"><i class="fa fa-lg fa-cog"></i></a> <a
-                            href="<?= base_url("logout") ?>"><i class="fa fa-lg fa-power-off"></i></a>
+                        <a href="<?= base_url("admin/config") ?>" title="Configuración"><i class="fa fa-lg fa-cog"></i></a> <a
+                            href="<?= base_url("logout") ?>" title="Cerrar Sesión"><i class="fa fa-lg fa-power-off"></i></a>
                     </div>
                 </div>
                 <ul class="sidebar-menu" data-widget="tree">

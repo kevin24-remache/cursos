@@ -14,6 +14,11 @@
     <link rel="stylesheet" href="<?= base_url("assets/css/payphone.css") ?>">
     <!-- Preloader -->
     <link rel="stylesheet" href="<?= base_url("assets/css/preloader.css") ?>">
+    <script type="text/javascript">
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+    </script>
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -146,7 +151,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="numeroCedula" class="form-label">Número de Cédula</label>
+                            <label for="numeroCedula" class="form-label">Número de Cédula/Ruc</label>
                             <div class="input-group">
                                 <div class="input-group-text"><i class="fas fa-id-card"></i></div>
 
@@ -220,6 +225,18 @@
                                 <div class="input-group">
                                     <div class="input-group-text"><i class="fas fa-map-marker-alt"></i></div>
                                     <input type="text" class="form-control" id="direccion" name="direccion" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="email" class="form-label">Genero</label>
+                                <div class="input-group">
+                                    <div class="input-group-text"><i class="fa-solid fa-venus-mars"></i></div>
+                                    <select class="form-select" name="gender" id="gender" required>
+                                        <option value="0">Masculino</option>
+                                        <option value="1">Femenino</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
