@@ -46,10 +46,12 @@ document.addEventListener('DOMContentLoaded', function() {
     var modalDeposito = document.getElementById('modalDeposito');
     modalDeposito.addEventListener('hidden.bs.modal', LimpiarModal);
 
-    // // Agregar un evento para cuando se abre el modal
-    // modalDeposito.addEventListener('show.bs.modal', function() {
-    //     // Agregar event listeners a los campos de entrada
-    //     document.getElementById('depositoCedula').addEventListener('input', fetchMontoDeposito);
-    //     document.getElementById('codigoPago').addEventListener('input', fetchMontoDeposito);
-    // });
+    // Función para limpiar los datos del formulario de registro de usuario
+    function limpiarFormularioRegistroUsuario() {
+        document.getElementById('formRegistroUsuario').reset();
+    }
+
+    // Evento para limpiar el modal de registro de usuario al cerrarse
+    var modalRegistroUsuario = document.getElementById('modalRegistroUsuario');
+    modalRegistroUsuario.addEventListener('hidden.bs.modal', limpiarFormularioRegistroUsuario);
 });

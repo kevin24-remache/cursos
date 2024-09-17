@@ -40,7 +40,8 @@ document.addEventListener("DOMContentLoaded", function () {
   // Función para validar que el campo solo acepte 10 dígitos
   function validarCedulaLongitud(input) {
     input.addEventListener("input", function () {
-      this.value = this.value.slice(0, 10); // Limitar a 10 caracteres
+      // Permitir que el valor tenga un máximo de 13 caracteres (el máximo entre cédula y RUC)
+      this.value = this.value.slice(0, 13);
     });
   }
 
@@ -126,11 +127,11 @@ document.addEventListener("DOMContentLoaded", function () {
     event.preventDefault();
     let numeroCedula = document.getElementById("numeroCedula").value;
     let eventoId = document.getElementById("eventoId").value;
-    if (numeroCedula.length !== 10) {
+    if (numeroCedula.length !== 10 && numeroCedula.length !== 13) {
       event.preventDefault(); // Evitar el envío del formulario
       Swal.fire({
         title: "Error",
-        text: "La cédula debe tener exactamente 10 dígitos.",
+        text: "La cédula debe tener exactamente 10 dígitos o el RUC 13 dígitos.",
         icon: "error",
         confirmButtonText: "Entendido",
       });
@@ -482,9 +483,11 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("numeroCedulaRegistro").value = cedula;
         document.getElementById("nombres").value = data.persona.name || '';
         document.getElementById("apellidos").value = data.persona.surname || '';
-        document.getElementById("telefono").value = data.persona.mobile || '';
+        document.getElementById("telefono").value = data.persona.phone || '';
         document.getElementById("email").value = data.persona.email || '';
-        document.getElementById("direccion").value = data.persona.direccion || '';
+        document.getElementById("direccion").value = data.persona.address || '';
+        const gender = data.persona.gender || '';
+        document.getElementById("gender").value = (gender === 'MASCULINO') ? '0' : (gender === 'FEMENINO') ? '1' : '';
       } else {
         // Si no se encuentra el usuario, solo llenamos la cédula
         document.getElementById("numeroCedulaRegistro").value = cedula;

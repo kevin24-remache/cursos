@@ -326,20 +326,20 @@ $(document).ready(function () {
                     },
                 ]
             },
-            {
-                text: '<i class="fa fa-lg fas fa-plus-circle"></i>',
-                titleAttr: 'Agregar',
-                className: 'js-mytooltip bg-success text-white',
-                attr: {
-                    'data-mytooltip-custom-class': 'align-center',
-                    'data-mytooltip-direction': 'top',
-                    'data-mytooltip-theme': 'success',
-                    'data-mytooltip-content': 'Agregar'
-                },
-                action: function () {
-                    window.location.href = base_url + "admin/event/new";
-                },
-            },
+            // {
+            //     text: '<i class="fa fa-lg fas fa-plus-circle"></i>',
+            //     titleAttr: 'Agregar',
+            //     className: 'js-mytooltip bg-success text-white',
+            //     attr: {
+            //         'data-mytooltip-custom-class': 'align-center',
+            //         'data-mytooltip-direction': 'top',
+            //         'data-mytooltip-theme': 'success',
+            //         'data-mytooltip-content': 'Agregar'
+            //     },
+            //     action: function () {
+            //         window.location.href = base_url + "admin/event/new";
+            //     },
+            // },
             // {
             //     text: '<i class="fa fa-lg fa-minus-circle" aria-hidden="true"></i>',
             //     titleAttr: 'Eliminados',
