@@ -186,9 +186,28 @@ class InscripcionController extends BaseController
             return $this->response->setJSON(['error' => true, 'message' => 'No se pudo registrar la inscripción']);
         }
 
-        // Enviar correo electrónico
-        $emailEnviado = $this->send_email($persona, $codigoPago, $fechaLimitePago, $event);
-        if ($emailEnviado === 'success') {
+        // Enviar correo electrónico a la cola
+        $emailData = [
+            'to' => $persona['email'],
+            'subject' => 'Código de pago',
+            'message' => 'Estimado ' . $persona['nombres'] . ' ' . $persona['apellidos'] . ', los detalles de su solicitud se encuentran en el documento adjunto. Su código de pago es: ' . $codigoPago,
+            'htmlContent' => view('client/codigo', [
+                'user' => $persona['nombres'] . ' ' . $persona['apellidos'],
+                'codigoPago' => $codigoPago,
+                'fechaLimitePago' => $fechaLimitePago->toDateString(),
+                'fechaEmision' => Time::now()->toDateTimeString(),
+                'evento' => $event['event_name'],
+                'categoria' => $event['category_name'],
+                'precio' => $event['cantidad_dinero'],
+            ]),
+            'pdfFilename' => 'comprobante_registro.pdf',
+            'emailType' => 'send_email_registro'
+        ];
+
+        // Añadir el trabajo a la cola
+        $jobId = service('queue')->push('emails', 'email', $emailData);
+
+        if ($jobId) {
             $db->transComplete();
             helper('email');
             $email = mask_email($persona['email']);
@@ -197,11 +216,12 @@ class InscripcionController extends BaseController
                 'codigoPago' => $codigoPago,
                 'eventName' => $event_name,
                 'email' => $email,
-                'payment_time_limit' => $fechaLimitePago->format('Y-m-d H:i:s')
+                'payment_time_limit' => $fechaLimitePago->format('Y-m-d H:i:s'),
+                'job_id' => $jobId,
             ]);
         } else {
             $db->transRollback();
-            return $this->response->setJSON(['error' => true, 'message' => 'No se pudo enviar el correo electrónico']);
+            return $this->response->setJSON(['error' => true, 'message' => 'No se pudo añadir el email a la cola']);
         }
     }
 
@@ -248,7 +268,7 @@ class InscripcionController extends BaseController
         );
 
         if ($validation->run((array) $data)) {
-            // Datos válidos, proceder con la verificación en Firebase
+            // Datos válidos, proceder con la verificación en Firebase y el registro simultáneo en la API
             try {
                 $firebase = service('firebase');
                 $firestore = $firebase->firestore;
@@ -266,6 +286,36 @@ class InscripcionController extends BaseController
                     return $this->response->setJSON(['success' => false, 'message' => 'El correo electrónico ya está registrado.']);
                 }
 
+                // Preparar los datos para la API
+                $dataApi = [
+                    'name' => $data->nombres,
+                    'surname' => $data->apellidos,
+                    'full_name' => $data->nombres . ' ' . $data->apellidos,
+                    'email' => $data->email,
+                    'phone' => $data->telefono,
+                    'mobile' => null,
+                    'address' => $data->direccion,
+                    'city' => null,
+                    'country' => null,
+                    'observation' => null,
+                    'identification' => $data->numeroCedula,
+                    'type_identification' => null,
+                    'profession' => null,
+                    'date_of_birth' => null,
+                    'place_of_birth' => null,
+                    'gender' => $data->gender == 0 ? "Masculino" : "Femenino",
+                    'nationality' => null,
+                    'citizen_status' => null,
+                    'civil_status' => null,
+                ];
+
+                // Llamada al servicio ApiPrivada
+                $apiResponse = \App\Services\ApiPrivadaService::setDataUserCi($dataApi);
+
+                if (!$apiResponse) {
+                    return $this->response->setJSON(['success' => false, 'message' => 'Error al registrar en la API privada.']);
+                }
+
                 // Asignar el valor de numeroCedula a cedula
                 $data->cedula = $data->numeroCedula;
                 unset($data->numeroCedula);
@@ -275,12 +325,13 @@ class InscripcionController extends BaseController
                 $timestamp = $currentTime->getTimestamp();
                 $data->timestamp = new \Google\Cloud\Core\Timestamp(new \DateTime("@$timestamp"));
 
-                // Si ambas verificaciones pasan, registrar el usuario en Firebase
+                // Registrar el usuario en Firebase
                 $documentReference = $collection->document($data->cedula);
                 $documentReference->set((array) $data);
 
                 return $this->response->setJSON(['success' => true, 'message' => 'Usuario registrado correctamente.']);
             } catch (\Exception $e) {
+                log_message('warning', $e->getMessage(), ['status' => $e->getMessage()]);
                 return $this->response->setJSON(['success' => false, 'message' => 'Error al registrar el usuario en Firebase.']);
             }
         } else {
@@ -288,36 +339,5 @@ class InscripcionController extends BaseController
         }
     }
 
-    public function send_email($persona, $codigoPago, $fechaLimitePago, $event)
-    {
-        helper('email');
-
-        // Fecha de emisión del PDF
-        $fechaEmision = Time::now()->toDateTimeString();
-        $fechaLimitePagoFormateada = $fechaLimitePago->toDateString();
-        // Obtener los datos
-        $user = $persona['nombres'] . ' ' . $persona['apellidos'];
-        $emailAddress = $persona['email'];
-        $evento = $event['event_name'];
-        $categoria = $event['category_name'];
-        $precio = $event['cantidad_dinero'];
-
-        // Cargar la vista y pasar los datos
-        $htmlContent = view('client/codigo', [
-            'user' => $user,
-            'codigoPago' => $codigoPago,
-            'fechaLimitePago' => $fechaLimitePagoFormateada,
-            'fechaEmision' => $fechaEmision,
-            'evento' => $evento,
-            'categoria' => $categoria,
-            'precio' => $precio
-        ]);
-
-        // Mensaje del email
-        $emailMessage = 'Estimado ' . $user . ' los detalles de su solicitud se encuentran en el documento adjunto. Su codigo de pago es: ' . $codigoPago;
-
-        // Usar la función del helper para enviar el email
-        return send_email_with_pdf($emailAddress, 'Código de pago', $emailMessage, $htmlContent, 'comprobante_registro.pdf');
-    }
 
 }

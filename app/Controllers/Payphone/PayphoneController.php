@@ -136,7 +136,7 @@ class PayphoneController extends BaseController
         if ($result['success'] && ($transaction_status == 'Approved' || $statusCode == 2)) {
             // Utilizamos el PaymentApprovalService para aprobar el pago
             $userId = null; // Asumimos que el ID del usuario está en la sesión o en el pago
-            $approvalResult = $this->paymentApprovalService->approvePayment($paymentId, $userId);
+            $approvalResult = $this->paymentApprovalService->approvePayment($paymentId, $userId,'3');
 
             if ($approvalResult['success']) {
                 // El pago se aprobó correctamente
