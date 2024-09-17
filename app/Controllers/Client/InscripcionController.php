@@ -6,10 +6,18 @@ use App\Controllers\BaseController;
 use App\Models\EventsModel;
 use App\Models\PaymentsModel;
 use App\Models\RegistrationsModel;
+use App\Services\ApiPrivadaService;
 use CodeIgniter\I18n\Time;
 
 class InscripcionController extends BaseController
 {
+    private $apiPrivadaService;
+
+    public function __construct(){
+
+        $this->apiPrivadaService = new ApiPrivadaService();
+    }
+
     private function generarCodigoPagoUnico()
     {
         $paymentModel = new PaymentsModel();
@@ -21,6 +29,7 @@ class InscripcionController extends BaseController
 
         return $codigoPago;
     }
+
     private function calcularFechaLimitePago($fechaInscripcion, $fechaEvento)
     {
         // Calcular la diferencia en días entre la fecha de inscripción y la fecha del evento
@@ -54,10 +63,10 @@ class InscripcionController extends BaseController
         return [
             'event_cod' => $event['id'],
             'cat_id' => $catId,
-            'full_name_user' => $persona['nombres'] . ' ' . $persona['apellidos'],
-            'ic' => $persona['cedula'],
-            'address' => $persona['direccion'],
-            'phone' => $persona['telefono'],
+            'full_name_user' => $persona['full_name'],
+            'ic' => $persona['identification'],
+            'address' => $persona['address'],
+            'phone' => $persona['phone'],
             'email' => $persona['email'],
             'event_name' => $event['event_name'],
             'monto_category' => $event['cantidad_dinero'],
@@ -85,26 +94,23 @@ class InscripcionController extends BaseController
 
         $cedula = trim($data->cedula);
 
-        $firebase = service('firebase');
-        $firestore = $firebase->firestore;
-        $collection = $firestore->database()->collection('Usuarios');
-        $documentReference = $collection->document($cedula);
-        $snapshot = $documentReference->snapshot();
+        // Usar el servicio para obtener los datos del usuario
+        $persona = $this->apiPrivadaService->getDataUser($cedula);
 
-        if ($snapshot->exists()) {
-            $persona = $snapshot->data();
-
+        if ($persona && $persona['success'] && isset($persona['data'])) {
+            // Extraer datos de la respuesta
+            $personaData = $persona['data'];
             helper('format_names');
             helper('email');
 
-            $persona_formateada = formatear_nombre_apellido($persona['nombres'], $persona['apellidos']);
+            $persona_formateada = formatear_nombre_apellido($personaData['name'], $personaData['surname']);
             $respuesta = [
                 'exists' => true,
                 'persona' => [
-                    'id' => $persona['cedula'],
+                    'id' => $personaData['identification'],
                     'nombres' => $persona_formateada['nombres'],
                     'apellidos' => $persona_formateada['apellidos'],
-                    'email' => mask_email($persona['email']),
+                    'email' => mask_email($personaData['email']),
                 ]
             ];
 
@@ -139,18 +145,14 @@ class InscripcionController extends BaseController
         $eventoId = $data->eventoId;
         $catId = $data->catId;
 
-        // Obtener datos del usuario de Firebase
-        $firebase = service('firebase');
-        $firestore = $firebase->firestore;
-        $collection = $firestore->database()->collection('Usuarios');
-        $documentReference = $collection->document($cedula);
-        $snapshot = $documentReference->snapshot();
+        // Usar el servicio para obtener los datos del usuario
+        $persona = $this->apiPrivadaService->getDataUser($cedula);
 
-        if (!$snapshot->exists()) {
+        if (!$persona || !$persona['success'] || !isset($persona['data'])) {
             return $this->response->setJSON(['error' => true, 'message' => 'Usuario no encontrado']);
         }
 
-        $persona = $snapshot->data();
+        $personaData = $persona['data'];
 
         // Verificar si el evento existe
         $eventModel = new EventsModel();
@@ -167,7 +169,7 @@ class InscripcionController extends BaseController
         $fechaLimitePago = $this->calcularFechaLimitePago($fechaInscripcion, $fechaEvento);
 
         // Preparar datos para la inscripción y el pago
-        $datosInscripcion = $this->prepararDatosInscripcion($persona, $event, $catId);
+        $datosInscripcion = $this->prepararDatosInscripcion($personaData, $event, $catId);
         $datosPayment = $this->prepararDatosPago($codigoPago, $fechaLimitePago);
 
         // Guardar los datos en la base de datos
@@ -188,11 +190,11 @@ class InscripcionController extends BaseController
 
         // Enviar correo electrónico a la cola
         $emailData = [
-            'to' => $persona['email'],
+            'to' => $personaData['email'],
             'subject' => 'Código de pago',
-            'message' => 'Estimado ' . $persona['nombres'] . ' ' . $persona['apellidos'] . ', los detalles de su solicitud se encuentran en el documento adjunto. Su código de pago es: ' . $codigoPago,
+            'message' => 'Estimado ' . $personaData['full_name'] . ', los detalles de su solicitud se encuentran en el documento adjunto. Su código de pago es: ' . $codigoPago,
             'htmlContent' => view('client/codigo', [
-                'user' => $persona['nombres'] . ' ' . $persona['apellidos'],
+                'user' => $personaData['full_name'],
                 'codigoPago' => $codigoPago,
                 'fechaLimitePago' => $fechaLimitePago->toDateString(),
                 'fechaEmision' => Time::now()->toDateTimeString(),
@@ -210,7 +212,7 @@ class InscripcionController extends BaseController
         if ($jobId) {
             $db->transComplete();
             helper('email');
-            $email = mask_email($persona['email']);
+            $email = mask_email($personaData['email']);
             return $this->response->setJSON([
                 'success' => true,
                 'codigoPago' => $codigoPago,
@@ -268,23 +270,7 @@ class InscripcionController extends BaseController
         );
 
         if ($validation->run((array) $data)) {
-            // Datos válidos, proceder con la verificación en Firebase y el registro simultáneo en la API
             try {
-                $firebase = service('firebase');
-                $firestore = $firebase->firestore;
-                $collection = $firestore->database()->collection('Usuarios');
-
-                // Verificar si la cédula ya existe
-                $cedulaSnapshot = $collection->document($data->numeroCedula)->snapshot();
-                if ($cedulaSnapshot->exists()) {
-                    return $this->response->setJSON(['success' => false, 'message' => 'La cédula ya está registrada.']);
-                }
-
-                // Verificar si el email ya existe
-                $emailQuery = $collection->where('email', '=', $data->email)->documents();
-                if (!$emailQuery->isEmpty()) {
-                    return $this->response->setJSON(['success' => false, 'message' => 'El correo electrónico ya está registrado.']);
-                }
 
                 // Preparar los datos para la API
                 $dataApi = [
@@ -316,23 +302,10 @@ class InscripcionController extends BaseController
                     return $this->response->setJSON(['success' => false, 'message' => 'Error al registrar en la API privada.']);
                 }
 
-                // Asignar el valor de numeroCedula a cedula
-                $data->cedula = $data->numeroCedula;
-                unset($data->numeroCedula);
-
-                // Añadir campo timestamp como Firebase Timestamp
-                $currentTime = new \DateTime();
-                $timestamp = $currentTime->getTimestamp();
-                $data->timestamp = new \Google\Cloud\Core\Timestamp(new \DateTime("@$timestamp"));
-
-                // Registrar el usuario en Firebase
-                $documentReference = $collection->document($data->cedula);
-                $documentReference->set((array) $data);
-
                 return $this->response->setJSON(['success' => true, 'message' => 'Usuario registrado correctamente.']);
             } catch (\Exception $e) {
                 log_message('warning', $e->getMessage(), ['status' => $e->getMessage()]);
-                return $this->response->setJSON(['success' => false, 'message' => 'Error al registrar el usuario en Firebase.']);
+                return $this->response->setJSON(['success' => false, 'message' => 'Error al registrar el usuario']);
             }
         } else {
             return $this->response->setJSON(['success' => false, 'message' => $validation->getErrors()]);
