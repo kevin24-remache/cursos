@@ -16,6 +16,7 @@ class DashboardController extends BaseController
             'modulo' => $modulo,
             'mis_ingresos' => $paymentsModel->getDailyRevenueMy(null,session('id')),
             'mis_ingresos_totales' => $paymentsModel->getTotalRevenueByUser(session('id')),
+            'paymentMethodStats' => $paymentsModel->getPaymentMethodStats(),
         ];
         return view('payments/index',$data);
     }

@@ -39,6 +39,15 @@ Panel
                 </a>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="info-box">
+                    <h5 class="text-black">Métodos de pago mas usados</h5>
+                    <canvas id="paymentMethodChart"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <?= $this->endSection() ?>
@@ -50,4 +59,41 @@ Panel
 <script src="<?= base_url("dist/plugins/raphael/raphael-min.js") ?>"></script>
 <script src="<?= base_url("dist/plugins/morris/morris.js") ?>"></script>
 <script src="<?= base_url("dist/plugins/functions/dashboard1.js") ?>"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var ctx = document.getElementById('paymentMethodChart').getContext('2d');
+        var paymentMethodStats = <?= json_encode(isset($paymentMethodStats) ? $paymentMethodStats : '') ?>;
+
+        var labels = paymentMethodStats.map(function (item) { return item.method_name; });
+        var data = paymentMethodStats.map(function (item) { return item.count; });
+
+        var chart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(255, 206, 86, 0.8)',
+                        'rgba(75, 192, 192, 0.8)',
+                        'rgba(153, 102, 255, 0.8)',
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Métodos de Pago Más Utilizados'
+                }
+            }
+        });
+
+
+
+    });
+</script>
 <?= $this->endSection() ?>
