@@ -118,7 +118,7 @@ class InscripcionesController extends BaseController
 
         // Si se proporciona un estado, obtener inscripciones filtradas por cédula y estado
         if (!is_null($estadoValue) && in_array($estadoValue, $validStates)) {
-            $filtered_registrations = $registrationModel->getInscripcionesByCedulaYEstado($cedula, $estadoValue);
+            $filtered_registrations = $registrationModel->getMisInscripcionesByCedulaYEstado($cedula, $estadoValue);
 
             if (empty($filtered_registrations)) {
                 $data['estado'] = $estadoValue;

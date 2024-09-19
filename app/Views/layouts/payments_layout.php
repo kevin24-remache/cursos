@@ -36,6 +36,7 @@
 
     <!-- tooltip -->
     <link rel="stylesheet" href="<?= base_url('dist/plugins/tooltip/tooltip.css') ?>">
+    <link rel="stylesheet" href="<?= base_url("dist/plugins/datatables/css/dataTables.bootstrap.min.css") ?>">
     <link rel="stylesheet" href="<?= base_url("assets/css/datatables.css") ?>">
     <?= $this->renderSection('css'); ?>
     <style>
@@ -151,26 +152,15 @@
                         </ul>
                     </li>
                     <li
-                        class="treeview  <?= (isset($modulo) && in_array($modulo, [ModulosAdminPagos::PAGOS, ModulosAdminPagos::PAGOS_COMPLETOS, ModulosAdminPagos::PAGOS_RECHAZADOS, ModulosAdminPagos::PAGOS_INCOMPLETOS])) ? 'active' : '' ?>">
-                        <a href="#"> <i class="fa fa-credit-card-alt" aria-hidden="true"></i> <span>Pagos con
-                                depósitos</span> <span class="pull-right-container"> <i
-                                    class="fa fa-angle-left pull-right"></i> </span> </a>
+                        class="treeview <?= (isset($modulo) && in_array($modulo, [ModulosAdminPagos::MIS_RECAUDACIONES])) ? 'active' : '' ?>">
+                        <a href="#"> <i class="fa fa-usd"></i>
+                        <span>Recaudación</span>
+                            <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
                         <ul class="treeview-menu">
+
                             <li
-                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdminPagos::PAGOS)) ? 'active' : '' ?>">
-                                <a href="<?= base_url("punto/pago/depositos") ?>">Ingresados</a>
-                            </li>
-                            <li
-                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdminPagos::PAGOS_COMPLETOS)) ? 'active' : '' ?>">
-                                <a href="<?= base_url('punto/pago/depositos/completados') ?>">Completados</a>
-                            </li>
-                            <li
-                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdminPagos::PAGOS_RECHAZADOS)) ? 'active' : '' ?>">
-                                <a href="<?= base_url('punto/pago/depositos/rechazados') ?>">Rechazados</a>
-                            </li>
-                            <li
-                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdminPagos::PAGOS_INCOMPLETOS)) ? 'active' : '' ?>">
-                                <a href="<?= base_url('punto/pago/depositos/incompletos') ?>">Incompletos</a>
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdminPagos::MIS_RECAUDACIONES)) ? 'active' : '' ?>">
+                                <a href="<?= base_url('punto/pago/recaudaciones'); ?>">Mis recaudaciones</a>
                             </li>
                         </ul>
                     </li>

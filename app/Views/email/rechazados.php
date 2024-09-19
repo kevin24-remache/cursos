@@ -99,7 +99,7 @@
 				<td>
 					<table class="row row-1" align="center" width="100%" border="0" cellpadding="0" cellspacing="0"
 						role="presentation"
-						style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-image: url('cid:<?php echo $cids['bg_top.jpg']; ?>'); background-position: top center; background-repeat: repeat;">
+						style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-image: url('<?= base_url('public/assets/images/email/bg_top.jpg')?>'); background-position: top center; background-repeat: repeat;">
 						<tbody>
 							<tr>
 								<td>
@@ -170,7 +170,7 @@
 																<div class="alignment" align="center"
 																	style="line-height:10px">
 																	<div style="max-width: 152px;"><img
-																			src="cid:<?php echo $cids['logo-ep.png']; ?>"
+																			src="<?= base_url('public/assets/images/email/logo-ep.png')?>"
 																			style="display: block; height: auto; border: 0; width: 100%;"
 																			width="152" alt="Logo" title="Logo"
 																			height="auto"></div>
@@ -419,7 +419,7 @@
 																		<td
 																			style="vertical-align: middle; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;">
 																			<img class="icon"
-																				src="cid:<?php echo $cids['5.png']; ?>"
+																				src="<?= base_url('public/assets/images/email/5.png')?>"
 																				height="auto" width="32" align="center"
 																				style="display: block; height: auto; margin: 0 auto; border: 0;">
 																		</td>
@@ -485,33 +485,6 @@
 																		cellpadding="0" cellspacing="0"
 																		role="presentation"
 																		style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; display: inline-block;">
-																		<tr>
-																			<td style="padding:0 2px 0 2px;"><a
-																					href="https://www.facebook.com/"
-																					target="_blank"><img
-																						src="cid:<?php echo $cids['facebook.png']; ?>"
-																						width="32" height="auto"
-																						alt="Facebook" title="facebook"
-																						style="display: block; height: auto; border: 0;"></a>
-																			</td>
-																			<td style="padding:0 2px 0 2px;"><a
-																					href="https://www.twitter.com/"
-																					target="_blank"><img
-																						src="cid:<?php echo $cids['twitter2x.png']; ?>"
-																						width="32" height="auto"
-																						alt="Twitter" title="twitter"
-																						style="display: block; height: auto; border: 0;"></a>
-																			</td>
-																			<td style="padding:0 2px 0 2px;"><a
-																					href="https://www.instagram.com/"
-																					target="_blank"><img
-																						src="cid:<?php echo $cids['instagram2x.png']; ?>"
-																						width="32" height="auto"
-																						alt="Instagram"
-																						title="instagram"
-																						style="display: block; height: auto; border: 0;"></a>
-																			</td>
-																		</tr>
 																	</table>
 																</div>
 															</td>

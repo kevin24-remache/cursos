@@ -89,15 +89,36 @@ Inscritos en <?= $event['event_name'] ?>
                                         class="<?= style_estado($inscription['payment_status']) ?> rounded p-1"><?= getPaymentStatusText($inscription['payment_status']) ?></span>
                                 </td>
                                 <td>
-                                    <button class="js-mytooltip btn btn-outline-warning btn-edit"
-                                        data-mytooltip-custom-class="align-center" data-mytooltip-direction="top"
-                                        data-mytooltip-theme="warning" data-mytooltip-content="Editar" data-toggle="modal"
-                                        data-target="#editModal" data-id="<?= $inscription['id'] ?>"
-                                        data-name="<?= $inscription['full_name_user'] ?>"
-                                        data-ic="<?= $inscription['ic'] ?>"
-                                        data-category="<?= $inscription['category_name'] ?>">
-                                        <i class="fa fa-lg fa-pencil-square-o fa-lg" aria-hidden="true"></i>
-                                    </button>
+                                    <?php if ($inscription['payment_status'] != 2): ?>
+                                        <button class="js-mytooltip btn btn-outline-warning btn-edit"
+                                            data-mytooltip-custom-class="align-center" data-mytooltip-direction="top"
+                                            data-mytooltip-theme="warning" data-mytooltip-content="Editar" data-toggle="modal"
+                                            data-target="#editModal" data-id="<?= $inscription['event_cod'] ?>"
+                                            data-name="<?= $inscription['full_name_user'] ?>"
+                                            data-address="<?= $inscription['address'] ?>"
+                                            data-phone="<?= $inscription['phone'] ?>" data-email="<?= $inscription['email'] ?>"
+                                            data-ic="<?= $inscription['ic'] ?>"
+                                            data-id-inscrito="<?= $inscription['id'] ?>">
+                                            <i class="fa fa-lg fa-pencil-square-o fa-lg" aria-hidden="true"></i>
+                                        </button>
+                                        <button class="js-mytooltip btn btn-outline-danger btn-delete m-1" title="Eliminar"
+                                            data-toggle="modal" data-target="#delete" data-mytooltip-custom-class="align-center"
+                                            data-mytooltip-direction="top" data-mytooltip-theme="danger"
+                                            data-mytooltip-content="Eliminar"
+                                            data-inscription-name="<?= $inscription['full_name_user'] ?>"
+                                            data-inscription-category="<?= $inscription['category_name'] ?>"
+                                            data-inscription-id="<?= $inscription['id'] ?>"
+                                            data-id-event="<?= $inscription['event_cod'] ?>">
+                                            <i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
+                                        </button>
+                                    <?php else: ?>
+                                        <a class="js-mytooltip btn btn-outline-danger" target="_blank"
+                                            data-mytooltip-custom-class="align-center" data-mytooltip-direction="top"
+                                            data-mytooltip-theme="danger" data-mytooltip-content="PDF"
+                                            href="<?= base_url("pdf/" . $inscription['num_autorizacion']) ?>" title="PDF">
+                                            <i class="fa fa-lg fa-file-pdf-o" aria-hidden="true"></i>
+                                        </a>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -115,32 +136,78 @@ Inscritos en <?= $event['event_name'] ?>
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">Editar Inscripción</h5>
+                    <h5 class="modal-title" id="editModalLabel">Editar datos del usuario inscrito</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="<?= base_url('admin/inscriptions/update') ?>" method="POST">
+                <form action="<?= base_url('admin/event/inscritos/update') ?>" method="POST">
                     <div class="modal-body">
                         <input type="hidden" name="id" id="edit-id">
-                        <div class="form-group">
-                            <label for="edit-name">Nombre</label>
-                            <input type="text" class="form-control" id="edit-name" name="full_name_user">
+                        <input type="hidden" name="id_inscrito" id="edit-id-inscrito">
+                        <div class="row">
+                            <div class="form-group col-lg-6">
+                                <label for="edit-name">Usuario inscrito</label>
+                                <input type="text" class="form-control" id="edit-name" name="full_name_user">
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label for="edit-ic">Cédula/Ruc</label>
+                                <input type="text" class="form-control" id="edit-ic" name="ic">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="edit-ic">Cédula</label>
-                            <input type="text" class="form-control" id="edit-ic" name="ic">
+                        <div class="row">
+                            <div class="form-group col-lg-6">
+                                <label for="edit-address">Dirección</label>
+                                <input type="text" class="form-control" id="edit-address" name="address">
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label for="edit-phone">Teléfono</label>
+                                <input type="text" class="form-control" id="edit-phone" name="phone">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="edit-category">Categoría</label>
-                            <input type="text" class="form-control" id="edit-category" name="category_name">
+                        <div class="row">
+                            <div class="form-group col">
+                                <label for="edit-email">Correo electrónico</label>
+                                <input type="email" class="form-control" id="edit-email" name="email">
+                            </div>
                         </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                         <button type="submit" class="btn btn-primary">Guardar cambios</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="delete" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content rounded-2">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Eliminar</h4>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="<?= base_url("admin/event/inscritos/delete") ?>" id="formPago" method="post">
+                        <div class="row mb-3">
+                            <div class="col">
+                                <p>Estas seguro de eliminar la inscripción de : <span class="text-danger"
+                                        id="text-inscription"></span> para la categoría : <span
+                                        id="text-category"></span></p>
+                            </div>
+                        </div>
+                        <input type="hidden" name="id" id="id_inscription">
+                        <input type="hidden" name="id_event" id="id_event">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button form="formPago" type="submit" class="btn btn-danger">Eliminar</button>
+                </div>
             </div>
         </div>
     </div>
@@ -195,7 +262,8 @@ Inscritos en <?= $event['event_name'] ?>
             default:
                 return '';
         }
-    }// Código para actualizar la tabla
+    }
+    // Código para actualizar la tabla
     function updateTable() {
         let status = $('#statusSelect').val();
         let category = $('#categorySelect').val();
@@ -216,22 +284,71 @@ Inscritos en <?= $event['event_name'] ?>
             success: function (response) {
                 let table = $('#eventInscriptions').DataTable();
                 table.clear();
+
                 response.data.forEach(function (inscription) {
+                    let actionButtons = '';
+
+                    if (inscription.payment_status != 2) {
+                        actionButtons += `
+                        <button class="js-mytooltip btn btn-outline-warning btn-edit"
+                                data-mytooltip-custom-class="align-center"
+                                data-mytooltip-direction="top"
+                                data-mytooltip-theme="warning"
+                                data-mytooltip-content="Editar"
+                                data-toggle="modal"
+                                data-target="#editModal"
+                                data-id="${inscription.event_cod}"
+                                data-name="${inscription.full_name_user}"
+                                data-address="${inscription.address}"
+                                data-phone="${inscription.phone}"
+                                data-email="${inscription.email}"
+                                data-ic="${inscription.ic}">
+                            <i class="fa fa-lg fa-pencil-square-o" aria-hidden="true"></i>
+                        </button>
+                        <button class="js-mytooltip btn btn-outline-danger btn-delete m-1"
+                                title="Eliminar"
+                                data-toggle="modal"
+                                data-target="#delete"
+                                data-mytooltip-custom-class="align-center"
+                                data-mytooltip-direction="top"
+                                data-mytooltip-theme="danger"
+                                data-mytooltip-content="Eliminar"
+                                data-inscription-name="${inscription.full_name_user}"
+                                data-inscription-category="${inscription.category_name}"
+                                data-inscription-id="${inscription.id}"
+                                data-id-event="${inscription.event_cod}">
+                            <i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
+                        </button>`;
+                    } else {
+                        actionButtons += `
+                        <a class="js-mytooltip btn btn-outline-danger"
+                           target="_blank"
+                           data-mytooltip-custom-class="align-center"
+                           data-mytooltip-direction="top"
+                           data-mytooltip-theme="danger"
+                           data-mytooltip-content="PDF"
+                           href="${base_url}pdf/${inscription.num_autorizacion}"
+                           title="PDF">
+                            <i class="fa fa-lg fa-file-pdf-o" aria-hidden="true"></i>
+                        </a>`;
+                    }
+
                     table.row.add([
                         inscription.full_name_user,
                         inscription.ic,
                         `${inscription.cantidad_dinero}`,
                         `${inscription.metodo_pago}`, // Mostrar método de pago
                         `<span class="${style_estado(inscription.payment_status)}">${getPaymentStatusText(inscription.payment_status)}</span>`,
-                        `<button class="js-mytooltip btn btn-outline-warning btn-edit" data-mytooltip-custom-class="align-center" data-mytooltip-direction="top" data-mytooltip-theme="warning" data-mytooltip-content="Editar" data-toggle="modal" data-target="#editModal" data-id="${inscription.id}" data-name="${inscription.full_name_user}" data-ic="${inscription.ic}" data-category="${inscription.category_name}">
-                        <i class="fa fa-lg fa-pencil-square-o fa-lg" aria-hidden="true"></i>
-                    </button>`
+                        actionButtons
                     ]);
                 });
-                $('.js-mytooltip').myTooltip('destroy');
-                $('.js-mytooltip').myTooltip();
+
+                // Refrescar tooltips y volver a enlazar los eventos
+                // $('.js-mytooltip').myTooltip('destroy');
+                // $('.js-mytooltip').myTooltip();
                 table.draw();
                 bindEditButtonEvents();
+                bindDeleteButtonEvents();
             },
             error: function (xhr, status, error) {
                 console.error('Error:', error);
@@ -245,19 +362,41 @@ Inscritos en <?= $event['event_name'] ?>
     function bindEditButtonEvents() {
         $('.btn-edit').off('click').on('click', function () {
             var id = $(this).data('id');
+            var idInscrito = $(this).data('id-inscrito');
             var name = $(this).data('name');
+            var address = $(this).data('address');
+            var phone = $(this).data('phone');
+            var email = $(this).data('email');
             var ic = $(this).data('ic');
-            var category = $(this).data('category');
+
             $('#edit-id').val(id);
+            $('#edit-id-inscrito').val(idInscrito);
             $('#edit-name').val(name);
+            $('#edit-address').val(address);
+            $('#edit-phone').val(phone);
+            $('#edit-email').val(email);
             $('#edit-ic').val(ic);
-            $('#edit-category').val(category);
+        });
+    }
+
+    function bindDeleteButtonEvents() {
+        $('.btn-delete').on('click', function () {
+            var inscriptionName = $(this).data('inscription-name');
+            var categoryName = $(this).data('inscription-category');
+            var id = $(this).data('inscription-id');
+            var eventId = $(this).data('id-event');
+
+            $('#text-inscription').text(inscriptionName);
+            $('#text-category').text(categoryName);
+            $('#id_inscription').val(id);
+            $('#id_event').val(eventId);
         });
     }
 
 
     $(document).ready(function () {
         bindEditButtonEvents(); // Vincula los eventos inicialmente
+        bindDeleteButtonEvents();
 
         // Nuevo código para manejar los filtros
         $('#statusSelect, #categorySelect, #metodoPagoSelect, #fechaRegistro').on('change', function () {

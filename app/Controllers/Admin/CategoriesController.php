@@ -8,13 +8,13 @@ use ModulosAdmin;
 
 class CategoriesController extends BaseController
 {
-    private function redirectView($validation=null, $flashMessages=null, $last_data=null, $last_action=null)
+    private function redirectView($validation = null, $flashMessages = null, $last_data = null, $last_action = null)
     {
         return redirect()->to('admin/category')->
-        with('flashValidation', isset($validation) ? $validation->getErrors() : null)->
-        with('flashMessages', $flashMessages)->
-        with('last_data', $last_data)->
-        with('last_action',$last_action);
+            with('flashValidation', isset($validation) ? $validation->getErrors() : null)->
+            with('flashMessages', $flashMessages)->
+            with('last_data', $last_data)->
+            with('last_action', $last_action);
     }
 
     public function index()
@@ -43,7 +43,7 @@ class CategoriesController extends BaseController
             'modulo' => $modulo,
             'additional_charge' => $additional_charge,
         ];
-        return view('admin/categories/category',$data);
+        return view('admin/categories/category', $data);
     }
 
     public function add()
@@ -141,7 +141,7 @@ class CategoriesController extends BaseController
                 // Actualizar los datos en la DB
                 $categoryModel = new CategoryModel();
                 unset($data['id_category']);
-                $update_category = $categoryModel->update($id_category,$data);
+                $update_category = $categoryModel->update($id_category, $data);
 
                 if (!$update_category) {
                     return $this->redirectView(null, [['No fue posible actualizar la categoría', 'warning']], $data, 'update');

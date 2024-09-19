@@ -233,6 +233,92 @@ $(document).ready(function () {
         ]
     });
 
+    let inscripcionesTrashTable = initializeDataTable("#inscripcionesTrash", {
+        buttons: [
+            {
+                extend: "pageLength",
+                className: "bg-secondary text-white",
+            },
+            {
+                extend: 'collection',
+                text: '<i class="fa fa-download"></i> Exportar',
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        text: '<i class="fa fa-files-o text-info"></i> Copiar',
+                        titleAttr: 'Copiar'
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel-o text-success"></i> Excel',
+                        titleAttr: 'Excel'
+                    },
+                    {
+                        extend: 'csvHtml5',
+                        text: '<i class="fa fa-file-text-o text-primary"></i> CSV',
+                        titleAttr: 'CSV'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: '<i class="fa fa-file-pdf-o text-red"></i> PDF',
+                        titleAttr: 'PDF'
+                    },
+                    {
+                        extend: 'colvis',
+                        text: 'Columnas visibles',
+                        columnText: function (dt, idx, title) {
+                            return (idx) + ': ' + title;
+                        },
+                        className: "btn btn-outline-success",
+                    },
+                ]
+            }
+        ]
+    });
+
+    let mis_cobros = initializeDataTable("#mis_cobros", {
+        buttons: [
+            {
+                extend: "pageLength",
+                className: "bg-secondary text-white",
+            },
+            {
+                extend: 'collection',
+                text: '<i class="fa fa-download"></i> Exportar',
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        text: '<i class="fa fa-files-o text-info"></i> Copiar',
+                        titleAttr: 'Copiar'
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel-o text-success"></i> Excel',
+                        titleAttr: 'Excel'
+                    },
+                    {
+                        extend: 'csvHtml5',
+                        text: '<i class="fa fa-file-text-o text-primary"></i> CSV',
+                        titleAttr: 'CSV'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: '<i class="fa fa-file-pdf-o text-red"></i> PDF',
+                        titleAttr: 'PDF'
+                    },
+                    {
+                        extend: 'colvis',
+                        text: 'Columnas visibles',
+                        columnText: function (dt, idx, title) {
+                            return (idx) + ': ' + title;
+                        },
+                        className: "btn btn-outline-success",
+                    },
+                ]
+            }
+        ]
+    });
+
     // Inicializar la tabla de categorías
     let categoryTable = initializeDataTable("#category", {
         responsive: true,

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comprobante de Registro</title>
+    <title>Inscripción actualizada</title>
     <style>
         body {
             font-family: Tahoma, Verdana, Segoe, sans-serif;
@@ -189,7 +189,7 @@
 
 <body>
     <header>
-        <img src="<?= base_url('public/assets/images/email/bg_top.jpg');?>" alt="bg-top" style="width: 100%;">
+        <img src="<?= base_url('public/assets/images/email/bg_top.jpg'); ?>" alt="bg-top" style="width: 100%;">
     </header>
     <main style="background-color: #F5F5F5;">
 
@@ -198,17 +198,17 @@
             <div class="content">
                 <div class="header row">
                     <div class="col bottom">
-                        <img src="<?=base_url('public/assets/images/email/logo-ep.png')?>" alt="Logo" class="logo">
+                        <img src="<?= base_url('public/assets/images/email/logo-ep.png') ?>" alt="Logo" class="logo">
                     </div>
                     <div class="col">
-                        <h1 class="pt-2 pb-2">Comprobante de Registro</h1>
+                        <h1 class="pt-2 pb-2">Inscripción actualizada</h1>
                     </div>
                 </div>
                 <div class="content-d">
                     <h2>Estimado(a) Cliente,
                         <?= $user ?>
                     </h2>
-                    <p>Has sido inscrito exitosamente en el evento. A continuación, se detallan los datos de tu
+                    <p> Tu inscripción se actualizo exitosamente . A continuación, se detallan los datos de tu
                         inscripción:</p>
                     <table class="details-table">
                         <tr>
@@ -232,13 +232,13 @@
                         <tr>
                             <th>Código de Pago:</th>
                             <td class="highlight">
-                                <?= $codigoPago ?>
+                                <?= $codigo_pago ?>
                             </td>
                         </tr>
                         <tr>
                             <th>Fecha Límite de Pago:</th>
                             <td class="highlight">
-                                <?= $fechaLimitePago ?>
+                                <?= $fecha_limite_pago ?>
                             </td>
                         </tr>
                         <tr>
@@ -249,7 +249,7 @@
                         </tr>
                     </table>
                     <p style="color: #c3171b; text-align: center;">
-                        Realiza el pago antes de la fecha límite utilizando el código de pago proporcionado.
+                        Recuerda realizar el pago antes de la fecha límite utilizando el código de pago proporcionado.
                     </p>
                     <p style="color: #c3171b; text-align: center;">Tu inscripción al evento no estará completa hasta que
                         verifiquemos correctamente tu pago.</p>

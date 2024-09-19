@@ -58,5 +58,13 @@ class CategoryModel extends Model
     //     return $data;
     // }
 
+    public function getCategoriesByEventId($eventId)
+    {
+        return $this->select('categories.id, categories.category_name, categories.cantidad_dinero')
+            ->join('event_category', 'event_category.cat_id = categories.id', 'left')
+            ->where('event_category.event_id', $eventId)
+            ->get()
+            ->getResultArray();
+    }
 
 }

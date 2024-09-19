@@ -129,6 +129,43 @@
                         </ul>
                     </li>
                     <li
+                        class="treeview <?= (isset($modulo) && in_array($modulo, [ModulosAdmin::INSCRIPCIONES,ModulosAdmin::INSCRIPCIONES_ELIMINADAS])) ? 'active' : '' ?>">
+                        <a href="#"> <i class="fa fa-users"></i>
+                        <span>Inscripciones</span>
+                            <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
+                        <ul class="treeview-menu">
+                            <li
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::INSCRIPCIONES)) ? 'active' : '' ?>">
+                                <a href="<?= base_url("admin/inscritos") ?>">Todas</a>
+                            </li>
+                            <li
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::INSCRIPCIONES_ELIMINADAS)) ? 'active' : '' ?>">
+                                <a href="<?= base_url("admin/inscritos/trash") ?>">Eliminadas</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li
+                        class="treeview <?= (isset($modulo) && in_array($modulo, [ModulosAdmin::MIS_RECAUDACIONES,ModulosAdmin::RECAUDACIONES,ModulosAdmin::RECAUDACIONES_ONLINE])) ? 'active' : '' ?>">
+                        <a href="#"> <i class="fa fa-usd"></i>
+                        <span>Recaudación</span>
+                            <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
+                        <ul class="treeview-menu">
+
+                            <li
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::MIS_RECAUDACIONES)) ? 'active' : '' ?>">
+                                <a href="<?= base_url('admin/recaudaciones'); ?>">Mis recaudaciones</a>
+                            </li>
+                            <li
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::RECAUDACIONES)) ? 'active' : '' ?>">
+                                <a href="<?= base_url(relativePath: 'admin/recaudaciones/usuarios'); ?>">Por usuario</a>
+                            </li>
+                            <li
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::RECAUDACIONES_ONLINE)) ? 'active' : '' ?>">
+                                <a href="<?= base_url(relativePath: 'admin/recaudaciones/online'); ?>">En Linea</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li
                         class="treeview <?= (isset($modulo) && in_array($modulo, [ModulosAdmin::EVENTS, ModulosAdmin::EVENTS_LIST, ModulosAdmin::EVENTS_ADD])) ? 'active' : '' ?>">
                         <a href="#"> <i class="fa fa-ticket"></i> <span>Eventos</span> <span
                                 class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>

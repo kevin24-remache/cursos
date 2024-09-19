@@ -82,32 +82,12 @@ if (!function_exists('send_rejection_email')) {
         $email->setTo($to);
         $email->setSubject($subject);
 
-        // Adjuntar las imágenes y obtener sus CIDs
-        $cids = [];
-        $images = [
-            'logo-ep.png',
-            'bg_top.jpg',
-            'twitter2x.png',
-            'instagram2x.png',
-            'facebook.png',
-            '5.png'
-        ];
-
-        foreach ($images as $image) {
-            $path = FCPATH . 'assets/images/email/' . $image;
-            if (file_exists($path)) {
-                $email->attach($path, 'inline');
-                $cids[$image] = $email->setAttachmentCID($path);
-            }
-        }
-
         // Preparar datos para la vista
         $data = [
             'rejectionReason' => $rejectionReason,
             'names' => $names,
             'codigoPago' => $codigoPago,
-            'nombreEvento' => $nombreEvento,
-            'cids' => $cids
+            'nombreEvento' => $nombreEvento
         ];
 
         // Solo agregar 'valor_pendiente' si está definido
@@ -141,24 +121,7 @@ if (!function_exists('email_rechazo_general')) {
         $email->setTo($to);
         $email->setSubject($subject);
 
-        // Adjuntar las imágenes y obtener sus CIDs
-        $cids = [];
-        $images = [
-            'logo-ep.png',
-            'bg_top.jpg',
-            'twitter2x.png',
-            'instagram2x.png',
-            'facebook.png',
-            '5.png'
-        ];
 
-        foreach ($images as $image) {
-            $path = FCPATH . 'assets/images/email/' . $image;
-            if (file_exists($path)) {
-                $email->attach($path, 'inline');
-                $cids[$image] = $email->setAttachmentCID($path);
-            }
-        }
 
         // Preparar datos para la vista
         $data = [
@@ -166,7 +129,6 @@ if (!function_exists('email_rechazo_general')) {
             'names' => $names,
             'codigoPago' => $codigoPago,
             'nombreEvento' => $nombreEvento,
-            'cids' => $cids
         ];
 
         // Cargar la vista con el contenido HTML del email

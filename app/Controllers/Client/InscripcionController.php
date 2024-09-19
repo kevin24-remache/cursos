@@ -63,7 +63,7 @@ class InscripcionController extends BaseController
         return [
             'event_cod' => $event['id'],
             'cat_id' => $catId,
-            'full_name_user' => $persona['full_name'],
+            'full_name_user' => $persona['name'] . " " .$persona['surname'],
             'ic' => $persona['identification'],
             'address' => $persona['address'],
             'phone' => $persona['phone'],
@@ -192,9 +192,9 @@ class InscripcionController extends BaseController
         $emailData = [
             'to' => $personaData['email'],
             'subject' => 'Código de pago',
-            'message' => 'Estimado ' . $personaData['full_name'] . ', los detalles de su solicitud se encuentran en el documento adjunto. Su código de pago es: ' . $codigoPago,
+            'message' => 'Estimado ' . $personaData['name'] . " " . $personaData['surname'] . ', los detalles de su solicitud se encuentran en el documento adjunto. Su código de pago es: ' . $codigoPago,
             'htmlContent' => view('client/codigo', [
-                'user' => $personaData['full_name'],
+                'user' => $personaData['name'] . " " . $personaData['surname'],
                 'codigoPago' => $codigoPago,
                 'fechaLimitePago' => $fechaLimitePago->toDateString(),
                 'fechaEmision' => Time::now()->toDateTimeString(),

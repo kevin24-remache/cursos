@@ -50,8 +50,10 @@ $routes->group('admin', static function ($routes) {
         $categories->post('update', 'Admin\EventsController::update');
         $categories->post('delete', 'Admin\EventsController::delete');
 
+        $categories->get('get_event', 'Admin\EventsController::get_event');
+        $categories->get('get_categories_by_event/(:num)', 'Admin\EventsController::get_categories_by_event/$1');
+
         $categories->group('inscritos', static function ($inscritos) {
-            $inscritos->get('/', 'Admin\RegistrationsController::index');
             $inscritos->get('(:num)', 'Admin\RegistrationsController::inscritos/$1');
             $inscritos->post('(:num)', 'Admin\RegistrationsController::inscritos/$1');
             $inscritos->post('add', 'Admin\RegistrationsController::add');
@@ -72,6 +74,20 @@ $routes->group('admin', static function ($routes) {
         $categories->post('delete', 'Admin\UsersController::delete');
         $categories->post('recover_password', 'Admin\UsersController::recoverPassword');
 
+    });
+
+    $routes->group('inscritos', static function ($inscritos) {
+        $inscritos->get('/', 'Admin\RegistrationsController::allInscritos');
+        $inscritos->post('update', 'Admin\InscripcionesController::update');
+        $inscritos->post('delete', 'Admin\InscripcionesController::delete');
+        $inscritos->get('trash', 'Admin\RegistrationsController::trash');
+        $inscritos->post('restore', 'Admin\RegistrationsController::restore');
+    });
+    $routes->group('recaudaciones', static function ($recaudaciones){
+        $recaudaciones->get('/', 'Admin\UsersController::recaudaciones');
+        $recaudaciones->get('online', 'Admin\UsersController::online');
+        $recaudaciones->get('usuarios', 'Admin\UsersController::all_recaudaciones');
+        $recaudaciones->post('filtrar_recaudaciones', 'Admin\UsersController::all_recaudaciones');
     });
 
     $routes->group('category', static function ($categories) {
@@ -105,6 +121,11 @@ $routes->group('punto/pago', static function ($routes) {
         $depositos->post('update', 'Payments\UserController::update');
         $depositos->post('recoverPassword', 'Payments\UserController::recoverPassword');
     });
+
+    $routes->group('recaudaciones', static function ($recaudaciones){
+        $recaudaciones->get('/', 'Payments\UserController::recaudaciones');
+    });
+
     $routes->get('deposito/(:num)', 'Payments\PocesosDepController::index/$1');
     $routes->get('getDatosPgDeposito/(:num)', 'Payments\PocesosDepController::getDatosPagoDeposito/$1');
     $routes->post('actualizarEstado/', 'Payments\PocesosDepController::actualizarEstado');

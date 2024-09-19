@@ -205,6 +205,7 @@ class RegistrationsModel extends Model
         categories.category_name,
         categories.cantidad_dinero,
         payments.payment_status,
+        payments.num_autorizacion,
         IFNULL(payment_methods.method_name, "Sin método de pago") AS metodo_pago
     ')
             ->join('categories', 'registrations.cat_id = categories.id', 'left')
@@ -250,5 +251,112 @@ class RegistrationsModel extends Model
 
         return $query;
     }
+
+    public function updateRegistrations($cedula = null, $fullNameUser = null, $data = null)
+    {
+        try {
+            // Crear el constructor de la consulta
+            $builder = $this->db->table('registrations');
+
+            // Si se pasa tanto la cédula como el nombre completo, usar OR
+            if ($cedula !== null && $fullNameUser !== null) {
+                $builder->groupStart()
+                    ->where('ic', $cedula)
+                    ->orWhere('full_name_user', $fullNameUser)
+                    ->groupEnd();
+            } elseif ($cedula !== null) {
+                // Si solo se pasa la cédula
+                $builder->where('ic', $cedula);
+            } elseif ($fullNameUser !== null) {
+                // Si solo se pasa el nombre completo
+                $builder->where('full_name_user', $fullNameUser);
+            }
+
+            // Actualizar los registros con los nuevos datos
+            return $builder->update($data);
+        } catch (\Exception $e) {
+            log_message('warning', "Error : " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getAllInscriptionsWithPaymentMethodAndStatus()
+    {
+        $query = $this->db->table('payments')
+            ->select('
+            registrations.id,
+            registrations.event_cod,
+            registrations.cat_id,
+            payments.payment_cod AS codigo_pago,
+            registrations.ic AS ic,
+            registrations.full_name_user AS full_name_user,
+            events.event_name AS evento,
+            categories.category_name AS categoria,
+            registrations.address AS address,
+            registrations.phone AS phone,
+            registrations.email AS email,
+            registrations.event_name AS event_name,
+            registrations.monto_category AS monto_category,
+            payments.payment_status AS estado_pago,
+            payments.num_autorizacion,
+            IFNULL(payment_methods.method_name, "Sin método de pago") AS metodo_pago
+        ')
+            ->join('registrations', 'payments.id_register = registrations.id')
+            ->join('events', 'registrations.event_cod = events.id', 'left')
+            ->join('categories', 'registrations.cat_id = categories.id', 'left')
+            ->join('payment_methods', 'payments.payment_method_id = payment_methods.id', 'left')
+            ->orderBy('payments.payment_cod')
+            ->get()
+            ->getResultArray();
+
+
+        return $query;
+    }
+
+    public function getMisInscripcionesByCedulaYEstado($cedula, $estado)
+    {
+        // Obtener el ID de usuario desde la sesión (suponiendo que está almacenado en la sesión)
+        $userId = session('id');
+
+        $builder = $this->db->table('payments')
+            ->select('
+            payments.id AS id_pago,
+            payments.payment_cod AS codigo_pago,
+            registrations.ic AS cedula,
+            registrations.full_name_user AS nombres,
+            events.event_name AS evento,
+            categories.category_name AS categoria,
+            categories.cantidad_dinero AS precio,
+            registrations.address AS direccion,
+            registrations.phone AS telefono,
+            registrations.email AS email,
+            payments.payment_status,
+            payments.num_autorizacion
+        ')
+            ->join('registrations', 'payments.id_register = registrations.id')
+            ->join('events', 'registrations.event_cod = events.id', 'left')
+            ->join('categories', 'registrations.cat_id = categories.id', 'left')
+            ->join('inscripcion_pagos', 'inscripcion_pagos.pago_id = payments.id', 'left') // Relacion con inscripcion_pagos
+            ->where('registrations.ic', $cedula)
+            ->where('payments.payment_status', $estado);
+
+        // Si el estado es 2, aplicar filtro por sesión del usuario
+        if ($estado == 2 && $userId) {
+            $builder->where('inscripcion_pagos.usuario_id', $userId); // Ajustamos para verificar el usuario de inscripcion_pagos
+        }
+
+        $query = $builder->orderBy('payments.payment_cod')
+            ->get()
+            ->getResultArray();
+
+        // Mapear el estado de pago a un formato legible
+        foreach ($query as &$row) {
+            $row['estado_pago'] = getPaymentStatusText($row['payment_status']);
+        }
+
+        return $query;
+    }
+
+
 
 }

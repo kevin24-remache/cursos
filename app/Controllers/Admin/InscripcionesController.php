@@ -2,18 +2,24 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Models\CategoryModel;
+use App\Models\EventsModel;
+use App\Models\PaymentsModel;
 use App\Models\RegistrationsModel;
 use App\Services\PaymentAprobarService;
-use ModulosAdminPagos;
+use CodeIgniter\I18n\Time;
 use PaymentStatus;
 
 class InscripcionesController extends BaseController
 {
     private $paymentAprobarService;
+    private $paymentsModel;
 
-    public function __construct(){
+    public function __construct()
+    {
 
         $this->paymentAprobarService = new PaymentAprobarService();
+        $this->paymentsModel = new PaymentsModel();
     }
 
     private function redirectView($validation = null, $flashMessages = null, $last_data = null, $ic = null, $estado = null, $uniqueCode = null)
@@ -23,6 +29,14 @@ class InscripcionesController extends BaseController
             with('flashMessages', $flashMessages)->
             with('last_data', $last_data)->
             with('uniqueCode', $uniqueCode);
+    }
+
+    private function redirectViewInscripcion($validation = null, $flashMessages = null, $last_data = null)
+    {
+        return redirect()->to('admin/inscritos')->
+            with('flashValidation', isset($validation) ? $validation->getErrors() : null)->
+            with('flashMessages', $flashMessages)->
+            with('last_data', $last_data);
     }
 
     private function redirectError($validation = null, $flashMessages = null, $last_data = null)
@@ -110,17 +124,183 @@ class InscripcionesController extends BaseController
             $all_registrations = $filtered_registrations;
         }
 
-        // Continuar con la vista normal si se encuentran registros
-        $modulo = ModulosAdminPagos::INSCRIPCIONES;
         $data = [
             'registrations' => $all_registrations,
             'last_action' => $last_action,
             'last_data' => $last_data,
             'validation' => $flashValidation,
             'flashMessages' => $flashMessages,
-            'modulo' => $modulo,
         ];
         return view('admin/pagos/recauda_inscripciones', $data);
     }
 
+    public function update()
+    {
+        $id_registro = $this->request->getPost('id');
+        $id_event = $this->request->getPost('event_id');
+        $category_id = $this->request->getPost('category_id');
+        $full_name_user = $this->request->getPost('full_name_user');
+        $ic = $this->request->getPost('ic');
+        $address = $this->request->getPost('address');
+        $phone = $this->request->getPost('phone');
+        $email = $this->request->getPost('email');
+
+        // Obtener el nombre del evento y el monto de la categoría
+        $eventModel = new EventsModel(); // Asegúrate de tener este modelo
+        $categoryModel = new CategoryModel(); // Asegúrate de tener este modelo
+
+        $event = $eventModel->find($id_event);
+        $category = $categoryModel->find($category_id);
+
+        $name_event = $event['event_name'] ?? ''; // Asume que el campo se llama 'name'
+        $monto_category = $category['cantidad_dinero'] ?? 0; // Asume que el campo se llama 'monto'
+
+        $data = [
+            'full_name_user' => trim($full_name_user),
+            'ic' => trim($ic),
+            'address' => trim($address),
+            'phone' => trim($phone),
+            'email' => trim($email),
+            'event_cod' => $id_event,
+            'cat_id' => $category_id,
+            'event_name' => $name_event,
+            'monto_category' => $monto_category
+        ];
+
+        try {
+            $validation = \Config\Services::validation();
+            $validation->setRules(
+                [
+                    'full_name_user' => [
+                        'label' => 'Nombres del usuario inscrito',
+                        'rules' => 'required|min_length[3]',
+                    ],
+                    'ic' => [
+                        'label' => 'Cédula/Ruc',
+                        'rules' => 'required|numeric',
+                    ],
+                    'phone' => [
+                        'label' => 'Teléfono',
+                        'rules' => 'required|numeric',
+                    ],
+                    'email' => [
+                        'label' => 'Correo electrónico',
+                        'rules' => 'required|valid_email',
+                    ],
+                    'event_cod' => [
+                        'label' => 'Evento',
+                        'rules' => 'required',
+                    ],
+                    'cat_id' => [
+                        'label' => 'Categoría',
+                        'rules' => 'required',
+                    ],
+                ]
+            );
+
+            if ($validation->run($data)) {
+                $paymentCompleted = $this->paymentsModel->isPaymentCompletedByRegistrationId($id_registro);
+                if ($paymentCompleted) {
+                    return $this->redirectViewInscripcion(null, [['La inscripción no se puede actualizar por que ya se encuentra aprobada', 'error']], null);
+                }
+                // Obtener el registro actual antes de la actualización
+                $registrationsModel = new RegistrationsModel();
+                $currentData = $registrationsModel->find($id_registro);
+
+                // Verificar si hubo cambios
+                $changes = array_diff_assoc($data, $currentData);
+
+                if (empty($changes)) {
+                    // No hubo cambios
+                    return $this->redirectViewInscripcion(null, [['No se han realizado cambios en el registro', 'info']], $data);
+                }
+
+                // Hubo cambios, proceder a la actualización
+                $update_registration = $registrationsModel->update($id_registro, $data);
+
+                if (!$update_registration) {
+                    return $this->redirectViewInscripcion(null, [['No fue posible actualizar los datos del usuario inscrito', 'warning']], $data);
+                } else {
+                    // Obtener los datos del pago usando PaymentsModel
+                    $paymentsModel = new PaymentsModel();
+                    $paymentData = $paymentsModel->getPaymentDetailsByRegistrationId($id_registro);
+
+                    // Enviar el correo solo si se realizaron cambios
+                    $emailData = [
+                        'to' => $email,
+                        'subject' => 'Actualización de inscripción',
+                        'message' => 'Estimado ' . $full_name_user . ', su inscripción ha sido actualizada correctamente.',
+                        'htmlContent' => view('email/update_codigo', [
+                            'user' => $full_name_user,
+                            'evento' => $paymentData['evento'],
+                            'categoria' => $paymentData['categoria'],
+                            'precio' => $paymentData['precio'],
+                            'codigo_pago' => $paymentData['codigo_pago'],
+                            'fecha_limite_pago' => $paymentData['fecha_limite_pago'],
+                            'fechaEmision' => Time::now()->toDateTimeString(),
+                        ]),
+                        'pdfFilename' => 'comprobante_actualizado.pdf',
+                        'emailType' => 'send_email_registro'
+                    ];
+
+                    // Añadir el trabajo a la cola
+                    $jobId = service('queue')->push('emails', 'email', $emailData);
+
+                    if ($jobId) {
+                        return $this->redirectViewInscripcion(null, [['Datos del usuario actualizados y correo enviado', 'success']], null);
+                    } else {
+                        return $this->redirectViewInscripcion(null, [['Datos actualizados, pero no se pudo enviar el correo', 'warning']], null);
+                    }
+                }
+            } else {
+                return $this->redirectViewInscripcion($validation, [['Error en los datos enviados', 'warning']], $data);
+            }
+        } catch (\Exception $e) {
+            log_message('warning', $e->getMessage());
+            return $this->redirectViewInscripcion(null, [['No se pudo actualizar los datos del usuario', 'error']], null);
+        }
+    }
+
+    public function delete()
+    {
+        $id = $this->request->getPost('id');
+
+        $data = [
+            'id' => $id,
+        ];
+
+        try {
+            $validation = \Config\Services::validation();
+            $validation->setRules(
+                [
+                    'id' => [
+                        'label' => 'Id',
+                        'rules' => 'required|numeric',
+                    ],
+                ]
+            );
+
+            if ($validation->run($data)) {
+
+                // Actualizar los datos en la DB
+                $registrationsModel = new RegistrationsModel();
+                $paymentCompleted = $this->paymentsModel->isPaymentCompletedByRegistrationId($id);
+                if ($paymentCompleted) {
+                    return $this->redirectViewInscripcion(null, [['La inscripción no se puede eliminar por que ya esta aprobada', 'error']], null);
+                }
+                $delete_registration = $registrationsModel->delete($id);
+
+                if (!$delete_registration) {
+                    return $this->redirectViewInscripcion(null, [['No fue posible eliminar la inscripción', 'warning']], $data);
+                } else {
+                    return $this->redirectViewInscripcion(null, [['Inscripción eliminada exitosamente', 'success']], null);
+                }
+            } else {
+                return $this->redirectViewInscripcion($validation, [['Error en los datos enviados', 'warning']], $data);
+            }
+        } catch (\Exception $e) {
+            log_message("warning", $e->getMessage());
+            return $this->redirectViewInscripcion(null, [['No se pudo eliminar el registro', 'danger']], null);
+        }
+    }
 }

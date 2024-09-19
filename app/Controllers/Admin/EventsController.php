@@ -396,7 +396,7 @@ class EventsController extends BaseController
         return view('admin/events/trash/trash', $data);
     }
 
-    private function redirectTrashView($validation = null, $flashMessages = null, $last_data = null,)
+    private function redirectTrashView($validation = null, $flashMessages = null, $last_data = null, )
     {
 
         return redirect()->to('admin/event/trash')->
@@ -415,12 +415,55 @@ class EventsController extends BaseController
             if (isset($client)) {
                 $eventsModel->withDeleted()->set(['deleted_at' => null])->update($category_id);
                 return $this->redirectTrashView(null, [['Evento restaurada correctamente', 'success']]);
-            }
-            else {
-                return $this->redirectTrashView(null,[['No existe el evento buscado', 'warning']]);
+            } else {
+                return $this->redirectTrashView(null, [['No existe el evento buscado', 'warning']]);
             }
         } catch (\Exception $e) {
-            return $this->redirectTrashView(null,[['No fue posible restaurar el evento', 'danger']]);
+            return $this->redirectTrashView(null, [['No fue posible restaurar el evento', 'danger']]);
         }
+    }
+
+    public function get_event()
+    {
+        $eventsModel = new EventsModel;
+
+        // Obtiene el término de búsqueda desde la solicitud
+        $searchTerm = $this->request->getVar('q');
+
+        // Filtra los eventos por nombre, dependiendo del término de búsqueda
+        if ($searchTerm) {
+            $events = $eventsModel->like('event_name', $searchTerm)->findAll();
+        } else {
+            $events = $eventsModel->findAll(); // Si no hay término de búsqueda, devuelve todos los eventos
+        }
+
+        // Prepara los eventos en formato compatible con Select2
+        $formatted_events = [];
+        foreach ($events as $event) {
+            $formatted_events[] = [
+                'id' => $event['id'],
+                'text' => $event['event_name']
+            ];
+        }
+
+        return $this->response->setJSON($formatted_events);
+    }
+
+
+    public function get_categories_by_event($eventId)
+    {
+        $categoriesModel = new CategoryModel;
+        $categories = $categoriesModel->getCategoriesByEventId($eventId);
+
+        $formatted_categories = [];
+        foreach ($categories as $category) {
+            $formatted_categories[] = [
+                'id' => $category['id'], // ID de la categoría
+                'text' => $category['category_name'], // Nombre de la categoría
+                'precio' => $category['cantidad_dinero']
+            ];
+        }
+
+        return $this->response->setJSON($formatted_categories);
     }
 }

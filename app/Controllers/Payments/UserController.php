@@ -161,4 +161,27 @@ class UserController extends BaseController
             return $this->redirectView(null, [['No se pudo cambiar la contraseña', 'danger']]);
         }
     }
+
+    public function recaudaciones()
+    {
+
+        $id = session('id');
+        $flashValidation = session()->getFlashdata('flashValidation');
+        $flashMessages = session()->getFlashdata('flashMessages');
+        $last_data = session()->getFlashdata('last_data');
+        $last_action = session()->getFlashdata('last_action');
+
+        $all_users = $this->usersModel->getUserCollections($id);
+        $modulo = ModulosAdminPagos::MIS_RECAUDACIONES;
+
+        $data = [
+            'users' => $all_users,
+            'last_action' => $last_action,
+            'last_data' => $last_data,
+            'validation' => $flashValidation,
+            'flashMessages' => $flashMessages,
+            'modulo' => $modulo,
+        ];
+        return view("payments/user/recaudaciones/mis_recaudaciones", $data);
+    }
 }

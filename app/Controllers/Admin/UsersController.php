@@ -3,12 +3,16 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Models\PaymentsModel;
 use App\Models\UsersModel;
 use ModulosAdmin;
 use RolesOptions;
 
 class UsersController extends BaseController
 {
+
+    private $usersModel;
+    private $paymentsModel;
 
     private function redirectView($validation = null, $flashMessages = null, $last_data = null, $last_action = null)
     {
@@ -22,6 +26,7 @@ class UsersController extends BaseController
     public function __construct()
     {
         $this->usersModel = new UsersModel();
+        $this->paymentsModel = new PaymentsModel();
     }
 
     public function index()
@@ -308,4 +313,72 @@ class UsersController extends BaseController
         }
     }
 
+    public function online()
+    {
+
+        $flashValidation = session()->getFlashdata('flashValidation');
+        $flashMessages = session()->getFlashdata('flashMessages');
+        $last_data = session()->getFlashdata('last_data');
+        $last_action = session()->getFlashdata('last_action');
+
+        $all_recaudaciones_online = $this->paymentsModel->getRecaudacionesOnline();
+        $modulo = ModulosAdmin::RECAUDACIONES_ONLINE;
+
+        $data = [
+            'users' => $all_recaudaciones_online,
+            'last_action' => $last_action,
+            'last_data' => $last_data,
+            'validation' => $flashValidation,
+            'flashMessages' => $flashMessages,
+            'modulo' => $modulo,
+        ];
+        return view("admin/users/recaudaciones/online_recaudaciones", $data);
+    }
+
+    public function recaudaciones()
+    {
+
+        $id = session('id');
+        $flashValidation = session()->getFlashdata('flashValidation');
+        $flashMessages = session()->getFlashdata('flashMessages');
+        $last_data = session()->getFlashdata('last_data');
+        $last_action = session()->getFlashdata('last_action');
+
+        $all_users = $this->usersModel->getUserCollections($id);
+        $modulo = ModulosAdmin::MIS_RECAUDACIONES;
+
+        $data = [
+            'users' => $all_users,
+            'last_action' => $last_action,
+            'last_data' => $last_data,
+            'validation' => $flashValidation,
+            'flashMessages' => $flashMessages,
+            'modulo' => $modulo,
+        ];
+        return view("admin/users/recaudaciones/recaudaciones", $data);
+    }
+
+    public function all_recaudaciones()
+    {
+
+        $id = $this->request->getPost('id');
+        // $id = session('id');
+        $flashValidation = session()->getFlashdata('flashValidation');
+        $flashMessages = session()->getFlashdata('flashMessages');
+        $last_data = session()->getFlashdata('last_data');
+        $last_action = session()->getFlashdata('last_action');
+
+        $all_users = $this->usersModel->getUserRecaudado();
+        $modulo = ModulosAdmin::RECAUDACIONES;
+
+        $data = [
+            'users' => $all_users,
+            'last_action' => $last_action,
+            'last_data' => $last_data,
+            'validation' => $flashValidation,
+            'flashMessages' => $flashMessages,
+            'modulo' => $modulo,
+        ];
+        return view("admin/users/recaudaciones/all_recaudaciones", $data);
+    }
 }

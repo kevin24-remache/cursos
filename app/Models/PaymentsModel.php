@@ -544,4 +544,72 @@ class PaymentsModel extends Model
             ->get()
             ->getResultArray();
     }
+
+    public function getPaymentDetailsByRegistrationId($registrationId)
+    {
+        $query = $this->db->table('payments')
+            ->select('
+            payments.payment_cod AS codigo_pago,
+            registrations.event_name AS evento,
+            registrations.monto_category AS precio,
+            categories.category_name AS categoria,
+            payments.payment_time_limit AS fecha_limite_pago
+        ')
+            ->join('registrations', 'payments.id_register = registrations.id')
+            ->join('categories', 'registrations.cat_id = categories.id', 'left')
+            ->where('registrations.id', $registrationId)
+            ->get()
+            ->getFirstRow('array');
+
+        return $query;
+    }
+
+    public function isPaymentCompletedByRegistrationId($registrationId)
+    {
+        $payment = $this->select('payment_status')
+            ->where('id_register', $registrationId)
+            ->first();
+
+        if ($payment && $payment['payment_status'] == 2) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    public function getRecaudacionesOnline()
+    {
+        $builder = $this->db->table('payments');
+
+        $builder->select('
+        payments.id AS payment_id,
+        payments.amount_pay,
+        payments.date_time_payment,
+        payments.payment_cod AS codigo,
+        registrations.full_name_user AS participante_name,
+        registrations.ic AS participante_cedula,
+        registrations.address AS participante_direccion,
+        registrations.phone AS participante_telefono,
+        registrations.email AS participante_email,
+        registrations.event_name AS event_name,
+        registrations.monto_category AS precio
+    ');
+
+        // Unir con la tabla de registros
+        $builder->join('registrations', 'payments.id_register = registrations.id');
+        // Unir con la tabla inscripcion_pagos, pero buscando aquellos donde usuario_id es NULL
+        $builder->join('inscripcion_pagos', 'payments.id = inscripcion_pagos.pago_id', 'left');
+        // Filtro para el estado de pago completado (suponiendo que 2 es completado)
+        $builder->where('payments.payment_status', 2);
+        // Filtrar donde el usuario_id de la tabla inscripcion_pagos sea NULL
+        $builder->where('inscripcion_pagos.usuario_id IS NULL');
+        // Ordenar por la fecha de pago
+        $builder->orderBy('payments.date_time_payment', 'DESC');
+
+        // Ejecutar la consulta
+        $query = $builder->get();
+        return $query->getResultArray();
+    }
+
 }
