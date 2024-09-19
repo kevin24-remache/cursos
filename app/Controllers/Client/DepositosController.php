@@ -146,6 +146,7 @@ class DepositosController extends BaseController
                 return $this->redirectView(null, [['No se pudo guardar el comprobante de pago', 'danger']]);
             }
         } catch (\Exception $e) {
+            log_message('warning',$e->getMessage());
             $db->transRollback(); // Revertir la transacción en caso de error
             return $this->redirectView(null, [['No se pudo registrar el depósito', 'danger']]);
         }
