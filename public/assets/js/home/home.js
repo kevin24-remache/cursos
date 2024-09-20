@@ -384,12 +384,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (data.error) {
       mensajeEstado.querySelector('span').textContent = data.error;
       mensajeEstado.style.display = 'block';
-    } else if (data.cancelado) {
-      mensajeEstado.querySelector('span').textContent = 'El pago anterior fue cancelado.';
-      mensajeOriginal.querySelector('span').textContent = `$ ${data.montoOriginal}`;
-      mensajePagado.querySelector('span').textContent = `$ ${data.montoPagado}`;
-      mensajeNuevo.querySelector('span').textContent = `$ ${data.nuevoMonto}`;
-      [mensajeEstado, mensajeOriginal, mensajePagado, mensajeNuevo].forEach(elem => elem.style.display = 'block');
     }
 
     if (data.deposits) {
