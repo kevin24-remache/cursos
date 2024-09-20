@@ -104,8 +104,12 @@
                             <td><?= $precio_unitario ?></td>
                             <td><?= $valor_total ?></td>
                         </tr>
-                    </tbody>
-                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Inscripción</strong></td>
+                            <td><strong><?= $sub_total_0 ?></strong></td>
+                            <td><?= $sub_total_0 ?></td>
+                        </tr>
                         <tr>
                             <td>1</td>
                             <td colspan="3">Inscripción en el <strong><?= $event_name ?></strong></td>
@@ -115,7 +119,7 @@
             </div>
             <div class="section text-right">
                 <div><strong>Sub Total: $ </strong><?= $sub_total ?></div>
-                <div><strong>Sub Total 0: $ </strong><?= $sub_total_0 ?></div>
+                <div><strong>Sub Total 0%: $ </strong><?= $sub_total_0 ?></div>
                 <div><strong>Sub Total 15%: $ </strong><?= $sub_total_15 ?></div>
                 <div><strong>IVA 15%: $ </strong><?= $iva ?></div>
                 <div><strong>TOTAL: $ </strong><?= $valor_final ?></div>
