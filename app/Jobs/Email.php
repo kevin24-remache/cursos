@@ -64,7 +64,8 @@ class Email extends BaseJob implements JobInterface
             return $result;
         } catch (Exception $e) {
             log_message('error', 'Error al enviar el email: ' . $e->getMessage());
-
+            // Lanzar la excepción para que el job falle y pueda ser reintentado
+            throw $e;
         }
     }
     public function generate_pdf($payment)
