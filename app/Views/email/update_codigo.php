@@ -189,7 +189,7 @@
 
 <body>
     <header>
-        <img src="<?= base_url('public/assets/images/email/bg_top.jpg'); ?>" alt="bg-top" style="width: 100%;">
+        <img src="<?= base_url('assets/images/email/bg_top.jpg'); ?>" alt="bg-top" style="width: 100%;">
     </header>
     <main style="background-color: #F5F5F5;">
 
@@ -198,7 +198,7 @@
             <div class="content">
                 <div class="header row">
                     <div class="col bottom">
-                        <img src="<?= base_url('public/assets/images/email/logo-ep.png') ?>" alt="Logo" class="logo">
+                        <img src="<?= base_url('assets/images/email/logo-ep.png') ?>" alt="Logo" class="logo">
                     </div>
                     <div class="col">
                         <h1 class="pt-2 pb-2">Inscripción actualizada</h1>
