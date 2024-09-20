@@ -10,6 +10,8 @@ use CodeIgniter\Router\RouteCollection;
 // ADMIN
 $routes->group('admin', static function ($routes) {
 
+    $routes->get('comprobantes/(:any)', 'ComprobanteController::mostrarComprobante/$1');
+
     $routes->get('dashboard', 'Admin\DashboardController::index');
 
     $routes->post('buscar', 'Admin\FiltrosController::buscarPorCedula');

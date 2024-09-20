@@ -123,7 +123,8 @@ class DepositosController extends BaseController
 
             // Guardar el monto del depósito y el comprobante de pago en la tabla inscripcion_pagos
             $nombreComprobante = $comprobantePago->getRandomName();
-            $ruta = ROOTPATH . 'public/uploads/comprobantes/';
+            $ruta = WRITEPATH . 'uploads/comprobantes/';
+
 
             if ($comprobantePago->move($ruta, $nombreComprobante)) {
                 $rutaComprobante = 'uploads/comprobantes/' . $nombreComprobante;

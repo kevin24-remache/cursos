@@ -148,7 +148,11 @@ document.addEventListener("DOMContentLoaded", async function () {
         $(this).addClass('selected');
         var imagenUrl = table.row(this).data().comprobante_pago;
         if (imagenUrl) {
-            $('#imagen-deposito').attr('src', base_url + imagenUrl);
+            // Extrae solo el nombre del archivo de la URL (después de "comprobantes/")
+            var fileName = imagenUrl.split('/').pop();
+            console.log(fileName);
+            // Construye la URL completa para acceder al comprobante
+            $('#imagen-deposito').attr('src', `${base_url}admin/comprobantes/${fileName}`);
         } else {
             $('#imagen-deposito').attr('src', defaultImageUrl);
         }
