@@ -160,5 +160,5 @@ $routes->post('monto_pago', 'Client\DepositosController::fetchMontoDeposito');
 $routes->get('login', 'Auth\LoginController::index');
 $routes->get('logout', 'Auth\LoginController::logout');
 $routes->post('validate_login', 'Auth\LoginController::login');
-$routes->get('forgotPassword', 'Auth\LoginController::forgotPassword');
-$routes->get('register', 'Auth\LoginController::register');
+// $routes->get('forgotPassword', 'Auth\LoginController::forgotPassword');
+// $routes->get('register', 'Auth\LoginController::register');

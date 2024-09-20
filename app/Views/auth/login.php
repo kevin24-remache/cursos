@@ -28,9 +28,9 @@ Login
                         <div class="form-group">
                             <div class="d-flex justify-content-between">
                                 <label for="login-password">Contraseña</label>
-                                <a href="<?= base_url("forgotPassword") ?>">
+                                <!-- <a href="<?= base_url("forgotPassword") ?>">
                                     <small>Olvido su contraseña?</small>
-                                </a>
+                                </a> -->
                             </div>
                             <div class="input-group input-group-merge form-password-toggle">
                                 <input type="password" class="form-control form-control-merge" id="login-password"
@@ -53,10 +53,10 @@ Login
                     </form>
 
                     <p class="text-center mt-2">
-                        <span>Nuevo en nuestra plataforma?</span>
+                        <!-- <span>Nuevo en nuestra plataforma?</span>
                         <a href="<?= base_url("register") ?>">
                             <span>Crear una cuenta</span>
-                        </a>
+                        </a> -->
                     </p>
                 </div>
             </div>
