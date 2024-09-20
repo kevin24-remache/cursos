@@ -238,6 +238,7 @@ class RegistrationsModel extends Model
 
         // Consulta JOIN para obtener el registro, el pago correspondiente y el precio de la categoría
         $query = $this->select('
+            registrations.event_name,
             categories.cantidad_dinero,
             payments.payment_status,
             payments.amount_pay,

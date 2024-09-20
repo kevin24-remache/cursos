@@ -100,7 +100,7 @@ class PayphoneController extends BaseController
                     'tax' => 0,
                     'service' => 0,
                     'tip' => 0,
-                    'reference' => "Pago de inscripción",
+                    'reference' => $result['event_name'] ?? 'Pago de inscripción',
                     'clientTransactionId' => $payment_id . $this->generateTimestampId()
                 ]
             ]);
