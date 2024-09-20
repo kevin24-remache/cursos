@@ -59,7 +59,15 @@ class ClientController extends BaseController
             if ($persona && $persona['success'] && isset($persona['data'])) {
                 // Extraer datos de la respuesta
                 $personaData = $persona['data'];
+                $email = $personaData['email'];
 
+                if ($email=='@' || !$email) {
+
+                    return $this->response->setJSON([
+                        'success' => false,
+                        'message' => 'Usuario no encontrado'
+                    ]);
+                }
                 // Crear un nuevo array con los datos requeridos y censurados
                 $datosPersona = [
                     'id' => $personaData['id'],

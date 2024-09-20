@@ -113,6 +113,11 @@ class InscripcionController extends BaseController
                     'email' => mask_email($personaData['email']),
                 ]
             ];
+            $email = $personaData['email'];
+            if ($email=='@' || !$email) {
+
+                return $this->response->setJSON(['exists' => false]);
+            }
 
             return $this->response->setJSON($respuesta);
         } else {
