@@ -34,7 +34,7 @@ class ApiPrivadaService
                 return null;
             }
         } catch (\Exception $e) {
-            log_message('error', 'Excepción en solicitud', ['id' => $id, 'error' => $e->getMessage()]);
+            log_message('error', 'Excepción en solicitud: {id} - ' . $e->getMessage() . ' Trace: ' . $e->getTraceAsString(), ['id' => $id]);
             return null;
         }
     }
