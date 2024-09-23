@@ -21,20 +21,26 @@ class ApiPrivadaService
 
             $token = getenv('API_PERSONAS');
 
+            log_message('debug', 'URL: ' . $url);
+            log_message('debug', 'Token: ' . $token);
+
             $response = $client->get($url, [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $token
                 ]
             ]);
 
+            log_message('debug', 'Status Code: ' . $response->getStatusCode());
+            log_message('debug', 'Response Body: ' . $response->getBody());
+
             if ($response->getStatusCode() == 200) {
                 return json_decode($response->getBody(), true);
             } else {
-                log_message('warning', 'Solicitud fallida', ['id' => $id, 'status' => $response->getStatusCode()]);
+                log_message('warning', 'Solicitud fallida: ' . $response->getStatusCode(), ['id' => $id]);
                 return null;
             }
         } catch (\Exception $e) {
-            log_message('error', 'Excepción en solicitud: {id} - ' . $e->getMessage() . ' Trace: ' . $e->getTraceAsString(), ['id' => $id]);
+            log_message('error', 'Excepción en solicitud: ' . $e->getMessage() . ' Trace: ' . $e->getTraceAsString(), ['id' => $id]);
             return null;
         }
     }
