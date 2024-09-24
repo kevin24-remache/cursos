@@ -35,11 +35,20 @@
     <!-- Datatables -->
     <link rel="stylesheet" href="<?= base_url("dist/plugins/datatables/css/dataTables.bootstrap.min.css") ?>">
     <link rel="stylesheet" href="<?= base_url("assets/css/datatables.css") ?>">
+
+    <!-- Preloader -->
+    <link rel="stylesheet" href="<?= base_url("assets/css/preloader.css") ?>">
     <?= $this->renderSection('css'); ?>
 
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
+    <!-- Preloader HTML -->
+    <div id="preloader" style="display: none;">
+        <div class="spinner"></div>
+        <p class="loading-text">Cargando<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+        </p>
+    </div>
     <div class="wrapper boxed-wrapper">
         <header class="main-header">
             <!-- Logo -->
@@ -330,6 +339,8 @@
     <script src="<?= base_url("dist/plugins/datatables/dataTables.bootstrap.min.js") ?>"></script>
 
     <script src="<?= base_url("assets/js/datatables.js") ?>"></script>
+
+    <script src="<?= base_url("assets/js/preloader.js") ?>"></script>
     <?= $this->renderSection('scripts'); ?>
 </body>
 

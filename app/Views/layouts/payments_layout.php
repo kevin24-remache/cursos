@@ -38,60 +38,18 @@
     <link rel="stylesheet" href="<?= base_url('dist/plugins/tooltip/tooltip.css') ?>">
     <link rel="stylesheet" href="<?= base_url("dist/plugins/datatables/css/dataTables.bootstrap.min.css") ?>">
     <link rel="stylesheet" href="<?= base_url("assets/css/datatables.css") ?>">
+
+    <!-- Preloader -->
+    <link rel="stylesheet" href="<?= base_url("assets/css/preloader.css") ?>">
     <?= $this->renderSection('css'); ?>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        #preloader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #f7f7f7;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 99999;
-            /* Valor muy alto para asegurar que esté por encima de todo */
-        }
-
-        .loader {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #3498db;
-            border-top: 5px solid transparent;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        .loader-text {
-            position: absolute;
-            top: 60%;
-            font-size: 18px;
-            color: #3498db;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-    </style>
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
-    <div id="preloader">
-        <div class="loader"></div>
-        <div class="loader-text">Cargando...</div>
+    <!-- Preloader HTML -->
+    <div id="preloader" style="display: none;">
+        <div class="spinner"></div>
+        <p class="loading-text">Cargando<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+        </p>
     </div>
     <div class="wrapper boxed-wrapper">
         <header class="main-header">
@@ -273,21 +231,7 @@
     <script src="<?= base_url("dist/plugins/datatables/dataTables.bootstrap.min.js") ?>"></script>
 
     <script src="<?= base_url("assets/js/datatables.js") ?>"></script>
-    <script>
-        // Asegurarse de que el preloader se muestre inmediatamente
-        document.getElementById('preloader').style.display = 'flex';
-
-        // Función para ocultar el preloader
-        function hidePreloader() {
-            document.getElementById('preloader').style.display = 'none';
-        }
-
-        // Esperar a que la página se cargue completamente
-        window.addEventListener('load', hidePreloader);
-
-        // Fallback por si el evento 'load' no se dispara correctamente
-        setTimeout(hidePreloader, 5000); // 5 segundos como máximo
-    </script>
+    <script src="<?= base_url("assets/js/preloader.js") ?>"></script>
 
     <?= $this->renderSection('scripts'); ?>
 </body>
