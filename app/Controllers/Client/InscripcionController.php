@@ -13,7 +13,8 @@ class InscripcionController extends BaseController
 {
     private $apiPrivadaService;
 
-    public function __construct(){
+    public function __construct()
+    {
 
         $this->apiPrivadaService = new ApiPrivadaService();
     }
@@ -63,7 +64,7 @@ class InscripcionController extends BaseController
         return [
             'event_cod' => $event['id'],
             'cat_id' => $catId,
-            'full_name_user' => $persona['name'] . " " .$persona['surname'],
+            'full_name_user' => $persona['name'] . " " . $persona['surname'],
             'ic' => $persona['identification'],
             'address' => $persona['address'],
             'phone' => $persona['phone'],
@@ -87,9 +88,13 @@ class InscripcionController extends BaseController
         // Obtener los datos JSON
         $data = $this->request->getJSON();
 
-        // Verificar si $data es null (si el cuerpo de la solicitud no es JSON o está vacío)
+        // Validar si el cuerpo de la solicitud contiene el campo 'cedula'
         if (is_null($data) || !isset($data->cedula) || empty($data->cedula)) {
-            return $this->response->setJSON(['error' => 'Cédula requerida']);
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Cédula requerida',
+                'code' => 400
+            ], 400);
         }
 
         $cedula = trim($data->cedula);
@@ -97,15 +102,19 @@ class InscripcionController extends BaseController
         // Usar el servicio para obtener los datos del usuario
         $persona = $this->apiPrivadaService->getDataUser($cedula);
 
+        // Si la persona existe y tiene éxito
         if ($persona && $persona['success'] && isset($persona['data'])) {
-            // Extraer datos de la respuesta
             $personaData = $persona['data'];
+
             helper('format_names');
             helper('email');
 
             $persona_formateada = formatear_nombre_apellido($personaData['name'], $personaData['surname']);
+
             $respuesta = [
-                'exists' => true,
+                'status' => 'success',
+                'message' => 'Usuario encontrado',
+                'code' => 200,
                 'persona' => [
                     'id' => $personaData['identification'],
                     'nombres' => $persona_formateada['nombres'],
@@ -113,15 +122,32 @@ class InscripcionController extends BaseController
                     'email' => mask_email($personaData['email']),
                 ]
             ];
-            $email = $personaData['email'];
-            if ($email=='@' || !$email) {
 
-                return $this->response->setJSON(['exists' => false]);
+            // Verificar si el email está vacío o es inválido
+            $email = $personaData['email'];
+            if ($email == '@' || !$email) {
+                return $this->response->setJSON([
+                    'status' => 'warning',
+                    'message' => 'Usuario encontrado pero email inválido',
+                    'code' => 200,
+                    'persona' => [
+                        'id' => $personaData['identification'],
+                        'nombres' => $personaData['name'],
+                        'apellidos' => $personaData['surname'],
+                        'email' => null,
+                        'phone' => $personaData['phone'],
+                        'gender' => $personaData['gender'],
+                    ]
+                ], 200);
             }
 
             return $this->response->setJSON($respuesta);
         } else {
-            return $this->response->setJSON(['exists' => false]);
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Usuario no encontrado',
+                'code' => 404
+            ], 404);
         }
     }
 

@@ -29,11 +29,17 @@ document.addEventListener("DOMContentLoaded", function () {
       });
       const data = await response.json();
       hidePreloader();
-      return data.exists ? data.persona : null;
+      if (data.status === 'success') {
+        return { status: 'success', persona: data.persona };
+      } else if (data.status === 'warning') {
+        return { status: 'warning', persona: data.persona };
+      } else {
+        return { status: 'error', persona: null };
+      }
     } catch (error) {
       hidePreloader();
       console.log("Error getting document:", error);
-      return null;
+      return { status: 'error', persona: null };
     }
   }
 
@@ -55,6 +61,16 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("nombresPersona").textContent = persona.nombres;
     document.getElementById("apellidosPersona").textContent = persona.apellidos;
     document.getElementById("emailPersona").textContent = persona.email;
+  }
+  function llenarCamposPersonaRegistro(persona) {
+    console.log(persona);
+    document.getElementById("numeroCedulaRegistro").value = persona.id;
+    document.getElementById("nombres").value = persona.nombres;
+    document.getElementById("apellidos").value = persona.apellidos;
+    document.getElementById("telefono").value = persona.phone;
+    document.getElementById("email").value = persona.email;
+    const gender = persona.gender;
+    document.getElementById("gender").value = (gender === 'MASCULINO') ? '0' : (gender === 'FEMENINO') ? '1' : '';
   }
   document.getElementById("formRegistroUsuario").addEventListener("submit", async function (event) {
     event.preventDefault();
@@ -127,8 +143,8 @@ document.addEventListener("DOMContentLoaded", function () {
     event.preventDefault();
     let numeroCedula = document.getElementById("numeroCedula").value;
     let eventoId = document.getElementById("eventoId").value;
+
     if (numeroCedula.length !== 10 && numeroCedula.length !== 13) {
-      event.preventDefault(); // Evitar el envío del formulario
       Swal.fire({
         title: "Error",
         text: "La cédula debe tener exactamente 10 dígitos o el RUC 13 dígitos.",
@@ -137,9 +153,10 @@ document.addEventListener("DOMContentLoaded", function () {
       });
       return;
     }
-    const user = await obtenerUsuario(numeroCedula);
-    if (user) {
-      llenarCamposPersona(user);
+
+    const userResponse = await obtenerUsuario(numeroCedula);
+    if (userResponse.status === 'success') {
+      llenarCamposPersona(userResponse.persona);
       try {
         const response = await fetch("obtener_datos_evento", {
           method: "POST",
@@ -149,10 +166,12 @@ document.addEventListener("DOMContentLoaded", function () {
           body: JSON.stringify({ eventoId: eventoId }),
         });
         const eventData = await response.json();
+
         if (eventData) {
+          // Llenar el modal de evento
           document.getElementById("titleEvent").textContent = eventData.event_name;
           document.getElementById("descripcionEvento").value = eventData.short_description;
-
+          // Manejar las categorías
           if (eventData.category_ids) {
             let categoryIds = eventData.category_ids.split(",");
             let categoryNames = eventData.categories.split(",");
@@ -169,7 +188,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     </label>
                   </div>
                 </div>
-            `;
+              `;
             }
 
             categoriaHtml += "</div></div></div>";
@@ -190,14 +209,14 @@ document.addEventListener("DOMContentLoaded", function () {
       } catch (error) {
         console.error("Error:", error);
       }
+    } else if (userResponse.status === 'warning') {
+      llenarCamposPersonaRegistro(userResponse.persona);
+      $("#modalInscripcion").modal("hide");
+      $("#modalRegistroUsuario").modal("show");
     } else {
-      if (eventoId) {
-        document.getElementById("numeroCedulaRegistro").value = numeroCedula;
-        $("#modalInscripcion").modal("hide");
-        $("#modalRegistroUsuario").modal("show");
-      } else {
-        swal("Ocurrió un error", "El evento seleccionado no existe", "warning");
-      }
+      document.getElementById("numeroCedulaRegistro").value = numeroCedula;
+      $("#modalInscripcion").modal("hide");
+      $("#modalRegistroUsuario").modal("show");
     }
   });
 
@@ -458,48 +477,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     tablaDepositos.style.display = 'block';
   }
-
-  async function obtenerDatosUsuarioParaRegistro(cedula) {
-    showPreloader(); // Mostrar el preloader antes de hacer la petición
-
-    try {
-      const response = await fetch('obtener_user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ cedula: cedula }),
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        // Llenar los campos del formulario con los datos del usuario
-        document.getElementById("numeroCedulaRegistro").value = cedula;
-        document.getElementById("nombres").value = data.persona.name || '';
-        document.getElementById("apellidos").value = data.persona.surname || '';
-        document.getElementById("telefono").value = data.persona.phone || '';
-        document.getElementById("email").value = data.persona.email || '';
-        document.getElementById("direccion").value = data.persona.address || '';
-        const gender = data.persona.gender || '';
-        document.getElementById("gender").value = (gender === 'MASCULINO') ? '0' : (gender === 'FEMENINO') ? '1' : '';
-      } else {
-        // Si no se encuentra el usuario, solo llenamos la cédula
-        document.getElementById("numeroCedulaRegistro").value = cedula;
-      }
-    } catch (error) {
-      console.error("Error al obtener los datos del usuario:", error);
-      document.getElementById("numeroCedulaRegistro").value = cedula;
-    } finally {
-      hidePreloader(); // Ocultar el preloader después de procesar los datos
-      $("#modalRegistroUsuario").modal("show"); // Mostrar el modal después de cargar los datos
-    }
-  }
-
-  // Llamar esta función cuando se muestra el modal
-  document.getElementById("modalRegistroUsuario").addEventListener("show.bs.modal", function () {
-    const cedula = document.getElementById("numeroCedulaRegistro").value;
-    obtenerDatosUsuarioParaRegistro(cedula);
-  });
 
   // Aplicar la misma validación al input con ID "numeroCedulaRegistro"
   const numeroCedulaRegistroInput = document.getElementById("numeroCedulaRegistro");
