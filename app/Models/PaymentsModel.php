@@ -587,6 +587,7 @@ class PaymentsModel extends Model
         payments.amount_pay,
         payments.date_time_payment,
         payments.payment_cod AS codigo,
+        payments.num_autorizacion AS num_autorizacion,
         registrations.full_name_user AS participante_name,
         registrations.ic AS participante_cedula,
         registrations.address AS participante_direccion,

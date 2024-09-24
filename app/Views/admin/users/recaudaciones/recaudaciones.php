@@ -55,7 +55,7 @@ Mi recaudación realizada
                                     <div class="d-flex">
 
                                     <a class="btn btn-outline-danger"
-                                            href="<?= base_url("pdf/".$user['codigo']) ?>" title="PDF">
+                                            href="<?= base_url("pdf/".$user['num_autorizacion']) ?>" target="_blank" title="PDF">
                                             <i class="fa fa-lg fa-file-pdf-o" aria-hidden="true"></i>
                                         </a>
                                     </div>
