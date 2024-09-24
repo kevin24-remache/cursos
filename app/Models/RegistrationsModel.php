@@ -306,7 +306,9 @@ class RegistrationsModel extends Model
             ->join('events', 'registrations.event_cod = events.id', 'left')
             ->join('categories', 'registrations.cat_id = categories.id', 'left')
             ->join('payment_methods', 'payments.payment_method_id = payment_methods.id', 'left')
-            ->orderBy('payments.payment_cod')
+            ->where('registrations.deleted_at', null)
+            ->orderBy('registrations.id', 'AS')
+            // ->orderBy('payments.payment_cod')
             ->get()
             ->getResultArray();
 

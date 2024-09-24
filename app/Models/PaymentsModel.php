@@ -593,17 +593,16 @@ class PaymentsModel extends Model
         registrations.phone AS participante_telefono,
         registrations.email AS participante_email,
         registrations.event_name AS event_name,
-        registrations.monto_category AS precio
+        registrations.monto_category AS precio,
+        pago_linea.transaction_date AS fecha_transaction
     ');
 
         // Unir con la tabla de registros
         $builder->join('registrations', 'payments.id_register = registrations.id');
         // Unir con la tabla inscripcion_pagos, pero buscando aquellos donde usuario_id es NULL
         $builder->join('inscripcion_pagos', 'payments.id = inscripcion_pagos.pago_id', 'left');
-        // Filtro para el estado de pago completado (suponiendo que 2 es completado)
-        $builder->where('payments.payment_status', 2);
-        // Filtrar donde el usuario_id de la tabla inscripcion_pagos sea NULL
-        $builder->where('inscripcion_pagos.usuario_id IS NULL');
+        // Unir con la tabla pago_linea para obtener solo los pagos online
+        $builder->join('pago_linea', 'payments.id = pago_linea.payment_id');
         // Ordenar por la fecha de pago
         $builder->orderBy('payments.date_time_payment', 'DESC');
 
