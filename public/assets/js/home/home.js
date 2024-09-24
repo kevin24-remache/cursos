@@ -63,7 +63,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("emailPersona").textContent = persona.email;
   }
   function llenarCamposPersonaRegistro(persona) {
-    console.log(persona);
     document.getElementById("numeroCedulaRegistro").value = persona.id;
     document.getElementById("nombres").value = persona.nombres;
     document.getElementById("apellidos").value = persona.apellidos;

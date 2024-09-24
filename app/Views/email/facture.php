@@ -111,8 +111,7 @@
                             <td><?= $sub_total_0 ?></td>
                         </tr>
                         <tr>
-                            <td>1</td>
-                            <td colspan="3">Inscripción en el <strong><?= $event_name ?></strong></td>
+                            <td colspan="4">Inscripción en el <strong><?= $event_name ?></strong></td>
                         </tr>
                     </tbody>
                 </table>
@@ -140,7 +139,7 @@
         <div class="section">
             <div><strong>Mail:</strong> <?= $email_user ?></div>
             <div><strong>Contacto:</strong> <?= $user_tel ?></div>
-            <div><strong>Operador:</strong> <?= isset($operador) ? $operador: 'Payphone' ?></div>
+            <div><strong>Operador:</strong> <?= isset($operador) ? $operador : 'Payphone' ?></div>
         </div>
         <div class="title">
             <strong>VALOR TOTAL PAGADO:</strong>
