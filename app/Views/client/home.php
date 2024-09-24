@@ -624,11 +624,10 @@
         function submitVoucherForm() {
             var numeroAuto = document.getElementById('numero_auto').value.replace(/\s/g, '');
 
-            // Elimina los primeros 13 dígitos
-            numeroAuto = numeroAuto.slice(13);
-
-            // Elimina los últimos 6 dígitos
-            numeroAuto = numeroAuto.slice(0, -6);
+            if (numeroAuto.length > 19) {
+                numeroAuto = numeroAuto.slice(13);
+                numeroAuto = numeroAuto.slice(0, -6);
+            }
 
             var url = '<?= base_url("pdf/") ?>' + numeroAuto;
             window.location.href = url;
