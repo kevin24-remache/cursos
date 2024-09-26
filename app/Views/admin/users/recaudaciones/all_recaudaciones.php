@@ -26,7 +26,7 @@ Recaudaciones por usuario
                     <thead class="thead-light">
                         <tr>
                             <th class="exclude-view">Código</th>
-                            <th class="exclude-view">Cédula</th>
+                            <th>Cédula</th>
                             <th>Operador</th>
                             <th>Nombres del participante</th>
                             <th class="exclude-view">Teléfono</th>

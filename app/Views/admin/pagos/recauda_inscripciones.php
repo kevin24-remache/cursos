@@ -36,7 +36,7 @@ Pagos
                             <th class="exclude-view">Email</th>
                             <th>Estado de pago</th>
                             <th>Precio a pagar</th>
-                            <th>Acciones</th>
+                            <th class="exclude-column">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>

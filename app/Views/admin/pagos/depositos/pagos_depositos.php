@@ -31,7 +31,7 @@ Pagos con depósitos Pendientes
                             <th class="exclude-view">Teléfono</th>
                             <th class="exclude-view">Email</th>
                             <th>Estado de pago</th>
-                            <th>Acciones</th>
+                            <th class="exclude-column">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>

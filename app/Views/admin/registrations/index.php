@@ -146,7 +146,7 @@ Todas las inscripciones
                             <div class="form-group col-12">
                                 <label for="edit-category">Categoría</label>
                                 <select class="form-control" id="edit-category" name="category_id">
-                                    <option value="">Seleccione una categoría</option>
+                                    <option value="" disabled>Seleccione una categoría</option>
                                 </select>
                             </div>
                         </div>
@@ -294,7 +294,7 @@ Todas las inscripciones
             dataType: 'json',
             success: function (data) {
                 $categorySelect.empty(); // Limpiar las opciones previas
-                $categorySelect.append('<option value="">Seleccione una categoría</option>');
+                $categorySelect.append('<option value="" disabled>Seleccione una categoría</option>');
 
                 // Agregar las categorías al select
                 data.forEach(function (category) {

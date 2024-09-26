@@ -26,7 +26,7 @@ Mi recaudaciones realizada
                     <thead class="thead-light">
                         <tr>
                             <th class="exclude-view">Código</th>
-                            <th class="exclude-view">Cédula</th>
+                            <th>Cédula</th>
                             <th>Nombres del participante</th>
                             <th class="exclude-view">Teléfono</th>
                             <th>Correo Electrónico</th>
@@ -34,7 +34,7 @@ Mi recaudaciones realizada
                             <th>Evento</th>
                             <th>Monto recaudado</th>
                             <th>Fecha de la recaudación</th>
-                            <th>Acciones</th>
+                            <th class="exclude-column">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>

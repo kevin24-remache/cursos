@@ -32,7 +32,7 @@ Usuarios
                             <th>Correo Electrónico</th>
                             <th>Dirección</th>
                             <th>Rol</th>
-                            <th>Acciones</th>
+                            <th class="exclude-column">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>

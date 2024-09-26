@@ -75,7 +75,7 @@ Inscritos en <?= $event['event_name'] ?>
                             <th>Categoría</th>
                             <th>Método de pago</th>
                             <th>Estado de Pago</th>
-                            <th>Acciones</th>
+                            <th class="exclude-column">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>

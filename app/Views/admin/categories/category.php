@@ -25,7 +25,7 @@ Categorías
                             <th>Nombre de la categoría</th>
                             <th>Valor por la categoría</th>
                             <th>Descripción de la categoría</th>
-                            <th>Acciones</th>
+                            <th class="exclude-column">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>

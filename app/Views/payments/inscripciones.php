@@ -23,7 +23,7 @@ Pagos
                     <thead>
                         <tr>
                             <th>Código de pago</th>
-                            <th class="exclude-view">Cédula</th>
+                            <th>Cédula</th>
                             <th>Nombres</th>
                             <th>Evento</th>
                             <th>Categoría</th>
@@ -32,7 +32,7 @@ Pagos
                             <th class="exclude-view">Email</th>
                             <th>Estado de pago</th>
                             <th>Precio a pagar</th>
-                            <th>Acciones</th>
+                            <th class="exclude-column">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>

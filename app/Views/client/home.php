@@ -109,11 +109,11 @@
                                             <button class="btn btn-danger mb-2 btn-inscribirse" data-bs-toggle="modal"
                                                 data-bs-target="#modalInscripcion" data-evento="<?= $event['event_name'] ?>"
                                                 data-event-id="<?= $event['id'] ?>" type="button" style="width:100%;">
-                                                Inscribirse
+                                                INSCRIBIRSE
                                             </button>
                                             <button class="btn card__button mb-2" type="button" data-bs-toggle="modal"
                                                 data-bs-target="#modalMetodo" style="width:100%;">
-                                                Método de pago
+                                                PAGAR
                                             </button>
                                         </section>
                                     </section>
@@ -478,7 +478,7 @@
                                         <div class="radio">
                                             <label>
                                                 <input type="radio" name="metodoPago" value="deposito" checked>
-                                                <span>Registrar deposito</span>
+                                                <span>Pago por deposito</span>
                                             </label>
                                         </div>
                                     </div>
