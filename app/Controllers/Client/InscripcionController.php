@@ -106,6 +106,27 @@ class InscripcionController extends BaseController
         if ($persona && $persona['success'] && isset($persona['data'])) {
             $personaData = $persona['data'];
 
+            // Verificar si el email está vacío o es inválido
+            $email = $personaData['email'];
+            if ($email == '@' || !$email) {
+                return $this->response->setJSON([
+                    'status' => 'warning',
+                    'message' => 'Usuario encontrado pero email vació',
+                    'code' => 200,
+                    'persona' => [
+                        'id' => $personaData['identification'],
+                        'nombres' => $personaData['name'],
+                        'apellidos' => $personaData['surname'],
+                        'email' => null,
+                        'phone' => $personaData['phone'],
+                        'gender' => $personaData['gender'],
+                    ]
+                ], 200);
+            }
+
+            // Guardar los datos del usuario en la sesión para su uso posterior
+            session()->set('persona', $personaData);
+
             helper('format_names');
             helper('email');
 
@@ -122,24 +143,6 @@ class InscripcionController extends BaseController
                     'email' => mask_email($personaData['email']),
                 ]
             ];
-
-            // Verificar si el email está vacío o es inválido
-            $email = $personaData['email'];
-            if ($email == '@' || !$email) {
-                return $this->response->setJSON([
-                    'status' => 'warning',
-                    'message' => 'Usuario encontrado pero email inválido',
-                    'code' => 200,
-                    'persona' => [
-                        'id' => $personaData['identification'],
-                        'nombres' => $personaData['name'],
-                        'apellidos' => $personaData['surname'],
-                        'email' => null,
-                        'phone' => $personaData['phone'],
-                        'gender' => $personaData['gender'],
-                    ]
-                ], 200);
-            }
 
             return $this->response->setJSON($respuesta);
         } else {
@@ -176,14 +179,13 @@ class InscripcionController extends BaseController
         $eventoId = $data->eventoId;
         $catId = $data->catId;
 
-        // Usar el servicio para obtener los datos del usuario
-        $persona = $this->apiPrivadaService->getDataUser($cedula);
+        // Obtener los datos del usuario de la sesión (flashdata)
+        $personaData = session('persona');
 
-        if (!$persona || !$persona['success'] || !isset($persona['data'])) {
+        // Si no hay datos de la persona en la sesión, devolver error
+        if (!$personaData) {
             return $this->response->setJSON(['error' => true, 'message' => 'Usuario no encontrado']);
         }
-
-        $personaData = $persona['data'];
 
         // Verificar si el evento existe
         $eventModel = new EventsModel();
@@ -216,6 +218,9 @@ class InscripcionController extends BaseController
 
         if (!$registration || !$payment) {
             $db->transRollback();
+
+            // Eliminar los datos de la persona de la sesión
+            session()->remove('persona');
             return $this->response->setJSON(['error' => true, 'message' => 'No se pudo registrar la inscripción']);
         }
 
@@ -241,6 +246,9 @@ class InscripcionController extends BaseController
         $jobId = service('queue')->push('emails', 'email', $emailData);
 
         if ($jobId) {
+
+            // Eliminar los datos de la persona de la sesión
+            session()->remove('persona');
             $db->transComplete();
             helper('email');
             $email = mask_email($personaData['email']);
@@ -253,6 +261,9 @@ class InscripcionController extends BaseController
                 'job_id' => $jobId,
             ]);
         } else {
+
+            // Eliminar los datos de la persona de la sesión
+            session()->remove('persona');
             $db->transRollback();
             return $this->response->setJSON(['error' => true, 'message' => 'No se pudo añadir el email a la cola']);
         }
@@ -343,5 +354,15 @@ class InscripcionController extends BaseController
         }
     }
 
+    public function limpiarSesionPersona()
+    {
+        // Eliminar los datos de la persona de la sesión
+        session()->remove('persona');
+
+        return $this->response->setJSON([
+            'success' => true,
+            'message' => 'Sesión de persona limpiada correctamente'
+        ]);
+    }
 
 }

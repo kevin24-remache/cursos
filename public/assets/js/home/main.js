@@ -1,6 +1,6 @@
-// main.js
+document.addEventListener('DOMContentLoaded', function () {
+    limpiarPersona();
 
-document.addEventListener('DOMContentLoaded', function() {
     // Código para manejar las imágenes
     const imagenes = document.querySelectorAll('.imagen-pequena');
     const imagenAmpliada = document.getElementById('imagen-ampliada');
@@ -31,8 +31,8 @@ document.addEventListener('DOMContentLoaded', function() {
         hiddenEventoId.value = eventId;
     });
 
-     // Función para limpiar el modal
-     function LimpiarModal() {
+    // Función para limpiar el modal
+    function LimpiarModal() {
         document.getElementById("formDeposito").reset();
         document.getElementById("montoDeposito").value = '';
         ['mensaje_estado', 'mensaje_original', 'mensaje_pagado', 'mensaje_nuevo'].forEach(id => {
@@ -51,7 +51,37 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('formRegistroUsuario').reset();
     }
 
+    $('#modalDetallesEvento').on('hidden.bs.modal', function () {
+        limpiarPersona();
+    });
+
     // Evento para limpiar el modal de registro de usuario al cerrarse
     var modalRegistroUsuario = document.getElementById('modalRegistroUsuario');
     modalRegistroUsuario.addEventListener('hidden.bs.modal', limpiarFormularioRegistroUsuario);
+});
+
+// Función para limpiar  la persona
+function limpiarPersona() {
+    fetch('limpiar_persona', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('ok');
+            } else {
+                console.error('Error al limpiar persona');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+// Limpiar la sesión cuando el usuario cierra o recarga la página
+window.addEventListener('beforeunload', function (event) {
+    limpiarPersona();
 });

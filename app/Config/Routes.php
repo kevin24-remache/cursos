@@ -155,6 +155,7 @@ $routes->post('guardar_inscripcion', 'Client\InscripcionController::guardarInscr
 $routes->post('registrar_usuario', 'Client\InscripcionController::registrarUsuario');
 $routes->post('deposito', 'Client\DepositosController::deposito');
 $routes->post('monto_pago', 'Client\DepositosController::fetchMontoDeposito');
+$routes->post('limpiar_persona', 'Client\InscripcionController::limpiarSesionPersona');
 
 //Auth
 $routes->get('login', 'Auth\LoginController::index');
