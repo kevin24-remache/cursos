@@ -71,7 +71,7 @@ function limpiarPersona() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                console.log('ok');
+                // console.log('ok');
             } else {
                 console.error('Error al limpiar persona');
             }
