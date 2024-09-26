@@ -15,7 +15,7 @@
     <!-- Preloader -->
     <link rel="stylesheet" href="<?= base_url("assets/css/preloader.css") ?>">
     <script type="text/javascript">
-        document.addEventListener('contextmenu', function(e) {
+        document.addEventListener('contextmenu', function (e) {
             e.preventDefault();
         });
     </script>
@@ -52,16 +52,35 @@
         }
     </style>
     <main class="flex-grow-1" style="background-color: #d9d9d9;">
-        <nav class="navbar navbar-dark" style="background-color: #0C244B;">
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #0C244B;">
             <div class="container-fluid">
-                <a class="navbar-brand col" style="margin-left: 20px;" href="">
-                    <h3>PROSERVI-UEB-EP</h3>
+                <a class="navbar-brand ms-lg-4" href="">
+                    <h4>PROSERVI-UEB-EP</h4>
                 </a>
-
-                <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#modalVoucher"
-                    type="button">
-                    Consultar Voucher
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
                 </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <button title="Información Bancaria" class="btn btn-outline-light me-2 mb-2 mb-lg-0"
+                                data-bs-toggle="modal" data-bs-target="#modalCuentasBancarias" type="button"
+                                data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver información bancaria">
+                                INFORMACIÓN BANCARIA
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button title="Consultar Voucher" class="btn btn-outline-light mb-2 mb-lg-0"
+                                data-bs-toggle="modal" data-bs-target="#modalVoucher" type="button"
+                                data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                title="Consultar detalles del voucher">
+                                CONSULTAR VOUCHER
+                            </button>
+                        </li>
+
+                    </ul>
+                </div>
             </div>
         </nav>
         <div class="mb-4">
@@ -133,6 +152,87 @@
             </section>
         </div>
     </main>
+
+    <!-- Modal de Cuentas Bancarias -->
+    <div class="modal fade" id="modalCuentasBancarias" tabindex="-1" aria-labelledby="modalCuentasBancariasLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <!-- style="background: linear-gradient(to right, #BC157C, #FFD700); color: white;" -->
+                    <h5 class="modal-title" id="modalCuentasBancariasLabel">Información de Cuentas Bancarias</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row text-center">
+                        <div class="col">
+                            <h5 class="text-center mb-3">Cuenta Bancaria</h5>
+                            <div class="table-responsive text-start">
+                                <table class="table table-striped table-hover">
+                                    <tbody>
+                                        <tr style="background:#BC157C;">
+                                            <th class="text-white" scope="row">Banco</th>
+                                            <td class="text-white">Banco de Guayaquil</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Tipo de Cuenta</th>
+                                            <td>Corriente</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Nombre</th>
+                                            <td>SOFTEC WEBSTORE S A S</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Cuenta Bancaria</th>
+                                            <td>0029421609</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">RUC</th>
+                                            <td>0291525784001</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- <div class="col">
+                            <h5 class="text-center mb-3">Cuenta Bancaria 2</h5>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Banco</th>
+                                            <td>[Nombre del segundo banco]</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Tipo de Cuenta</th>
+                                            <td>[Tipo de cuenta]</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Nombre</th>
+                                            <td>[Nombre del titular]</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Cuenta Bancaria</th>
+                                            <td>[Número de cuenta]</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">RUC</th>
+                                            <td>[Número de RUC]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal de inscripción -->
     <div class="modal fade" id="modalInscripcion" tabindex="-1" aria-labelledby="modalInscripcionLabel"
         aria-hidden="true">
@@ -155,7 +255,8 @@
                             <div class="input-group">
                                 <div class="input-group-text"><i class="fas fa-id-card"></i></div>
 
-                                <input type="text" class="form-control numTex" id="numeroCedula" name="numeroCedula" required>
+                                <input type="text" class="form-control numTex" id="numeroCedula" name="numeroCedula"
+                                    required>
                             </div>
                         </div>
                         <div class="float-end">
