@@ -361,7 +361,7 @@ class InscripcionController extends BaseController
 
         return $this->response->setJSON([
             'success' => true,
-            'message' => 'Sesión de persona limpiada correctamente'
+            'message' => 'Datos limpiados correctamente'
         ]);
     }
 
