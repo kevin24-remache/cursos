@@ -253,7 +253,19 @@ class InscripcionesController extends BaseController
                     }
                 }
             } else {
-                return $this->redirectViewInscripcion($validation, [['Error en los datos enviados', 'warning']], $data);
+
+                // Obtener los errores específicos de la validación
+                $errors = $validation->getErrors();
+
+                // Transformar los errores en el formato esperado
+                $errorMessages = [];
+                foreach ($errors as $field => $errorMessage) {
+                    $errorMessages[] = [$errorMessage, 'warning'];
+                }
+
+                // Redirigir pasando los errores específicos
+                return $this->redirectViewInscripcion(null, $errorMessages, $data);
+                // return $this->redirectViewInscripcion($validation, [['Error en los datos enviados', 'warning']], $data);
             }
         } catch (\Exception $e) {
             log_message('warning', $e->getMessage());
