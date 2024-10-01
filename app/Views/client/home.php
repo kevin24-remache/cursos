@@ -68,7 +68,7 @@
                             <button title="Información Bancaria" class="btn btn-outline-light me-2 mb-2 mb-lg-0"
                                 data-bs-toggle="modal" data-bs-target="#modalCuentasBancarias" type="button"
                                 data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver información bancaria">
-                                INFORMACIÓN BANCARIA
+                                <i class="fa-solid fa-circle-info"></i> INFORMACIÓN BANCARIA
                             </button>
                         </li>
                         <li class="nav-item">
@@ -76,7 +76,7 @@
                                 data-bs-toggle="modal" data-bs-target="#modalVoucher" type="button"
                                 data-bs-toggle="tooltip" data-bs-placement="bottom"
                                 title="Consultar detalles del voucher">
-                                CONSULTAR VOUCHER
+                                <i class="fa-solid fa-file-pdf"></i> CONSULTAR VOUCHER
                             </button>
                         </li>
 
@@ -161,8 +161,8 @@
             <div class="modal-content">
                 <div class="modal-header bg-dark text-white">
                     <!-- style="background: linear-gradient(to right, #BC157C, #FFD700); color: white;" -->
-                    <h5 class="modal-title" id="modalCuentasBancariasLabel">Información de Cuentas Bancarias</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    <h5 class="modal-title" id="modalCuentasBancariasLabel"><i class="fa-solid fa-circle-info"></i> Información de Cuentas Bancarias</h5>
+                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal"
                         aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -262,7 +262,7 @@
                         </div>
                         <div class="float-end">
                             <button type="submit" class="btn btn-success me-1">Inscribirse</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                         </div>
                     </form>
                 </div>
@@ -367,7 +367,7 @@
                     <form id="formDetallesEvento">
                         <div class="mb-3">
                             <label for="descripcionEvento" class="form-label">Descripción del Evento</label>
-                            <textarea class="form-control" id="descripcionEvento" readonly></textarea>
+                            <textarea rows="3" class="form-control" id="descripcionEvento" readonly></textarea>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Seleccione la categoría</label>
@@ -516,9 +516,9 @@
     <div class="modal fade" id="modalVoucher" tabindex="-1" aria-labelledby="modalVoucherLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalVoucherLabel">Consultar Voucher</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title" id="modalVoucherLabel"><i class="fa-solid fa-file-pdf"></i> Consultar Voucher</h5>
+                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="formVoucher" method="GET">
@@ -532,7 +532,7 @@
                         <div class="float-end">
                             <button type="button" class="btn btn-success me-1"
                                 onclick="submitVoucherForm()">Buscar</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                         </div>
                     </form>
                 </div>
@@ -601,7 +601,7 @@
 
                         <div class="float-end">
                             <button type="submit" class="btn btn-success me-1">Continuar</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                         </div>
                     </form>
                 </div>
