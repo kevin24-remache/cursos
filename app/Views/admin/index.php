@@ -21,7 +21,7 @@ Panel
     <div class="content">
         <div class="row">
             <div class="col-lg-4 col-md-6">
-                <a href="" class="info-box btn-outline-info">
+                <a href="<?= base_url("admin/inscritos") ?>" class="info-box btn-outline-info">
                     <span class="info-box-icon bg-primary text-white"><i class="fa fa-italic"
                             aria-hidden="true"></i></span>
                     <div class="info-box-content">

@@ -52,7 +52,7 @@
     <div class="wrapper boxed-wrapper">
         <header class="main-header">
             <!-- Logo -->
-            <a href="index.html" class="logo blue-bg">
+            <a href="<?= base_url("admin/dashboard") ?>" class="logo blue-bg">
                 <span class="logo-mini"><img src="<?= base_url("dist/img/logo-n.png") ?>" alt=""></span>
                 <span class="logo-lg"><img style="width:120px; background:white; border-radius:10px;"
                         src="<?= base_url("assets/images/logo-ep.png") ?>" alt=""></span> </a>
