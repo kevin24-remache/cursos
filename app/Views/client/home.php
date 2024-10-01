@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="<?= base_url("assets/css/payphone.css") ?>">
     <!-- Preloader -->
     <link rel="stylesheet" href="<?= base_url("assets/css/preloader.css") ?>">
+    <link rel="stylesheet" href="<?= base_url("assets/css/whatsapp.css") ?>">
     <script type="text/javascript">
         document.addEventListener('contextmenu', function (e) {
             e.preventDefault();
@@ -632,15 +633,18 @@
         <img src="" alt="Imagen ampliada">
     </div>
 
+    <a href="https://wa.me/+593989026071" class="Btn text-decoration-none" target="_blank" title="¿Necesitas ayuda?">
+        <div class="sign">
+            <i class="fa-brands fa-whatsapp"></i>
+        </div>
+        <div class="text">Escríbenos</div>
+    </a>
+
     <!-- Footer-->
-    <footer class="bg-dark py-3 mt-auto">
-        <div class="container px-5">
-            <div class="row align-items-center justify-content-between flex-column flex-sm-row">
-                <div class="col-auto">
-                    <div class="small m-0 text-white">Copyright 2024 &copy; PROSERVI-UEB-EP |
-                        <a href="https://www.softecsa.com" class="text-decoration-none link-light">Softec Apps S.A.S</a>
-                    </div>
-                </div>
+    <footer class="bg-dark text-light py-4 mt-auto">
+        <div class="container-fluid text-center">
+            <div class="small m-0 text-white p-1">Copyright 2024 &copy; PROSERVI-UEB-EP |
+                <a href="" class="text-decoration-none link-light">Softec Apps S.A.S</a>
             </div>
         </div>
     </footer>
