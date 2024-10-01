@@ -21,17 +21,11 @@ class ApiPrivadaService
 
             $token = getenv('API_PERSONAS');
 
-            log_message('debug', 'URL: ' . $url);
-            log_message('debug', 'Token: ' . $token);
-
             $response = $client->get($url, [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $token
                 ]
             ]);
-
-            log_message('debug', 'Status Code: ' . $response->getStatusCode());
-            log_message('debug', 'Response Body: ' . $response->getBody());
 
             if ($response->getStatusCode() == 200) {
                 return json_decode($response->getBody(), true);
