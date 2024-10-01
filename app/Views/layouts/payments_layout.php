@@ -54,7 +54,7 @@
     <div class="wrapper boxed-wrapper">
         <header class="main-header">
             <!-- Logo -->
-            <a href="index.html" class="logo blue-bg">
+            <a href="<?=base_url('/punto/pago')?>" class="logo blue-bg">
                 <span class="logo-mini"><img src="<?= base_url("assets/images/payments/logo-p.png") ?>" alt=""></span>
                 <span class="logo-lg"><img src="<?= base_url("assets/images/payments/logo.png") ?>" alt=""></span> </a>
             <nav class="navbar blue-bg navbar-static-top">
