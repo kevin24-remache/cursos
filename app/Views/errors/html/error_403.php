@@ -37,7 +37,7 @@
         </div>
         <div class="lockscreen-footer text-center m-t-3">
             Copyright 2024 &copy; PROSERVI-UEB-EP |
-            <a href="https://www.softecsa.com" class="text-decoration-none link-light">Softec Apps S.A.S</a>
+            <a href="" class="text-decoration-none link-light">Softec Apps S.A.S</a>
 
         </div>
     </div>

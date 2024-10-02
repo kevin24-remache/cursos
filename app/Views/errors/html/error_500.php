@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Error 500</title>
     <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1" />
-    <link rel="stylesheet" href="dist/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?= base_url("dist/bootstrap/css/bootstrap.min.css") ?>">
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
     <link rel="icon" href="<?= base_url("assets/images/icono.jpeg"); ?>" type="image/jpeg">
 
@@ -38,7 +38,7 @@
         </div>
         <div class="lockscreen-footer text-center m-t-3">
             Copyright 2024 &copy; PROSERVI-UEB-EP |
-            <a href="https://www.softecsa.com" class="text-decoration-none link-light">Softec Apps S.A.S</a>
+            <a href="" class="text-decoration-none link-light">Softec Apps S.A.S</a>
 
         </div>
     </div>
