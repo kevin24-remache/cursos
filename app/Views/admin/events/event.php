@@ -14,7 +14,7 @@ Eventos
     <div class="content-header sty-one">
         <h1 class="text-black">Eventos</h1>
         <ol class="breadcrumb">
-            <li><a href="#">Casa</a></li>
+            <li><a href="#">Inicio</a></li>
             <li class="sub-bread"><i class="fa fa-angle-right"></i> Eventos</li>
             <li><i class="fa fa-angle-right"></i> Lista</li>
         </ol>

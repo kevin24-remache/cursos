@@ -116,7 +116,7 @@ class UsersModel extends Model
         $builder->join('payments', 'inscripcion_pagos.pago_id = payments.id');
         $builder->join('registrations', 'payments.id_register = registrations.id');
         $builder->join('payment_methods', 'payment_methods.id = payments.payment_method_id');
-        $builder->where('users.rol_id', 2);
+        // $builder->where('users.rol_id', 2);
         $builder->where('payments.payment_status', 2); // Asumiendo que 2 es el estado de pago completado
         $builder->orderBy('payments.date_time_payment', 'DESC');
 

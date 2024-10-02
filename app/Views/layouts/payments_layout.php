@@ -55,8 +55,8 @@
         <header class="main-header">
             <!-- Logo -->
             <a href="<?=base_url('/punto/pago')?>" class="logo blue-bg">
-                <span class="logo-mini"><img src="<?= base_url("assets/images/payments/logo-p.png") ?>" alt=""></span>
-                <span class="logo-lg"><img src="<?= base_url("assets/images/payments/logo.png") ?>" alt=""></span> </a>
+                <span class="logo-mini"><img class="img-fluid" style="width:35px; background:white; border-radius:10px;"  src="<?= base_url("assets/images/icono-sin-fondo.png") ?>" alt=""></span>
+                <span class="logo-lg"><img style="width:120px; background:white; border-radius:10px;" src="<?= base_url("assets/images/logo-ep.png") ?>" alt=""></span> </a>
             <nav class="navbar blue-bg navbar-static-top">
                 <!-- Sidebar toggle button-->
                 <ul class="nav navbar-nav pull-left">
@@ -66,7 +66,7 @@
                     <ul class="nav navbar-nav">
                         <!-- User Account: style can be found in dropdown.less -->
                         <li class="dropdown user user-menu p-ph-res"> <a href="#" class="dropdown-toggle"
-                                data-toggle="dropdown"><span class="hidden-xs"><?= session('first_name') ?></span> </a>
+                                data-toggle="dropdown"><span class="hidden-xs"><?= session('first_name') . ' ' . session('last_name') ?></span> </a>
                             <ul class="dropdown-menu">
                                 <li><a href="<?= base_url('punto/pago/user')?>"><i class="icon-profile-male"></i> Mi perfil</a></li>
                                 <li role="separator" class="divider"></li>
@@ -89,7 +89,7 @@
                             alt="User Image">
                     </div>
                     <div class="info text-black">
-                        <p><?= session('first_name') ?></p> <a
+                        <p><?= session('first_name') . ' ' . session('last_name') ?></p> <a
                             href="<?= base_url("logout") ?>" title="Cerrar Sesión"><i class="fa fa-lg fa-power-off"></i></a>
                     </div>
                 </div>

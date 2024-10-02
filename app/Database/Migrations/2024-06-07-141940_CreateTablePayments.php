@@ -34,7 +34,7 @@ class CreateTablePayments extends Migration
                 'null' => true,
             ],
             'date_time_payment' => [
-                'type' => 'DATETIME',
+                'type' => 'DATE',
                 'null' => true,
             ],
             'payment_cod' => [

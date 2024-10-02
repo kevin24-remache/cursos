@@ -10,9 +10,8 @@ Categorías
     <div class="content-header sty-one">
         <h1 class="text-black">Categorías</h1>
         <ol class="breadcrumb">
-            <li><a href="#">Casa</a></li>
-            <li class="sub-bread"><i class="fa fa-angle-right"></i>Categoría</li>
-            <li><i class="fa fa-angle-right"></i> Lista</li>
+            <li><a href="#">Inicio</a></li>
+            <li class="sub-bread"><i class="fa fa-angle-right"></i>Categorías de eventos</li>
         </ol>
     </div>
 

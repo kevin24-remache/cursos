@@ -182,7 +182,7 @@
                                         </tr>
                                         <tr>
                                             <th scope="row">Nombre</th>
-                                            <td>SOFTEC WEBSTORE S A S</td>
+                                            <td>SOFTEC WEBSTORE S.A.S</td>
                                         </tr>
                                         <tr>
                                             <th scope="row">Cuenta Bancaria</th>

@@ -259,7 +259,7 @@
                     <table class="details-table">
                         <tr>
                             <th>Banco:</th>
-                            <td style="background:#BC157C; color:white;"">Banco de Guayaquil</td>
+                            <td style="background:#BC157C; color:white;">Banco de Guayaquil</td>
                         </tr>
                         <tr>
                             <th>Tipo de Cuenta:</th>
@@ -267,7 +267,7 @@
                         </tr>
                         <tr>
                             <th>Nombre:</th>
-                            <td>SOFTEC WEBSTORE S A S</td>
+                            <td>SOFTEC WEBSTORE S.A.S</td>
                         </tr>
                         <tr>
                             <th>Cuenta Bancaria:</th>

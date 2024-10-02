@@ -112,12 +112,12 @@ $routes->group('punto/pago', static function ($routes) {
     $routes->post('pago_rechazado/', 'Payments\DepositosController::rechazar');
     $routes->post('pago_incompleto/', 'Payments\DepositosController::pagoIncompleto');
     $routes->post('buscar', 'Payments\FiltrosController::buscarPorCedula');
-    $routes->group('depositos', static function ($depositos) {
-        $depositos->get('/', 'Payments\DepositosController::index');
-        $depositos->get('completados', 'Payments\DepositosController::completados');
-        $depositos->get('rechazados', 'Payments\DepositosController::rechazados');
-        $depositos->get('incompletos', 'Payments\DepositosController::incompletos');
-    });
+    // $routes->group('depositos', static function ($depositos) {
+    //     $depositos->get('/', 'Payments\DepositosController::index');
+    //     $depositos->get('completados', 'Payments\DepositosController::completados');
+    //     $depositos->get('rechazados', 'Payments\DepositosController::rechazados');
+    //     $depositos->get('incompletos', 'Payments\DepositosController::incompletos');
+    // });
     $routes->group('user', static function ($depositos) {
         $depositos->get('/', 'Payments\UserController::index');
         $depositos->post('update', 'Payments\UserController::update');
@@ -128,15 +128,15 @@ $routes->group('punto/pago', static function ($routes) {
         $recaudaciones->get('/', 'Payments\UserController::recaudaciones');
     });
 
-    $routes->get('deposito/(:num)', 'Payments\PocesosDepController::index/$1');
-    $routes->get('getDatosPgDeposito/(:num)', 'Payments\PocesosDepController::getDatosPagoDeposito/$1');
-    $routes->post('actualizarEstado/', 'Payments\PocesosDepController::actualizarEstado');
-    $routes->get('obtener_depositos/(:num)', 'Payments\PocesosDepController::obtenerDeposito/$1');
-    $routes->post('aprobar/', 'Payments\PocesosDepController::aprobar_deposito');
-    $routes->post('incompleto/', 'Payments\PocesosDepController::pago_incompleto');
-    $routes->post('rechazar/', 'Payments\PocesosDepController::rechazar');
-    $routes->get('verificarDepositoRechazado/(:num)', 'Payments\PocesosDepController::verificarDepositoRechazado/$1');
-    $routes->get('verificarDepositoIncompleto/(:num)', 'Payments\PocesosDepController::verificarDepositoIncompleto/$1');
+    // $routes->get('deposito/(:num)', 'Payments\PocesosDepController::index/$1');
+    // $routes->get('getDatosPgDeposito/(:num)', 'Payments\PocesosDepController::getDatosPagoDeposito/$1');
+    // $routes->post('actualizarEstado/', 'Payments\PocesosDepController::actualizarEstado');
+    // $routes->get('obtener_depositos/(:num)', 'Payments\PocesosDepController::obtenerDeposito/$1');
+    // $routes->post('aprobar/', 'Payments\PocesosDepController::aprobar_deposito');
+    // $routes->post('incompleto/', 'Payments\PocesosDepController::pago_incompleto');
+    // $routes->post('rechazar/', 'Payments\PocesosDepController::rechazar');
+    // $routes->get('verificarDepositoRechazado/(:num)', 'Payments\PocesosDepController::verificarDepositoRechazado/$1');
+    // $routes->get('verificarDepositoIncompleto/(:num)', 'Payments\PocesosDepController::verificarDepositoIncompleto/$1');
 });
 
 //Pdf

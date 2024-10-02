@@ -22,7 +22,7 @@ Editar evento
     <div class="content-header sty-one shadow">
         <h1 class="text-black">Editar evento</h1>
         <ol class="breadcrumb">
-            <li><a href="#">Casa</a></li>
+            <li><a href="#">Inicio</a></li>
             <li class="sub-bread"><i class="fa fa-angle-right"></i> Eventos</li>
             <li><i class="fa fa-angle-right"></i> Editar evento</li>
         </ol>

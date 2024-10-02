@@ -53,7 +53,7 @@
         <header class="main-header">
             <!-- Logo -->
             <a href="<?= base_url("admin/dashboard") ?>" class="logo blue-bg">
-                <span class="logo-mini"><img src="<?= base_url("dist/img/logo-n.png") ?>" alt=""></span>
+            <span class="logo-mini"><img class="img-fluid" style="width:35px; background:white; border-radius:10px;"  src="<?= base_url("assets/images/icono-sin-fondo.png") ?>" alt=""></span>
                 <span class="logo-lg"><img style="width:120px; background:white; border-radius:10px;"
                         src="<?= base_url("assets/images/logo-ep.png") ?>" alt=""></span> </a>
             <nav class="navbar blue-bg navbar-static-top">
@@ -67,7 +67,7 @@
                         <li class="dropdown user user-menu p-ph-res">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <img
                                     src="<?= base_url('assets/images/admin_letter.jpeg') ?>" class="user-image"
-                                    alt="User Image"> <span class="hidden-xs"><?= session('first_name') ?></span> </a>
+                                    alt="User Image"> <span class="hidden-xs"><?= session('first_name') . ' ' . session('last_name') ?></span> </a>
                             <ul class="dropdown-menu">
 
                                 <li class="user-header">
@@ -103,19 +103,12 @@
                             alt="User Image">
                     </div>
                     <div class="info text-black">
-                        <p><?= session('first_name') ?></p>
+                        <p><?= session('first_name') . ' ' . session('last_name') ?></p>
                         <a href="<?= base_url("admin/config") ?>" title="Configuración"><i class="fa fa-lg fa-cog"></i></a> <a
                             href="<?= base_url("logout") ?>" title="Cerrar Sesión"><i class="fa fa-lg fa-power-off"></i></a>
                     </div>
                 </div>
                 <ul class="sidebar-menu" data-widget="tree">
-                    <li class="header">
-
-                        <a class="px-0 py-1" href="<?= base_url('admin/inscripciones') ?>">
-                            <i class="fa fa-usd" aria-hidden="true"></i><span>Cobrar</span> <span
-                                class="pull-right-container"> </span>
-                        </a>
-                    </li>
                     <li
                         class="treeview <?= (isset($modulo) && checkActiveModule($modulo, ModulosAdminPagos::DASHBOARD)) ? 'active' : '' ?>">
                         <a href="#"> <i class="fa fa-dashboard"></i> <span>Panel</span>
@@ -126,14 +119,34 @@
                                 <a href="<?= base_url("admin/dashboard") ?>">Estadísticas</a></li>
                         </ul>
                     </li>
+                    <li class="header">
+
+                        <a class="px-0 py-1" href="<?= base_url('admin/inscripciones') ?>">
+                            <i class="fa fa-usd" aria-hidden="true"></i><span>Cobrar con efectivo</span> <span
+                                class="pull-right-container"> </span>
+                        </a>
+                    </li>
                     <li
-                        class="treeview <?= (isset($modulo) && in_array($modulo, [ModulosAdmin::USERS])) ? 'active' : '' ?>">
-                        <a href="#"> <i class="fa fa-user-o"></i> <span>Usuarios</span> <span
-                                class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
+                        class="treeview  <?= (isset($modulo) && in_array($modulo, [ModulosAdmin::PAGOS, ModulosAdmin::PAGOS_COMPLETOS, ModulosAdmin::PAGOS_RECHAZADOS, ModulosAdmin::PAGOS_INCOMPLETOS])) ? 'active' : '' ?>">
+                        <a href="#"> <i class="fa fa-credit-card-alt" aria-hidden="true"></i> <span>Cobrar con
+                                depósito</span> <span class="pull-right-container"> <i
+                                    class="fa fa-angle-left pull-right"></i> </span> </a>
                         <ul class="treeview-menu">
                             <li
-                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::USERS)) ? 'active' : '' ?>">
-                                <a href="<?= base_url('admin/users'); ?>">Lista</a>
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::PAGOS)) ? 'active' : '' ?>">
+                                <a href="<?= base_url('admin/pagos') ?>">Ingresados</a>
+                            </li>
+                            <li
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::PAGOS_COMPLETOS)) ? 'active' : '' ?>">
+                                <a href="<?= base_url('admin/pagos/completados') ?>">Completados</a>
+                            </li>
+                            <li
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::PAGOS_RECHAZADOS)) ? 'active' : '' ?>">
+                                <a href="<?= base_url('admin/pagos/rechazados') ?>">Rechazados</a>
+                            </li>
+                            <li
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::PAGOS_INCOMPLETOS)) ? 'active' : '' ?>">
+                                <a href="<?= base_url('admin/pagos/incompletos') ?>">Incompletos</a>
                             </li>
                         </ul>
                     </li>
@@ -154,19 +167,39 @@
                         </ul>
                     </li>
                     <li
+                        class="treeview <?= (isset($modulo) && in_array($modulo, [ModulosAdmin::EVENTS, ModulosAdmin::EVENTS_LIST, ModulosAdmin::EVENTS_ADD,ModulosAdmin::CATEGORY_LIST])) ? 'active' : '' ?>">
+                        <a href="#"> <i class="fa fa-ticket"></i> <span>Eventos</span> <span
+                                class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
+                        <ul class="treeview-menu">
+                            <li
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::EVENTS_ADD)) ? 'active' : '' ?>">
+                                <a href="<?= base_url("admin/event/new") ?>">Nuevo evento</a>
+                            </li>
+                            <li
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::EVENTS_LIST)) ? 'active' : '' ?>">
+                                <a href="<?= base_url("admin/event") ?>">Lista de eventos</a>
+                            </li>
+                            <li
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::CATEGORY_LIST)) ? 'active' : '' ?>">
+                                <a href="<?= base_url("admin/category") ?>">Categorías de eventos</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li
                         class="treeview <?= (isset($modulo) && in_array($modulo, [ModulosAdmin::MIS_RECAUDACIONES,ModulosAdmin::RECAUDACIONES,ModulosAdmin::RECAUDACIONES_ONLINE])) ? 'active' : '' ?>">
-                        <a href="#"> <i class="fa fa-usd"></i>
-                        <span>Recaudación</span>
+                        <a href="#"> <i class="fa fa-book"></i>
+
+                        <span>Reportes</span>
                             <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
                         <ul class="treeview-menu">
 
                             <li
-                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::MIS_RECAUDACIONES)) ? 'active' : '' ?>">
-                                <a href="<?= base_url('admin/recaudaciones'); ?>">Mis recaudaciones</a>
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::RECAUDACIONES)) ? 'active' : '' ?>">
+                                <a href="<?= base_url(relativePath: 'admin/recaudaciones/usuarios'); ?>">Consolidado</a>
                             </li>
                             <li
-                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::RECAUDACIONES)) ? 'active' : '' ?>">
-                                <a href="<?= base_url(relativePath: 'admin/recaudaciones/usuarios'); ?>">Por usuario</a>
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::MIS_RECAUDACIONES)) ? 'active' : '' ?>">
+                                <a href="<?= base_url('admin/recaudaciones'); ?>">Mis recaudaciones</a>
                             </li>
                             <li
                                 class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::RECAUDACIONES_ONLINE)) ? 'active' : '' ?>">
@@ -175,53 +208,13 @@
                         </ul>
                     </li>
                     <li
-                        class="treeview <?= (isset($modulo) && in_array($modulo, [ModulosAdmin::EVENTS, ModulosAdmin::EVENTS_LIST, ModulosAdmin::EVENTS_ADD])) ? 'active' : '' ?>">
-                        <a href="#"> <i class="fa fa-ticket"></i> <span>Eventos</span> <span
+                        class="treeview <?= (isset($modulo) && in_array($modulo, [ModulosAdmin::USERS])) ? 'active' : '' ?>">
+                        <a href="#"> <i class="fa fa-user-o"></i> <span>Usuarios</span> <span
                                 class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
                         <ul class="treeview-menu">
                             <li
-                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::EVENTS_ADD)) ? 'active' : '' ?>">
-                                <a href="<?= base_url("admin/event/new") ?>">Agregar</a>
-                            </li>
-                            <li
-                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::EVENTS_LIST)) ? 'active' : '' ?>">
-                                <a href="<?= base_url("admin/event") ?>">Lista</a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li
-                        class="treeview <?= (isset($modulo) && in_array($modulo, [ModulosAdmin::CATEGORIES, ModulosAdmin::CATEGORY_LIST, ModulosAdmin::CATEGORY_ADD])) ? 'active' : '' ?>">
-                        <a href="#"> <i class="fa fa-list-ul"></i> <span>Categorías</span> <span
-                                class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
-                        <ul class="treeview-menu">
-                            <li
-                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::CATEGORY_LIST)) ? 'active' : '' ?>">
-                                <a href="<?= base_url("admin/category") ?>">Lista</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li
-                        class="treeview  <?= (isset($modulo) && in_array($modulo, [ModulosAdmin::PAGOS, ModulosAdmin::PAGOS_COMPLETOS, ModulosAdmin::PAGOS_RECHAZADOS, ModulosAdmin::PAGOS_INCOMPLETOS])) ? 'active' : '' ?>">
-                        <a href="#"> <i class="fa fa-credit-card-alt" aria-hidden="true"></i> <span>Pagos con
-                                depósitos</span> <span class="pull-right-container"> <i
-                                    class="fa fa-angle-left pull-right"></i> </span> </a>
-                        <ul class="treeview-menu">
-                            <li
-                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::PAGOS)) ? 'active' : '' ?>">
-                                <a href="<?= base_url('admin/pagos') ?>">Ingresados</a>
-                            </li>
-                            <li
-                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::PAGOS_COMPLETOS)) ? 'active' : '' ?>">
-                                <a href="<?= base_url('admin/pagos/completados') ?>">Completados</a>
-                            </li>
-                            <li
-                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::PAGOS_RECHAZADOS)) ? 'active' : '' ?>">
-                                <a href="<?= base_url('admin/pagos/rechazados') ?>">Rechazados</a>
-                            </li>
-                            <li
-                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::PAGOS_INCOMPLETOS)) ? 'active' : '' ?>">
-                                <a href="<?= base_url('admin/pagos/incompletos') ?>">Incompletos</a>
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::USERS)) ? 'active' : '' ?>">
+                                <a href="<?= base_url('admin/users'); ?>">Lista</a>
                             </li>
                         </ul>
                     </li>

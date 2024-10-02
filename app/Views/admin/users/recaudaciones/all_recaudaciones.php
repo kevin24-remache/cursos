@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/admin_layout'); ?>
 
 <?= $this->section('title') ?>
-Recaudaciones por usuario
+Consolidado
 <?= $this->endSection() ?>
 
 <?= $this->section('css') ?>
@@ -12,11 +12,11 @@ Recaudaciones por usuario
 
 <div class="content-wrapper">
     <div class="content-header sty-one">
-        <h1 class="text-black"> Recaudaciones por usuario</h1>
+        <h1 class="text-black"> Consolidado</h1>
         <ol class="breadcrumb">
             <li><a href="#">Inicio</a></li>
-            <li class="sub-bread"><i class="fa fa-angle-right"></i> Recaudaciones</li>
-            <li><i class="fa fa-angle-right"></i> Por usuario</li>
+            <li class="sub-bread"><i class="fa fa-angle-right"></i> Reportes</li>
+            <li><i class="fa fa-angle-right"></i> Consolidado</li>
         </ol>
     </div>
     <div class="content">
@@ -28,14 +28,14 @@ Recaudaciones por usuario
                             <th class="exclude-view">Código</th>
                             <th>Cédula</th>
                             <th>Operador</th>
-                            <th>Nombres del participante</th>
+                            <th>Nombres</th>
                             <th class="exclude-view">Teléfono</th>
                             <th class="exclude-view">Correo Electrónico</th>
                             <th class="exclude-view">Dirección</th>
                             <th>Evento</th>
-                            <th>Monto pagado</th>
-                            <th>Método de pago</th>
-                            <th>Fecha del pago</th>
+                            <th>Monto</th>
+                            <th>Método</th>
+                            <th>Fecha</th>
                             <th class="exclude-column">Acciones</th>
                         </tr>
                     </thead>

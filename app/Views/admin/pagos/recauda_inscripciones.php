@@ -12,10 +12,10 @@ Pagos
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header sty-one">
-        <h1 class="text-black">Cobrar Inscripciones</h1>
+        <h1 class="text-black">Cobrar en efectivo</h1>
         <ol class="breadcrumb">
             <li><a href="#">Inicio</a></li>
-            <li><i class="fa fa-angle-right"></i>Cobrar Inscripciones</li>
+            <li><i class="fa fa-angle-right"></i>Cobrar en efectivo</li>
         </ol>
     </div>
 

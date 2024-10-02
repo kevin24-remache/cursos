@@ -15,7 +15,7 @@ Mi recaudación realizada
         <h1 class="text-black"> Mis recaudaciones realizadas</h1>
         <ol class="breadcrumb">
             <li><a href="#">Inicio</a></li>
-            <li class="sub-bread"><i class="fa fa-angle-right"></i> Recaudación</li>
+            <li class="sub-bread"><i class="fa fa-angle-right"></i> Reportes</li>
             <li><i class="fa fa-angle-right"></i> Mi recaudación</li>
         </ol>
     </div>
@@ -27,14 +27,14 @@ Mi recaudación realizada
                         <tr>
                             <th class="exclude-view">Código</th>
                             <th>Cédula</th>
-                            <th>Nombres del participante</th>
+                            <th>Nombres</th>
                             <th class="exclude-view">Teléfono</th>
-                            <th>Correo Electrónico</th>
+                            <th>Correo</th>
                             <th class="exclude-view">Dirección</th>
                             <th>Evento</th>
-                            <th>Monto cobrado</th>
-                            <th>Método de cobro</th>
-                            <th>Fecha del cobro</th>
+                            <th>Monto</th>
+                            <th>Método</th>
+                            <th>Fecha</th>
                             <th class="exclude-column">Acciones</th>
                         </tr>
                     </thead>

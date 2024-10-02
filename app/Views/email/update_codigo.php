@@ -254,6 +254,53 @@
                     <p style="color: #c3171b; text-align: center;">Tu inscripción al evento no estará completa hasta que
                         verifiquemos correctamente tu pago.</p>
                     <hr>
+                        <!-- Tabla de cuentas bancarias -->
+                        <h3 style="text-align: center;">Para depósitos la cuenta</h3>
+                    <table class="details-table">
+                        <tr>
+                            <th>Banco:</th>
+                            <td style="background:#BC157C; color:white;">Banco de Guayaquil</td>
+                        </tr>
+                        <tr>
+                            <th>Tipo de Cuenta:</th>
+                            <td>Corriente</td>
+                        </tr>
+                        <tr>
+                            <th>Nombre:</th>
+                            <td>SOFTEC WEBSTORE S.A.S</td>
+                        </tr>
+                        <tr>
+                            <th>Cuenta Bancaria:</th>
+                            <td>0029421609</td>
+                        </tr>
+                        <tr>
+                            <th>RUC:</th>
+                            <td>0291525784001</td>
+                        </tr>
+                        <!-- <tr>
+                            <td colspan="2" style="text-align: center; font-weight: bold; padding-top: 15px;">Otra cuenta</td>
+                        </tr>
+                        <tr>
+                            <td>Banco:</td>
+                            <td>Banco Pichincha</td>
+                        </tr>
+                        <tr>
+                            <td>Tipo de Cuenta:</td>
+                            <td>Ahorros</td>
+                        </tr>
+                        <tr>
+                            <td>Nombre:</td>
+                            <td>SOFTEC WEBSTORE S A S</td>
+                        </tr>
+                        <tr>
+                            <td>Cuenta Bancaria:</td>
+                            <td>65656</td>
+                        </tr>
+                        <tr>
+                            <td>RUC:</td>
+                            <td>342434343535</td>
+                        </tr> -->
+                    </table>
                     <p style="text-align: center;">Gracias por tu participación.</p>
                 </div>
             </div>

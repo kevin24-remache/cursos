@@ -319,8 +319,7 @@ class RegistrationsModel extends Model
     public function getMisInscripcionesByCedulaYEstado($cedula, $estado)
     {
         // Obtener el ID de usuario desde la sesión (suponiendo que está almacenado en la sesión)
-        $userId = session('id');
-
+        // $userId = null;
         $builder = $this->db->table('payments')
             ->select('
             payments.id AS id_pago,
@@ -343,10 +342,10 @@ class RegistrationsModel extends Model
             ->where('registrations.ic', $cedula)
             ->where('payments.payment_status', $estado);
 
-        // Si el estado es 2, aplicar filtro por sesión del usuario
-        if ($estado == 2 && $userId) {
-            $builder->where('inscripcion_pagos.usuario_id', $userId); // Ajustamos para verificar el usuario de inscripcion_pagos
-        }
+        // // Si el estado es 2, aplicar filtro por sesión del usuario
+        // if ($estado == 2 && $userId) {
+        //     $builder->where('inscripcion_pagos.usuario_id', $userId); // Ajustamos para verificar el usuario de inscripcion_pagos
+        // }
 
         $query = $builder->orderBy('payments.payment_cod')
             ->get()

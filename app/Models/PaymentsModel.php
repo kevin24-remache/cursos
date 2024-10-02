@@ -104,7 +104,7 @@ class PaymentsModel extends Model
             payments.send_email,
             payments.id,
             payments.amount_pay,
-            users.first_name AS operador
+            CONCAT(users.first_name, " ", users.last_name) AS operador
         ')
             ->join('registrations', 'payments.id_register = registrations.id', 'left')
             ->join('payment_methods', 'payments.payment_method_id = payment_methods.id', 'left')

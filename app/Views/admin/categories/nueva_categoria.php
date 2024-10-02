@@ -15,7 +15,7 @@ Agregar categorías
     <div class="content-header sty-one shadow">
         <h1 class="text-black">Nueva categoría</h1>
         <ol class="breadcrumb">
-            <li><a href="#">Casa</a></li>
+            <li><a href="#">Inicio</a></li>
             <li class="sub-bread"><i class="fa fa-angle-right"></i> Categoría</li>
             <li><i class="fa fa-angle-right"></i> Nueva categoría</li>
         </ol>
