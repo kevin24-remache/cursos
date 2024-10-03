@@ -1,7 +1,7 @@
-<?= $this->extend('layouts/admin_layout'); ?>
+<?= $this->extend('layouts/proservi_layout'); ?>
 
 <?= $this->section('title') ?>
-Consolidado
+Reporte de inscripciones
 <?= $this->endSection() ?>
 
 <?= $this->section('css') ?>
@@ -12,11 +12,10 @@ Consolidado
 
 <div class="content-wrapper">
     <div class="content-header sty-one">
-        <h1 class="text-black"> Consolidado</h1>
+        <h1 class="text-black"> Reporte de inscripciones</h1>
         <ol class="breadcrumb">
             <li><a href="#">Inicio</a></li>
-            <li class="sub-bread"><i class="fa fa-angle-right"></i> Reportes</li>
-            <li><i class="fa fa-angle-right"></i> Consolidado</li>
+            <li class="sub-bread"><i class="fa fa-angle-right"></i> Reporte de inscripciones</li>
         </ol>
     </div>
     <div class="content">
@@ -26,9 +25,8 @@ Consolidado
                     <thead class="thead-light">
                         <tr>
                             <th class="exclude-view">Código</th>
-                            <th>Operador</th>
                             <th>Cédula</th>
-                            <th>Nombres</th>
+                            <th>Participante</th>
                             <th class="exclude-view">Teléfono</th>
                             <th class="exclude-view">Correo</th>
                             <th class="exclude-view">Dirección</th>
@@ -43,8 +41,8 @@ Consolidado
                         <?php foreach ($users as $key => $user): ?>
                             <tr>
                                 <td><?= $user["codigo"] ?></td>
-                                <td><?= $user["operador"] . " " . $user["last_operador"]?></td>
                                 <td><?= $user["participante_cedula"] ?></td>
+
                                 <td><?= $user["participante_name"] ?></td>
                                 <td><?= $user["participante_telefono"] ?></td>
                                 <td><?= $user["participante_email"] ?></td>

@@ -637,7 +637,7 @@
         <div class="sign">
             <i class="fa-brands fa-whatsapp"></i>
         </div>
-        <div class="text">Escríbenos</div>
+        <div class="text">Soporte</div>
     </a>
 
     <!-- Footer-->

@@ -3,7 +3,7 @@ class RolesOptions
 {
     const AdminPrincipal = 1;
     const AdministradorDePagos = 2;
-    // const AdministradorDeEventos = 3;
+    const AdministradorProservi = 3;
     // const UsuarioPublico = 4;
 }
 
@@ -151,7 +151,7 @@ if (!function_exists('getRolesOptions')) {
         return [
             RolesOptions::AdminPrincipal => 'Admin Principal',
             RolesOptions::AdministradorDePagos => 'Administrador de Pagos',
-            // RolesOptions::AdministradorDeEventos => 'Administrador de Eventos',
+            RolesOptions::AdministradorProservi => 'Usuario Proservi',
             // RolesOptions::UsuarioPublico => 'Usuario Público',
         ];
     }

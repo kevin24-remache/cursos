@@ -25,11 +25,11 @@ Usuarios
                 <table id="users" class="table datatable">
                     <thead class="thead-light">
                         <tr>
-                            <th class="exclude-view">cédula</th>
+                            <th>Cédula</th>
                             <th>Nombres</th>
                             <th class="exclude-view">Apellidos</th>
                             <th class="exclude-view">Teléfono</th>
-                            <th>Correo Electrónico</th>
+                            <th>Correo</th>
                             <th>Dirección</th>
                             <th>Rol</th>
                             <th class="exclude-column">Acciones</th>
@@ -39,7 +39,7 @@ Usuarios
                         <?php foreach ($users as $key => $user): ?>
                             <tr>
                                 <td><?= $user["ic"] ?></td>
-                                <td><?= $user["first_name"] ?></td>
+                                <td><?= $user["first_name"] . ' ' .$user["last_name"] ?></td>
                                 <td><?= $user["last_name"] ?></td>
                                 <td><?= $user["phone_number"] ?></td>
                                 <td><?= $user["email"] ?></td>

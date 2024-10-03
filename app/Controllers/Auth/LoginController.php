@@ -81,8 +81,8 @@ class LoginController extends BaseController
                                 return redirect('admin/dashboard');
                             case RolesOptions::AdministradorDePagos:
                                 return redirect('punto/pago');
-                            // case RolesOptions::AdministradorDeEventos:
-                            //     return redirect('eventos/dashboard');
+                            case RolesOptions::AdministradorProservi:
+                                return redirect('proservi/reportes');
                             // case RolesOptions::UsuarioPublico:
                             //     return redirect('public/dashboard');
                             default:

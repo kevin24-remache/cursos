@@ -136,7 +136,7 @@ class UsersController extends BaseController
                 }
             } else {
                 unset($data['password']);
-                $data['password']=$password;
+                $data['password'] = $password;
                 return $this->redirectView($validation, [['Error en los datos enviados', 'warning']], $data, 'insert');
             }
         } catch (\Exception $e) {
@@ -156,7 +156,7 @@ class UsersController extends BaseController
         $rol_id = $this->request->getPost('rol_id');
 
         $data = [
-            'id'=> $id,
+            'id' => $id,
             'ic' => trim($cedula),
             'first_name' => trim($first_name),
             'last_name' => trim($last_name),
@@ -211,7 +211,7 @@ class UsersController extends BaseController
             if ($validation->run($data)) {
 
 
-                $update_user = $this->usersModel->update($id,$data);
+                $update_user = $this->usersModel->update($id, $data);
 
                 if ($update_user) {
                     return $this->redirectView(null, [['Datos del usuario actualizado exitosamente', 'success']], null);
@@ -246,7 +246,16 @@ class UsersController extends BaseController
             );
 
             if ($validation->run($data)) {
+                // Primero verificamos si el usuario tiene rol_id = 1
+                $user = $this->usersModel->find($id);
 
+                if (!$user) {
+                    return $this->redirectView(null, [['Usuario no encontrado', 'warning']], null);
+                }
+
+                if ($user['rol_id'] == 1) {
+                    return $this->redirectView(null, [['No se pueden eliminar usuarios con rol administrador', 'warning']], null);
+                }
 
                 $delete_user = $this->usersModel->delete($id);
 
@@ -296,7 +305,7 @@ class UsersController extends BaseController
 
                 unset($data['password_repeat']);
                 unset($data['password_match']);
-                $insert_user = $this->usersModel->update($id,$data);
+                $insert_user = $this->usersModel->update($id, $data);
 
                 if ($insert_user) {
                     return $this->redirectView(null, [['Contraseña cambiada exitosamente', 'success']], null);
@@ -305,7 +314,7 @@ class UsersController extends BaseController
                 }
             } else {
                 unset($data['password']);
-                $data['password']=$password;
+                $data['password'] = $password;
                 return $this->redirectView($validation, [['Error en los datos enviados', 'warning']], $data, 'recover');
             }
         } catch (\Exception $e) {

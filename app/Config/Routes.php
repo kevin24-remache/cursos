@@ -139,6 +139,13 @@ $routes->group('punto/pago', static function ($routes) {
     // $routes->get('verificarDepositoIncompleto/(:num)', 'Payments\PocesosDepController::verificarDepositoIncompleto/$1');
 });
 
+// ADMIN
+$routes->group('proservi', static function ($routes) {
+
+    $routes->get('reportes', 'Proservi\ReportesController::index');
+
+});
+
 //Pdf
 $routes->get('pdf/(:hash)', 'Payments\InscripcionesController::showPDF/$1');
 //Payphone

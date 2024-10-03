@@ -14,6 +14,7 @@ use CodeIgniter\Filters\PerformanceMetrics;
 use CodeIgniter\Filters\SecureHeaders;
 use App\Filters\SessionAdmin;
 use App\Filters\SessionPagos;
+use App\Filters\SessionProservi;
 
 class Filters extends BaseFilters
 {
@@ -38,6 +39,7 @@ class Filters extends BaseFilters
         'performance' => PerformanceMetrics::class,
         'SessionAdmin' => SessionAdmin::class,
         'SessionPagos' => SessionPagos::class,
+        'SessionProservi' => SessionProservi::class,
     ];
 
     /**
@@ -115,7 +117,13 @@ class Filters extends BaseFilters
         ],
         "SessionPagos" => [
             "before" => [
+                'punto/pago',
                 "punto/pago/*",
+            ],
+        ],
+        "SessionProservi" => [
+            "before" => [
+                "proservi/*",
             ],
         ],
     ];

@@ -612,4 +612,38 @@ class PaymentsModel extends Model
         return $query->getResultArray();
     }
 
+
+    public function getRecaudado()
+    {
+        // Obtener el valor de 'additional_charge' de la tabla config
+        $configModel = new ConfigModel(); // Asumiendo que tienes un modelo para la tabla config
+        $additionalCharge = $configModel->where('key', 'additional_charge')->first();
+        $additionalChargeValue = floatval($additionalCharge['value']);
+
+        // Construir la consulta para obtener los datos
+        $builder = $this->select('
+        payments.id AS payment_id,
+        (payments.amount_pay - ' . $additionalChargeValue . ') AS amount_pay,
+        payments.date_time_payment,
+        payments.payment_cod AS codigo,
+        payments.num_autorizacion AS num_autorizacion,
+        registrations.full_name_user AS participante_name,
+        registrations.ic AS participante_cedula,
+        registrations.address AS participante_direccion,
+        registrations.phone AS participante_telefono,
+        registrations.email AS participante_email,
+        registrations.event_name AS event_name,
+        (registrations.monto_category - ' . $additionalChargeValue . ') AS precio,
+        payment_methods.method_name AS method_pago,
+    ');
+        $builder->join('registrations', 'payments.id_register = registrations.id');
+        $builder->join('payment_methods', 'payment_methods.id = payments.payment_method_id');
+        // $builder->where('users.rol_id', 2);
+        $builder->where('payments.payment_status', 2); // Asumiendo que 2 es el estado de pago completado
+        $builder->orderBy('payments.date_time_payment', 'DESC');
+
+        $query = $builder->get();
+        return $query->getResultArray();
+    }
+
 }
