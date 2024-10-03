@@ -1,21 +1,15 @@
-<!DOCTYPE html>
-<html lang="es">
+<?= $this->extend('layouts/client_layaout'); ?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pago no aprobado</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+<?= $this->section('title') ?>
+Pago no aprobado
+<?= $this->endSection() ?>
 
-<body class="bg-light">
-    <div class="container mt-5">
-        <div class="alert alert-danger text-center">
-            <h4>Pago rechazado</h4>
-            <p>El pago no fue aprobado por la plataforma de PayPhone, inténtenlo más tarde.</p>
-            <a href="<?= base_url('/') ?>" class="btn btn-primary">Volver al Inicio</a>
-        </div>
-    </div>
-</body>
+<?= $this->section('content') ?>
+<div class="error-message">
+<h1 class="text-danger">Pago rechazado</h1>
+            <h3>El pago no fue aprobado por la plataforma de PayPhone, inténtenlo más tarde.</h3>
+            <a href="<?= base_url('/') ?>" class="btn btn-danger"><i class="fa-solid fa-arrow-left"></i> Volver al
+            Inicio</a>
+</div>
 
-</html>
+<?= $this->endSection() ?>

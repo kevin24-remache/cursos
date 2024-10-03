@@ -177,6 +177,10 @@ class PayphoneController extends BaseController
         $payment = $this->paymentsModel->find($paymentId);
 
         $result = $this->PayphoneConfirmService->confirmTransaction($id, $clientTransactionId);
+        if (!isset($result['data']['transactionStatus']) || !isset($result['data']['statusCode'])) {
+            // Redirige a la vista de error si alguna de las claves no existe
+            return view('client/errors/error_payphone');
+        }
         $transaction_status = $result['data']['transactionStatus'];
         $statusCode = $result['data']['statusCode'];
 

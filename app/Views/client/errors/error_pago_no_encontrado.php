@@ -1,21 +1,15 @@
-<!DOCTYPE html>
-<html lang="es">
+<?= $this->extend('layouts/client_layaout'); ?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pago No Encontrado</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+<?= $this->section('title') ?>
+Pago No Encontrado
+<?= $this->endSection() ?>
 
-<body class="bg-light">
-    <div class="container mt-5">
-        <div class="alert alert-danger text-center">
-            <h4>Error</h4>
-            <p>No se encontró un pago asociado a los datos proporcionados.</p>
-            <a href="<?= base_url('/') ?>" class="btn btn-primary">Volver al Inicio</a>
-        </div>
-    </div>
-</body>
+<?= $this->section('content') ?>
+<div class="error-message">
+    <h1 class="text-danger">Error</h1>
+    <h3>No se encontró un pago asociado a los datos proporcionados.</h3>
+    <a href="<?= base_url('/') ?>" class="btn btn-danger"><i class="fa-solid fa-arrow-left"></i> Volver al
+        Inicio</a>
+</div>
 
-</html>
+<?= $this->endSection() ?>

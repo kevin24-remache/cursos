@@ -21,7 +21,7 @@ Reporte de inscripciones
     <div class="content">
         <div class="info-box">
             <div class="table-responsive">
-                <table id="mis_cobros" class="table datatable">
+                <table id="proservi" class="table datatable">
                     <thead class="thead-light">
                         <tr>
                             <th class="exclude-view">Código</th>
