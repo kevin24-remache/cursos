@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/admin_layout'); ?>
 
 <?= $this->section('title') ?>
-Pagos con depósitos Pendientes
+Pagos con depósitos ingresados
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
@@ -9,7 +9,7 @@ Pagos con depósitos Pendientes
 
 <div class="content-wrapper">
     <div class="content-header sty-one">
-        <h1 class="text-black">Pagos con depósitos Pendientes</h1>
+        <h1 class="text-black">Pagos con depósitos ingresados</h1>
         <ol class="breadcrumb">
             <li><a href="#">Inicio</a></li>
             <li class="sub-bread"><i class="fa fa-angle-right"></i> Pagos con depósitos</li>
@@ -23,13 +23,13 @@ Pagos con depósitos Pendientes
                     <thead class="thead-light">
                         <tr>
                             <th>Código de pago</th>
-                            <th class="exclude-view">Cédula</th>
+                            <th>Cédula</th>
                             <th>Nombres</th>
                             <th>Evento</th>
                             <th>Categoría</th>
                             <th class="exclude-view">Dirección</th$>
                             <th class="exclude-view">Teléfono</th>
-                            <th class="exclude-view">Email</th>
+                            <th class="exclude-view">Correo</th>
                             <th>Estado de pago</th>
                             <th class="exclude-column">Acciones</th>
                         </tr>

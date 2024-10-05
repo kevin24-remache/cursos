@@ -24,13 +24,13 @@ Pagos con depósitos rechazados
                     <thead class="thead-light">
                         <tr>
                             <th>Código de pago</th>
-                            <th class="exclude-view">Cédula</th>
+                            <th>Cédula</th>
                             <th>Nombres</th>
                             <th>Evento</th>
                             <th>Categoría</th>
                             <th class="exclude-view">Dirección</th$>
                             <th class="exclude-view">Teléfono</th>
-                            <th class="exclude-view">Email</th>
+                            <th class="exclude-view">Correo</th>
                             <th>Estado de pago</th>
                             <th class="exclude-column">Acciones</th>
                         </tr>
