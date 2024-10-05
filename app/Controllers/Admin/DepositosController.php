@@ -2,6 +2,7 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Models\ConfigModel;
 use App\Models\DepositsModel;
 use App\Models\PaymentsModel;
 use App\Models\PaymentMethodsModel;
@@ -15,6 +16,7 @@ class DepositosController extends BaseController
     protected $depositsModel;
     protected $paymentsModel;
     protected $paymentMethodsModel;
+    protected $configModel;
     private function demoPDF($num_autorizacion)
     {
         try {
@@ -77,6 +79,7 @@ class DepositosController extends BaseController
         $this->depositsModel = new DepositsModel();
         $this->paymentsModel = new PaymentsModel();
         $this->paymentMethodsModel = new PaymentMethodsModel();
+        $this->configModel = new ConfigModel();
     }
 
     public function index($id_pago)
@@ -221,6 +224,8 @@ class DepositosController extends BaseController
         try {
             $paymentsModel = $this->paymentsModel;
             $payment_methodModel = $this->paymentMethodsModel;
+            // Obtener el valor de additional_charge
+            $adicional = $this->configModel->getAdditionalCharge();
             helper('ramdom');
             $uniqueCode = generateUniqueNumericCode(50);
 
@@ -253,26 +258,23 @@ class DepositosController extends BaseController
             }
             $cantidad = 1;
             $fecha_emision = Time::now();
-            $precio_unitario = 0.51;
-            $subtotal = $precio_unitario * $cantidad;
-            $valor_total = $precio_unitario * $cantidad;
-            $sub_total_0 = 0.00; // Si no hay subtotales exentos o a 0%
-            $subtotal_15 = $subtotal;
-            $iva_15 = $subtotal * 0.15;
-            // $total_pago = $subtotal + $iva_15;
-            $pago_final = $precio;
+            $precio_unitario = $adicional / 1.15;
+            $sub_total_0 = $precio-$adicional;
+            $subtotal = $sub_total_0 + $precio_unitario;
+            $subtotal_15 = $precio_unitario;
+            $iva_15 = $precio_unitario * 0.15;
             $total = $precio_unitario + $iva_15;
             $datosPago = [
                 "num_autorizacion" => $uniqueCode,
                 "date_time_payment" => $fecha_emision,
-                "payment_status" => 2,
-                "amount_pay" => $pago_final,
+                "payment_status" => PaymentStatus::Completado,
+                "amount_pay" => $precio,
                 "precio_unitario" => $precio_unitario,
                 "sub_total" => $subtotal,
                 "sub_total_0" => $sub_total_0,
                 "sub_total_15" => $subtotal_15,
                 "iva" => $iva_15,
-                "valor_total" => $valor_total,
+                "valor_total" => $precio_unitario,
                 "total" => $total,
                 "payment_method_id" => 1,
             ];
