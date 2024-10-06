@@ -27,8 +27,8 @@ Todas las inscripciones
                     <thead class="thead-light">
                         <tr>
                             <th class="exclude-view">Código</th>
-                            <th class="exclude-view">Cédula</th>
-                            <th>Usuario inscrito</th>
+                            <th>Cédula</th>
+                            <th>Nombres</th>
                             <th class="exclude-view">Dirección</th>
                             <th class="exclude-view">Teléfono</th>
                             <th>Email</th>
