@@ -53,7 +53,7 @@
         }
     </style>
     <main class="flex-grow-1" style="background-color: #d9d9d9;">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-home">
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #0C244B;">
             <div class="container-fluid">
                 <a class="navbar-brand ms-lg-4" href="">
                     <h4>PROSERVI-UEB-EP</h4>
@@ -190,7 +190,7 @@
                                         <div class="bg-home rounded-circle p-3 me-3">
                                             <i class="fa-solid fa-building text-white fs-4"></i>
                                         </div>
-                                        <h5 class="card-title mb-0">Oficina Principal (Softec APS)</h5>
+                                        <h5 class="card-title mb-0">Oficina Principal (Softec)</h5>
                                     </div>
                                     <ul class="list-unstyled">
                                         <li class="mb-2">
