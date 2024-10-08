@@ -595,7 +595,7 @@ class PaymentsModel extends Model
         registrations.email AS participante_email,
         registrations.event_name AS event_name,
         registrations.monto_category AS precio,
-        pago_linea.transaction_date AS fecha_transaction
+        pago_linea.transaction_date AS fecha_transaction,
         pago_linea.authorization_code
     ');
 
