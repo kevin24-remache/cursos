@@ -26,6 +26,7 @@ Recaudaciones en linea
                     <thead class="thead-light">
                         <tr>
                             <th class="exclude-view">Código</th>
+                            <th>N autorización</th>
                             <th>Cédula</th>
                             <th>Nombres</th>
                             <th class="exclude-view">Teléfono</th>
@@ -41,6 +42,7 @@ Recaudaciones en linea
                         <?php foreach ($users as $key => $user): ?>
                             <tr>
                                 <td><?= $user["codigo"] ?></td>
+                                <td><?= $user["authorization_code"] ?></td>
                                 <td><?= $user["participante_cedula"] ?></td>
                                 <td><?= $user["participante_name"] ?></td>
                                 <td><?= $user["participante_telefono"] ?></td>
