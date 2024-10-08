@@ -61,7 +61,7 @@ class ApiPrivadaService
             if ($response->getStatusCode() === 201) {
                 return json_decode($response->getBody(), true);
             } else {
-                log_message('warning', $response->getBody(), ['status' => $response->getStatusCode(), 'response' => $response->getBody()]);
+                log_message('warning', "Error en la API de registro: " . $response->getBody(), ['status' => $response->getStatusCode()]);
                 return null;
             }
         } catch (\Exception $e) {

@@ -341,16 +341,16 @@ class InscripcionController extends BaseController
                 $apiResponse = \App\Services\ApiPrivadaService::setDataUserCi($dataApi);
 
                 if (!$apiResponse) {
-                    return $this->response->setJSON(['success' => false, 'message' => 'Error al registrar en la API privada.']);
+                    return $this->response->setJSON(['error' => false, 'message' => 'Error al intentar registrarse']);
                 }
 
                 return $this->response->setJSON(['success' => true, 'message' => 'Usuario registrado correctamente.']);
             } catch (\Exception $e) {
                 log_message('warning', $e->getMessage(), ['status' => $e->getMessage()]);
-                return $this->response->setJSON(['success' => false, 'message' => 'Error al registrar el usuario']);
+                return $this->response->setJSON(['error' => false, 'message' => 'Error al registrar el usuario']);
             }
         } else {
-            return $this->response->setJSON(['success' => false, 'message' => $validation->getErrors()]);
+            return $this->response->setJSON(['error' => false, 'message' => $validation->getErrors()]);
         }
     }
 
