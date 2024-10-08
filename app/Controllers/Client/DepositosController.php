@@ -58,7 +58,7 @@ class DepositosController extends BaseController
             ],
             'comprobantePago' => [
                 'label' => 'Comprobante de pago',
-                'rules' => 'required',
+                'rules' => 'uploaded[comprobantePago]|max_size[comprobantePago,10240]|ext_in[comprobantePago,png,jpg,jpeg]',
             ],
         ]);
 
@@ -113,7 +113,7 @@ class DepositosController extends BaseController
             }
 
             // Validar si el archivo subido es una imagen
-            if (!$comprobantePago->isValid() || !in_array($comprobantePago->getMimeType(), ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'])) {
+            if (!$comprobantePago->isValid() || !in_array($comprobantePago->getMimeType(), ['image/jpg', 'image/jpeg', 'image/png'])) {
                 $db->transRollback();
                 return $this->redirectView(null, [['El archivo subido no es una imagen válida', 'warning']]);
             }
