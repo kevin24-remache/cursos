@@ -156,3 +156,18 @@ if (!function_exists('getRolesOptions')) {
         ];
     }
 }
+if (!function_exists('getListRolesOptions')) {
+    function getListRolesOptions($rol)
+    {
+        switch ($rol) {
+            case RolesOptions::AdminPrincipal:
+                return 'Admin Principal';
+            case RolesOptions::AdministradorDePagos:
+                return 'Administrador de Pagos';
+            case RolesOptions::AdministradorProservi:
+                return 'Usuario Proservi';
+            default:
+                return null; // Estado inválido
+        }
+    }
+}

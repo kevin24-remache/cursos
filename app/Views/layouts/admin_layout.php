@@ -203,7 +203,7 @@
                             </li>
                             <li
                                 class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::RECAUDACIONES_ONLINE)) ? 'active' : '' ?>">
-                                <a href="<?= base_url(relativePath: 'admin/recaudaciones/online'); ?>">En Linea</a>
+                                <a href="<?= base_url(relativePath: 'admin/recaudaciones/online'); ?>">En linea</a>
                             </li>
                         </ul>
                     </li>

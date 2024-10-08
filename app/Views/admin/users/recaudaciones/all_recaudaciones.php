@@ -30,7 +30,7 @@ Consolidado
                             <th>Cédula</th>
                             <th>Nombres</th>
                             <th class="exclude-view">Teléfono</th>
-                            <th class="exclude-view">Correo</th>
+                            <th>Correo</th>
                             <th class="exclude-view">Dirección</th>
                             <th>Evento</th>
                             <th>Monto</th>

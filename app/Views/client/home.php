@@ -53,7 +53,7 @@
         }
     </style>
     <main class="flex-grow-1" style="background-color: #d9d9d9;">
-        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #0C244B;">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-home">
             <div class="container-fluid">
                 <a class="navbar-brand ms-lg-4" href="">
                     <h4>PROSERVI-UEB-EP</h4>
@@ -64,6 +64,13 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                     <ul class="navbar-nav">
+                        <!-- Añadir este botón dentro del <ul class="navbar-nav"> junto a los otros botones -->
+                        <li class="nav-item">
+                            <button title="Puntos de Recaudación" class="btn btn-outline-light me-2 mb-2 mb-lg-0"
+                                data-bs-toggle="modal" data-bs-target="#modalPuntosRecaudacion" type="button">
+                                <i class="fa-solid fa-location-dot"></i> PUNTOS DE RECAUDACIÓN
+                            </button>
+                        </li>
                         <li class="nav-item">
                             <button title="Información Bancaria" class="btn btn-outline-light me-2 mb-2 mb-lg-0"
                                 data-bs-toggle="modal" data-bs-target="#modalCuentasBancarias" type="button"
@@ -154,6 +161,96 @@
         </div>
     </main>
 
+    <!-- Modal de Puntos de Recaudación -->
+    <div class="modal fade" id="modalPuntosRecaudacion" tabindex="-1" aria-labelledby="modalPuntosRecaudacionLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title" id="modalPuntosRecaudacionLabel">
+                        <i class="fa-solid fa-location-dot"></i> Puntos de Recaudación
+                    </h5>
+                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-4">
+                        <!-- Sucursal Principal -->
+                        <div class="col-md-12">
+                            <div class="card h-100 border-0 shadow">
+                                <div class="card-img-wrapper">
+                                    <img src="<?= base_url('assets/images/oficina_principal.jpeg') ?>"
+                                        alt="Oficina principal" class="card-img-top sucursal-img">
+                                    <div class="img-overlay">
+                                        <h6 class="text-white mb-0">Softec</h6>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="bg-home rounded-circle p-3 me-3">
+                                            <i class="fa-solid fa-building text-white fs-4"></i>
+                                        </div>
+                                        <h5 class="card-title mb-0">Oficina Principal (Softec)</h5>
+                                    </div>
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2">
+                                            <i class="fa-solid fa-location-arrow text-home me-2"></i>
+                                            C. 7 de mayo y C. olmedo, Guaranda
+                                        </li>
+                                        <li class="mb-2">
+                                            <i class="fa-solid fa-clock text-home me-2"></i>
+                                            Lunes a Viernes 8:00 - 18:00
+                                        </li>
+                                        <li>
+                                            <i class="fa-solid fa-phone text-home me-2"></i>
+                                            (+593) 989026071
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Sucursal Secundaria -->
+                        <!-- <div class="col-md-6">
+                            <div class="card h-100 border-0 shadow">
+                                <div class="card-img-wrapper">
+                                    <img src="/api/placeholder/800/400" alt="Sucursal Secundaria"
+                                        class="card-img-top sucursal-img">
+                                    <div class="img-overlay">
+                                        <h6 class="text-white mb-0">Sucursal Campus</h6>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="bg-success rounded-circle p-3 me-3">
+                                            <i class="fa-solid fa-building-columns text-white fs-4"></i>
+                                        </div>
+                                        <h5 class="card-title mb-0">Campus UEB</h5>
+                                    </div>
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2">
+                                            <i class="fa-solid fa-location-arrow text-success me-2"></i>
+                                            Av. Universitaria y Aurelio Espinoza Pólit
+                                        </li>
+                                        <li class="mb-2">
+                                            <i class="fa-solid fa-clock text-success me-2"></i>
+                                            Lunes a Viernes: 9:00 AM - 4:00 PM
+                                        </li>
+                                        <li>
+                                            <i class="fa-solid fa-phone text-success me-2"></i>
+                                            (593) 3-228-0948
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Modal de Cuentas Bancarias -->
     <div class="modal fade" id="modalCuentasBancarias" tabindex="-1" aria-labelledby="modalCuentasBancariasLabel"
         aria-hidden="true">
@@ -517,8 +614,10 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-dark text-white">
-                    <h5 class="modal-title" id="modalVoucherLabel"><i class="fa-solid fa-file-pdf"></i> Consultar Voucher</h5>
-                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title" id="modalVoucherLabel"><i class="fa-solid fa-file-pdf"></i> Consultar
+                        Voucher</h5>
+                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="formVoucher" method="GET">

@@ -44,7 +44,7 @@ Usuarios
                                 <td><?= $user["phone_number"] ?></td>
                                 <td><?= $user["email"] ?></td>
                                 <td><?= $user["address"] ?></td>
-                                <td><?= $user["rol_id"] ?></td>
+                                <td><?= getListRolesOptions($user["rol_id"]) ?></td>
                                 <td>
                                     <div class="d-flex">
 
@@ -333,7 +333,7 @@ Usuarios
                             </div>
 
                             <div class="col">
-                                <label>Nombres</label>
+                                <label>Nombre</label>
                                 <div class="input-group">
                                     <div class="input-group-addon"><i class="fa fa-user-o" aria-hidden="true"></i></div>
 
@@ -349,7 +349,7 @@ Usuarios
                         </div>
                         <div class="row mb-3">
                             <div class="col">
-                                <label>Apellidos</label>
+                                <label>Apellido</label>
                                 <div class="input-group">
                                     <div class="input-group-addon"><i class="fa fa-user" aria-hidden="true"></i></div>
                                     <input type="text" name="last_name" class="form-control"
