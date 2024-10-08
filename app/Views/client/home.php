@@ -155,6 +155,84 @@
                                 max-width: 50%;
                             }
                         }
+
+                        .modal-lg {
+                            max-width: 900px;
+                        }
+
+                        .card {
+                            transition: transform 0.2s ease-in-out;
+                            overflow: hidden;
+                        }
+
+                        .card:hover {
+                            transform: translateY(-5px);
+                        }
+
+                        .rounded-circle {
+                            width: 50px;
+                            height: 50px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        }
+
+                        .card-img-wrapper {
+                            position: relative;
+                            overflow: hidden;
+                            height: 200px;
+                        }
+
+                        .sucursal-img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                            transition: transform 0.3s ease;
+                        }
+
+                        .card:hover .sucursal-img {
+                            transform: scale(1.1);
+                        }
+
+                        .img-overlay {
+                            position: absolute;
+                            bottom: 0;
+                            left: 0;
+                            right: 0;
+                            background: linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%);
+                            padding: 20px;
+                            transition: all 0.3s ease;
+                        }
+
+                        .card:hover .img-overlay {
+                            background: linear-gradient(0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.1) 100%);
+                        }
+
+                        .modal-content {
+                            border-radius: 15px;
+                            overflow: hidden;
+                        }
+
+                        .card {
+                            border-radius: 10px;
+                        }
+
+                        .list-unstyled li {
+                            padding: 8px 0;
+                            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+                        }
+
+                        .list-unstyled li:last-child {
+                            border-bottom: none;
+                        }
+
+                        .text-home {
+                            color: #0C244B !important;
+                        }
+
+                        .bg-home {
+                            background-color: #0C244B !important;
+                        }
                     </style>
                 </div>
             </section>
