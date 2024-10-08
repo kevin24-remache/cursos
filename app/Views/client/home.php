@@ -190,7 +190,7 @@
                                         <div class="bg-home rounded-circle p-3 me-3">
                                             <i class="fa-solid fa-building text-white fs-4"></i>
                                         </div>
-                                        <h5 class="card-title mb-0">Oficina Principal (Softec)</h5>
+                                        <h5 class="card-title mb-0">Oficina Principal (Softec APS)</h5>
                                     </div>
                                     <ul class="list-unstyled">
                                         <li class="mb-2">

@@ -406,8 +406,8 @@
 }
 
 .text-home{
-    color: #0C244B;
+    color: #0C244B !important;
 }
 .bg-home{
-    background-color: #0C244B;
+    background-color: #0C244B !important;
 }
