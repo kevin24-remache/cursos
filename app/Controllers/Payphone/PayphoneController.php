@@ -101,7 +101,7 @@ class PayphoneController extends BaseController
                     'service' => 0,
                     'tip' => 0,
                     'reference' => $result['event_name'] ?? 'Pago de inscripción',
-                    'clientTransactionId' => $depositoCedula
+                    'clientTransactionId' => $result['payment_id']. $depositoCedula
                 ]
             ]);
         } catch (\Exception $e) {
