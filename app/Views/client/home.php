@@ -642,13 +642,16 @@
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="montoDeposito" class="form-label">Monto del Depósito</label>
+                                    <label for="montoDeposito" class="form-label"><strong style="color: #ff416c;">Monto
+                                            a depositar <span class="text-danger">*</span></strong></label>
                                     <div class="input-group">
                                         <div class="input-group-text"><i class="fas fa-dollar-sign"></i></div>
                                         <input type="text" class="form-control" id="montoDeposito" name="montoDeposito"
                                             value="<?= (isset($last_data) && ($last_action ?? null) == 'insert') ? display_data($last_data, 'montoDeposito') : '' ?>"
                                             readonly>
                                     </div>
+                                    <p class="text-danger mt-2"><strong>Por favor, asegúrate de depositar exactamente
+                                            esta cantidad para evitar problemas con tu inscripción.</strong></p>
                                     <p id="mensaje_estado" style="display: none;">Estado: <span
                                             class="text-danger"></span></p>
                                     <p id="mensaje_original" style="display: none;">Monto original: <span
