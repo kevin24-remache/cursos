@@ -204,6 +204,7 @@ class UsersController extends BaseController
                         'rules' => 'required|in_list[' . implode(',', [
                             RolesOptions::AdminPrincipal,
                             RolesOptions::AdministradorDePagos,
+                            RolesOptions::AdministradorProservi,
                         ]) . ']',
                     ]
                 ]
