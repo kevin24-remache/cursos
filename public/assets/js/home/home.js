@@ -253,13 +253,21 @@ document.addEventListener("DOMContentLoaded", function () {
         const diasRestantes = Math.ceil(diferenciaMilisegundos / (1000 * 60 * 60 * 24));
 
         Swal.fire({
-          title: "<strong>Registro Exitoso!</strong>",
+          title: "<strong>¡Registro Exitoso!</strong>",
           icon: "success",
           html: `
-              <p>Te registraste para el evento: </br><b>${data.eventName}</b></p>
-              <p>Tu código de pago es: <b>${data.codigoPago}</b></p>
-              <p>Tienes <b>${diasRestantes}</b> días para realizar el pago</p>
-              <p>Comprobante de registro enviado a : <b>${data.email}</b></p>
+              <p style="color: #0C244B;">Te has registrado para el evento: </br><b>${data.eventName}</b></p>
+               <!--<p>Tienes <b>${diasRestantes}</b> días para realizar el pago.</p>-->
+              <p style="color: #0C244B;">Comprobante de registro enviado a: <b>${data.email}</b></p>
+              <p><strong style="color: #0C244B;">Tu código de pago es:</strong></p>
+              <h2 style="color: #0C244B; border: 2px solid #ff416c; padding: 10px; display: inline-block; border-radius: 30px;">
+                ${data.codigoPago}
+              </h2>
+              <hr>
+              <h3 style="color: #ff416c;">¡IMPORTANTE!</h3>
+              <p><strong style="color: #ff416c;">Tu inscripción no estará completa hasta que realices el pago.</strong></p>
+              <p>Si eliges <b>pago por depósito bancario</b>, deberás subir el comprobante de pago en la plataforma para que sea validado.</p>
+              <p><strong style="color: #ff416c;">¡Asegúrate de completar este paso para confirmar tu inscripción!</strong></p>
             `,
           showCloseButton: true,
           confirmButtonText: 'Entendido',
