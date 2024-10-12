@@ -127,6 +127,9 @@ class PayphoneController extends BaseController
             // Extraer el paymentId antes de los diez primeros ceros
             if (preg_match('/^(\d+?)0000000000/', $clientTransactionId, $matches)) {
                 $paymentId = $matches[1]; // Aquí obtenemos el payment_id extraído
+
+                // Quitar los primeros 10 ceros del clientTransactionId
+                $clientTransactionIdSinCeros = preg_replace('/0000000000/', '', $clientTransactionId, 1);
             } else {
                 // Si no se encuentra el patrón esperado, mostramos un error
                 return view('client/errors/error_pago_no_encontrado');
@@ -138,7 +141,9 @@ class PayphoneController extends BaseController
                 return view('client/errors/error_pago_no_encontrado');
             }
 
-            $result = $this->PayphoneConfirmService->confirmTransaction($id, $clientTransactionId);
+            // Ahora enviamos el $clientTransactionId sin los ceros al servicio
+            $result = $this->PayphoneConfirmService->confirmTransaction($id, $clientTransactionIdSinCeros);
+
             $transaction_status = $result['data']['transactionStatus'];
             $statusCode = $result['data']['statusCode'];
 
@@ -170,7 +175,7 @@ class PayphoneController extends BaseController
                     ];
                     $this->pagosEnLineaModel->insert($data);
 
-                    return $this->redirectView(null, null, null, $id, $clientTransactionId);
+                    return $this->redirectView(null, null, null, $id, $clientTransactionIdSinCeros);
                 } else {
                     // Hubo un error al aprobar el pago
                     return view('client/errors/error_aprobacion_pago', ['message' => $approvalResult['message']]);
@@ -249,6 +254,9 @@ class PayphoneController extends BaseController
             // Extraer el paymentId antes de los diez primeros ceros
             if (preg_match('/^(\d+?)0000000000/', $clientTransactionId, $matches)) {
                 $paymentId = $matches[1]; // Aquí obtenemos el payment_id extraído
+
+                // Quitar los primeros 10 ceros del clientTransactionId
+                $clientTransactionIdSinCeros = preg_replace('/0000000000/', '', $clientTransactionId, 1);
             } else {
                 // Si no se encuentra el patrón esperado, mostramos un error
                 return view('client/errors/error_pago_no_encontrado');
@@ -260,7 +268,8 @@ class PayphoneController extends BaseController
                 return view('client/errors/error_pago_no_encontrado');
             }
 
-            $result = $this->PayphoneConfirmService->confirmTransaction($id, $clientTransactionId);
+            // Ahora enviamos el $clientTransactionId sin los ceros al servicio
+            $result = $this->PayphoneConfirmService->confirmTransaction($id, $clientTransactionIdSinCeros);
 
             // Validar que $result contenga 'data' antes de intentar acceder a sus claves
             if (isset($result['data'])) {
@@ -296,7 +305,7 @@ class PayphoneController extends BaseController
                         ];
                         $this->pagosEnLineaModel->insert($data);
 
-                        return $this->redirectView(null, null, null, $id, $clientTransactionId);
+                        return $this->redirectView(null, null, null, $id, $clientTransactionIdSinCeros);
                     } else {
                         // Hubo un error al aprobar el pago
                         return view('client/errors/error_aprobacion_pago', ['message' => $approvalResult['message']]);
