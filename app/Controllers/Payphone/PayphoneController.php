@@ -88,7 +88,8 @@ class PayphoneController extends BaseController
 
             $token = $this->payphoneService->getToken();
             $store = $this->payphoneService->getStore();
-
+            // Generar clientTransactionId
+            $clientTransactionId = $payment_id . '0000000000' . $depositoCedula; // Mantén el formato con los ceros
             return $this->response->setJSON([
                 'success' => true,
                 'data' => [
@@ -101,7 +102,7 @@ class PayphoneController extends BaseController
                     'service' => 0,
                     'tip' => 0,
                     'reference' => $result['event_name'] ?? 'Pago de inscripción',
-                    'clientTransactionId' => $result['payment_id']. $depositoCedula
+                    'clientTransactionId' => $clientTransactionId
                 ]
             ]);
         } catch (\Exception $e) {
@@ -122,7 +123,14 @@ class PayphoneController extends BaseController
             return view('client/errors/error_datos_incompletos');
         }
 
-        $paymentId = substr($clientTransactionId, 0, 1);
+        // Extraer el paymentId antes de los diez primeros ceros
+        if (preg_match('/^(\d+?)0000000000/', $clientTransactionId, $matches)) {
+            $paymentId = $matches[1]; // Aquí obtenemos el payment_id extraído
+        } else {
+            // Si no se encuentra el patrón esperado, mostramos un error
+            return view('client/errors/error_pago_no_encontrado');
+        }
+
         $payment = $this->paymentsModel->find($paymentId);
 
         if (!$payment) {
