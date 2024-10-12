@@ -218,6 +218,8 @@ Inscritos en <?= $event['event_name'] ?>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
 
+    bindEditButtonEvents();
+    bindDeleteButtonEvents();
     const PaymentStatus = Object.freeze({
         Pendiente: 1,
         Completado: 2,
