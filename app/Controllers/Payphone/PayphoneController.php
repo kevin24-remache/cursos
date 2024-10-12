@@ -116,66 +116,74 @@ class PayphoneController extends BaseController
 
     public function respuesta()
     {
-        $id = $this->request->getGet('id') ?? null;
-        $clientTransactionId = $this->request->getGet('clientTransactionId') ?? null;
+        try {
+            $id = $this->request->getGet('id') ?? null;
+            $clientTransactionId = $this->request->getGet('clientTransactionId') ?? null;
 
-        if (!$id || !$clientTransactionId) {
-            return view('client/errors/error_datos_incompletos');
-        }
-
-        // Extraer el paymentId antes de los diez primeros ceros
-        if (preg_match('/^(\d+?)0000000000/', $clientTransactionId, $matches)) {
-            $paymentId = $matches[1]; // Aquí obtenemos el payment_id extraído
-        } else {
-            // Si no se encuentra el patrón esperado, mostramos un error
-            return view('client/errors/error_pago_no_encontrado');
-        }
-
-        $payment = $this->paymentsModel->find($paymentId);
-
-        if (!$payment) {
-            return view('client/errors/error_pago_no_encontrado');
-        }
-
-        $result = $this->PayphoneConfirmService->confirmTransaction($id, $clientTransactionId);
-        $transaction_status = $result['data']['transactionStatus'];
-        $statusCode = $result['data']['statusCode'];
-
-        if ($result['success'] && ($transaction_status == 'Approved' || $statusCode == 2)) {
-            // Utilizamos el PaymentApprovalService para aprobar el pago
-            $userId = null; // Asumimos que el ID del usuario está en la sesión o en el pago
-            $approvalResult = $this->paymentApprovalService->approvePayment($paymentId, $userId,'3');
-
-            if ($approvalResult['success']) {
-                // El pago se aprobó correctamente
-                $data = [
-                    'status_code' => $result['data']['statusCode'],
-                    'payment_id' => $paymentId,
-                    'transaction_status' => $result['data']['transactionStatus'],
-                    'client_transaction_id' => $result['data']['clientTransactionId'],
-                    'authorization_code' => $result['data']['authorizationCode'] ?? null,
-                    'transaction_id' => $result['data']['transactionId'],
-                    'email' => $result['data']['email'] ?? null,
-                    'phone_number' => $result['data']['phoneNumber'] ?? null,
-                    'document' => $result['data']['document'] ?? null,
-                    'amount' => $result['data']['amount'],
-                    'card_type' => $result['data']['cardType'] ?? null,
-                    'card_brand' => $result['data']['cardBrand'] ?? null,
-                    'message' => $result['data']['message'] ?? null,
-                    'message_code' => $result['data']['messageCode'] ?? null,
-                    'currency' => $result['data']['currency'],
-                    'transaction_date' => $result['data']['date'],
-                    'created_at' => date('Y-m-d H:i:s'),
-                ];
-                $this->pagosEnLineaModel->insert($data);
-
-                return $this->redirectView(null, null, null, $id, $clientTransactionId);
-            } else {
-                // Hubo un error al aprobar el pago
-                return view('client/errors/error_aprobacion_pago', ['message' => $approvalResult['message']]);
+            if (!$id || !$clientTransactionId) {
+                return view('client/errors/error_datos_incompletos');
             }
-        } else {
-            return view('client/errors/error_pago_rechazado');
+
+            // Extraer el paymentId antes de los diez primeros ceros
+            if (preg_match('/^(\d+?)0000000000/', $clientTransactionId, $matches)) {
+                $paymentId = $matches[1]; // Aquí obtenemos el payment_id extraído
+            } else {
+                // Si no se encuentra el patrón esperado, mostramos un error
+                return view('client/errors/error_pago_no_encontrado');
+            }
+
+            $payment = $this->paymentsModel->find($paymentId);
+
+            if (!$payment) {
+                return view('client/errors/error_pago_no_encontrado');
+            }
+
+            $result = $this->PayphoneConfirmService->confirmTransaction($id, $clientTransactionId);
+            $transaction_status = $result['data']['transactionStatus'];
+            $statusCode = $result['data']['statusCode'];
+
+            if ($result['success'] && ($transaction_status == 'Approved' || $statusCode == 2)) {
+                // Utilizamos el PaymentApprovalService para aprobar el pago
+                $userId = null; // Asumimos que el ID del usuario está en la sesión o en el pago
+                $approvalResult = $this->paymentApprovalService->approvePayment($paymentId, $userId, '3');
+
+                if ($approvalResult['success']) {
+                    // El pago se aprobó correctamente
+                    $data = [
+                        'status_code' => $result['data']['statusCode'],
+                        'payment_id' => $paymentId,
+                        'transaction_status' => $result['data']['transactionStatus'],
+                        'client_transaction_id' => $result['data']['clientTransactionId'],
+                        'authorization_code' => $result['data']['authorizationCode'] ?? null,
+                        'transaction_id' => $result['data']['transactionId'],
+                        'email' => $result['data']['email'] ?? null,
+                        'phone_number' => $result['data']['phoneNumber'] ?? null,
+                        'document' => $result['data']['document'] ?? null,
+                        'amount' => $result['data']['amount'],
+                        'card_type' => $result['data']['cardType'] ?? null,
+                        'card_brand' => $result['data']['cardBrand'] ?? null,
+                        'message' => $result['data']['message'] ?? null,
+                        'message_code' => $result['data']['messageCode'] ?? null,
+                        'currency' => $result['data']['currency'],
+                        'transaction_date' => $result['data']['date'],
+                        'created_at' => date('Y-m-d H:i:s'),
+                    ];
+                    $this->pagosEnLineaModel->insert($data);
+
+                    return $this->redirectView(null, null, null, $id, $clientTransactionId);
+                } else {
+                    // Hubo un error al aprobar el pago
+                    return view('client/errors/error_aprobacion_pago', ['message' => $approvalResult['message']]);
+                }
+            } else {
+                return view('client/errors/error_pago_rechazado');
+            }
+        } catch (\Exception $e) {
+            // Registrar el error en el log
+            log_message('error', 'Error en respuesta: ' . $e->getMessage());
+
+            // Mostrar una vista de error general
+            return view('client/errors/error_payphone');
         }
     }
 
