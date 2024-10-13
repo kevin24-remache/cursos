@@ -143,7 +143,6 @@ Pagos
 <?= $this->section('scripts') ?>
 
 <script>
-    $(document).ready(function () {
         $(".btn-pagar").click(function () {
             var fila = $(this).closest("tr");
             var ic = fila.data("ic");
@@ -164,7 +163,6 @@ Pagos
             $("#categoria").val(categoria);
             $("#precio").val(precio);
         });
-    });
 </script>
 
 <?= $this->endSection() ?>
