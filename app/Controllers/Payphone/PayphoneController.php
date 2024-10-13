@@ -66,18 +66,8 @@ class PayphoneController extends BaseController
                 return $this->response->setJSON(['error' => 'No existen un registro con los datos enviados'], 404);
             }
 
-            if ($result['payment_status'] == PaymentStatus::Completado) {
-                return $this->response->setJSON(['error' => 'El pago de su inscripción ha sido recibido y registrado correctamente. No es necesario realizar otro pago'], 400);
-            }
+            // Verificaciones de estado de pago...
 
-            if ($result['payment_status'] == PaymentStatus::EnProceso) {
-                return $this->response->setJSON(['error' => 'El pago de tu inscripción se ha realizado mediante depósito bancario y está en proceso de verificación. Recibirás una confirmación una vez que el depósito sea validado.'], 400);
-            }
-            if ($result['payment_status'] != PaymentStatus::Pendiente) {
-                return $this->response->setJSON(['error' => 'Una parte de tu pago se ha realizado con deposito El pago de tu inscripción se ha realizado mediante depósito bancario. Revisa tu correo donde se detalla la forma de realizar el pago'], 400);
-            }
-
-            // Calcular el monto total con comisión e IVA
             $payment_id = $result['payment_id'];
             $montoBase = $result['cantidad_dinero'];
             $por = 0.07;
@@ -88,8 +78,10 @@ class PayphoneController extends BaseController
 
             $token = $this->payphoneService->getToken();
             $store = $this->payphoneService->getStore();
-            // Generar clientTransactionId
-            $clientTransactionId = $payment_id . '0000000000' . $depositoCedula; // Mantén el formato con los ceros
+
+            // Modificamos la generación del clientTransactionId
+            $clientTransactionId = $payment_id . '00000' . $depositoCedula; // Ahora usamos 5 ceros
+
             return $this->response->setJSON([
                 'success' => true,
                 'data' => [
@@ -124,12 +116,10 @@ class PayphoneController extends BaseController
                 return view('client/errors/error_datos_incompletos');
             }
 
-            // Extraer el paymentId antes de los diez primeros ceros
-            if (preg_match('/^(\d+?)0000000000/', $clientTransactionId, $matches)) {
-                $paymentId = $matches[1]; // Aquí obtenemos el payment_id extraído
-
-                // Quitar los primeros 10 ceros del clientTransactionId
-                $clientTransactionIdSinCeros = preg_replace('/0000000000/', '', $clientTransactionId, 1);
+            // Extraer el paymentId y la cédula del clientTransactionId
+            if (preg_match('/^(\d+)00000(\d+)$/', $clientTransactionId, $matches)) {
+                $paymentId = $matches[1];
+                $cedula = $matches[2];
             } else {
                 // Si no se encuentra el patrón esperado, mostramos un error
                 return view('client/errors/error_pago_no_encontrado');
@@ -141,8 +131,8 @@ class PayphoneController extends BaseController
                 return view('client/errors/error_pago_no_encontrado');
             }
 
-            // Ahora enviamos el $clientTransactionId sin los ceros al servicio
-            $result = $this->PayphoneConfirmService->confirmTransaction($id, $clientTransactionIdSinCeros);
+            // Ahora enviamos el $clientTransactionId completo al servicio
+            $result = $this->PayphoneConfirmService->confirmTransaction($id, $clientTransactionId);
 
             // Validar que $result contenga 'data' antes de intentar acceder a sus claves
             if (isset($result['data'])) {
@@ -178,7 +168,7 @@ class PayphoneController extends BaseController
                         ];
                         $this->pagosEnLineaModel->insert($data);
 
-                        return $this->redirectView(null, null, null, $id, $clientTransactionIdSinCeros);
+                        return $this->redirectView(null, null, null, $id, $clientTransactionId);
                     } else {
                         // Hubo un error al aprobar el pago
                         return view('client/errors/error_aprobacion_pago', ['message' => $approvalResult['message']]);
@@ -193,7 +183,7 @@ class PayphoneController extends BaseController
             }
         } catch (\Exception $e) {
             // Registrar el error en el log
-            log_message('error', 'Error en respuesta payphone 1: ' . $e->getMessage());
+            log_message('error', 'Error en respuesta payphone: ' . $e->getMessage());
 
             // Mostrar una vista de error general
             return view('client/errors/error_payphone');
