@@ -91,15 +91,37 @@ class InscripcionController extends BaseController
         // Validar si el cuerpo de la solicitud contiene el campo 'cedula'
         if (is_null($data) || !isset($data->cedula) || empty($data->cedula)) {
             return $this->response->setJSON([
-                'status' => 'error',
-                'message' => 'Cédula requerida',
+                'status' => 'validation',
+                'message' => 'Cédula o RUC requerido',
                 'code' => 400
             ], 400);
         }
 
         $cedula = trim($data->cedula);
+        $ipAddress = $this->request->getIPAddress(); // Capturar la dirección IP del cliente
 
-        // Usar el servicio para obtener los datos del usuario
+        // Validar que la cédula sea numérica
+        $validation = \Config\Services::validation();
+        $validation->setRules([
+            'cedula' => 'required|numeric' // Regla para validar que sea numérico
+        ]);
+
+        // Ejecutar la validación y revisar si falló
+        if (!$validation->run(['cedula' => $cedula])) {
+            // Obtener el mensaje de error generado automáticamente por CodeIgniter
+            $errorMessage = $validation->getError('cedula');
+
+            // Registrar el error en el log con la dirección IP del cliente
+            log_message('warning', "Validación fallida: Cédula no numérica ingresada desde IP: {$ipAddress}");
+
+            return $this->response->setJSON([
+                'status' => 'validation',
+                'message' => $errorMessage,  // Usar el mensaje de error de CodeIgniter
+                'code' => 400
+            ], 400);
+        }
+
+        // Usar el servicio para obtener los datos del usuario si la cédula es válida
         $persona = $this->apiPrivadaService->getDataUser($cedula);
 
         // Si la persona existe y tiene éxito
@@ -109,7 +131,7 @@ class InscripcionController extends BaseController
             // Verificar si el email está vacío o es inválido
             $email = $personaData['email'];
             $phone = $personaData['phone'];
-            if ($email == '@' || !$email|| !$phone) {
+            if ($email == '@' || !$email || !$phone) {
                 return $this->response->setJSON([
                     'status' => 'warning',
                     'message' => 'Usuario encontrado pero email vació',

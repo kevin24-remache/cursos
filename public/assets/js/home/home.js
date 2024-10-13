@@ -33,6 +33,8 @@ document.addEventListener("DOMContentLoaded", function () {
         return { status: 'success', persona: data.persona };
       } else if (data.status === 'warning') {
         return { status: 'warning', persona: data.persona };
+      } else if (data.status === 'validation') {
+        return { status: 'validation', message: data.message};
       } else {
         return { status: 'error', persona: null };
       }
@@ -67,6 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("nombres").value = persona.nombres;
     document.getElementById("apellidos").value = persona.apellidos;
     document.getElementById("telefono").value = persona.phone;
+    document.getElementById("direccion").value = persona.address;
     document.getElementById("email").value = persona.email;
     const gender = persona.gender;
     document.getElementById("gender").value = (gender === 'MASCULINO') ? '0' : (gender === 'FEMENINO') ? '1' : '';
@@ -212,6 +215,15 @@ document.addEventListener("DOMContentLoaded", function () {
       llenarCamposPersonaRegistro(userResponse.persona);
       $("#modalInscripcion").modal("hide");
       $("#modalRegistroUsuario").modal("show");
+    } else if (userResponse.status === 'validation') {
+      $("#modalInscripcion").modal("hide");
+      Swal.fire({
+        title: "Error",
+        text: userResponse.message,
+        icon: "error",
+        confirmButtonText: "Entendido",
+      });
+      return;
     } else {
       document.getElementById("numeroCedulaRegistro").value = numeroCedula;
       $("#modalInscripcion").modal("hide");
