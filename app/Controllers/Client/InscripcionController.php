@@ -108,7 +108,8 @@ class InscripcionController extends BaseController
 
             // Verificar si el email está vacío o es inválido
             $email = $personaData['email'];
-            if ($email == '@' || !$email) {
+            $phone = $personaData['phone'];
+            if ($email == '@' || !$email|| !$phone) {
                 return $this->response->setJSON([
                     'status' => 'warning',
                     'message' => 'Usuario encontrado pero email vació',
@@ -117,8 +118,9 @@ class InscripcionController extends BaseController
                         'id' => $personaData['identification'],
                         'nombres' => $personaData['name'],
                         'apellidos' => $personaData['surname'],
-                        'email' => null,
+                        'email' => $email,
                         'phone' => $personaData['phone'],
+                        'address' => $personaData['address'],
                         'gender' => $personaData['gender'],
                     ]
                 ], 200);
