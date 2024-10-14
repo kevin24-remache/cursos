@@ -218,6 +218,17 @@ class InscripcionController extends BaseController
             return $this->response->setJSON(['error' => true, 'message' => 'Evento no encontrado']);
         }
 
+        // **Validar si ya está inscrito en el mismo evento y categoría**
+        $registrationModel = new RegistrationsModel();
+        $existingRegistration = $registrationModel->where('ic', $cedula)
+            ->where('event_cod', $eventoId)
+            ->where('cat_id', $catId)
+            ->first();
+
+        if ($existingRegistration) {
+            return $this->response->setJSON(['error' => true, 'message' => 'Ya estás inscrito en esta categoría, realiza el pago de tu inscripción']);
+        }
+
         // Generar código de pago y calcular fecha límite
         $codigoPago = $this->generarCodigoPagoUnico();
         $fechaInscripcion = Time::now();
