@@ -152,7 +152,7 @@ $routes->get('pdf/(:hash)', 'Payments\InscripcionesController::showPDF/$1');
 $routes->post('payphone', 'Payphone\PayphoneController::index');
 $routes->get('respuesta', 'Payphone\PayphoneController::respuesta');
 $routes->get('respuesta_manual', 'Payphone\PayphoneController::respuesta_manual');
-$routes->get('completado/(:num)/(:num)', 'Payphone\PayphoneController::completado/$1/$2');
+$routes->get('completado/(:num)/(:segment)', 'Payphone\PayphoneController::completado/$1/$2');
 
 //Client
 $routes->get('/', 'Client\ClientController::index');

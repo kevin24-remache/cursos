@@ -192,7 +192,13 @@ class PayphoneController extends BaseController
 
     public function completado($id, $clientTransactionId)
     {
-        $paymentId = substr($clientTransactionId, 0, 1);
+        // Extraer el paymentId y la cédula del clientTransactionId
+        if (preg_match('/^(\d+)-(\d+)-(\d+)$/', $clientTransactionId, $matches)) {
+            $paymentId = $matches[1];
+        } else {
+            // Si no se encuentra el patrón esperado, mostramos un error
+            return view('client/errors/error_pago_no_encontrado');
+        }
         $payment = $this->paymentsModel->find($paymentId);
 
         $result = $this->PayphoneConfirmService->confirmTransaction($id, $clientTransactionId);
