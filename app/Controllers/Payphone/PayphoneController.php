@@ -79,8 +79,7 @@ class PayphoneController extends BaseController
             $token = $this->payphoneService->getToken();
             $store = $this->payphoneService->getStore();
 
-            // Modificamos la generación del clientTransactionId
-            $clientTransactionId = $payment_id . '00000' . $depositoCedula; // Ahora usamos 5 ceros
+            $clientTransactionId = $payment_id . '-' . $depositoCedula . '-' . time();
 
             return $this->response->setJSON([
                 'success' => true,
@@ -117,9 +116,10 @@ class PayphoneController extends BaseController
             }
 
             // Extraer el paymentId y la cédula del clientTransactionId
-            if (preg_match('/^(\d+)00000(\d+)$/', $clientTransactionId, $matches)) {
+            if (preg_match('/^(\d+)-(\d+)-(\d+)$/', $clientTransactionId, $matches)) {
                 $paymentId = $matches[1];
                 $cedula = $matches[2];
+                $timestamp = $matches[3];  // Timestamp que también puedes usar si lo necesitas
             } else {
                 // Si no se encuentra el patrón esperado, mostramos un error
                 return view('client/errors/error_pago_no_encontrado');
