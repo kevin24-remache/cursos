@@ -84,6 +84,7 @@ $routes->group('admin', static function ($routes) {
         $inscritos->post('delete', 'Admin\InscripcionesController::delete');
         $inscritos->get('trash', 'Admin\RegistrationsController::trash');
         $inscritos->post('restore', 'Admin\RegistrationsController::restore');
+        $inscritos->post('deleteAll', 'Admin\RegistrationsController::deleteAll');
     });
     $routes->group('recaudaciones', static function ($recaudaciones){
         $recaudaciones->get('/', 'Admin\UsersController::recaudaciones');

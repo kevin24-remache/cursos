@@ -20,6 +20,16 @@ Inscripciones eliminadas
     </div>
     <div class="content">
         <div class="info-box">
+            <!-- Botón para eliminar todos los registros eliminados -->
+            <div class="d-flex justify-content-end">
+                <button class="js-mytooltip btn btn-outline-danger m-1" data-toggle="modal" data-target="#delete"
+                    data-mytooltip-custom-class="align-center" data-mytooltip-direction="left"
+                    data-mytooltip-theme="danger" data-mytooltip-content="Eliminar todos los registros permanentemente"
+                    title="Eliminar todos los registros permanentemente">
+
+                    <i class="fa fa-ban fa-lg" aria-hidden="true"></i>
+                </button>
+            </div>
             <div class="table-responsive">
                 <table id="inscripcionesTrash" class="table datatable">
                     <thead class="thead-light">
@@ -82,8 +92,8 @@ Inscripciones eliminadas
                         <div class="row mb-3">
                             <div class="col">
                                 <p>Estas seguro de restaurar la inscripción del usuario : <strong
-                                id="text-user-restore"></strong><br/> para el evento : <strong
-                                        id="text-event-restore"></strong> <br/> con el monto de : <strong
+                                        id="text-user-restore"></strong><br /> para el evento : <strong
+                                        id="text-event-restore"></strong> <br /> con el monto de : <strong
                                         id="text-category-restore"></strong></p>
                             </div>
                         </div>
@@ -97,6 +107,32 @@ Inscripciones eliminadas
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="delete" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content rounded-2">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Eliminar</h4>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="<?= base_url('admin/inscritos/deleteAll') ?>" method="post" id="formDelete" >
+                        <div class="row text-center">
+                            <div class="col">
+                                <p> <strong class="text-danger">¿Estas seguro de eliminar todos los registros permanentemente ?</strong></p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button form="formDelete" type="submit" class="btn btn-danger">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -105,17 +141,17 @@ Inscripciones eliminadas
 
 <?= $this->section('scripts') ?>
 <script>
-        $('.btn-restore').on('click', function () {
-            var eventName = $(this).data('event-name');
-            var categoryName = $(this).data('category-name');
-            var userName = $(this).data('user-name');
-            var inscritoId = $(this).data('inscrito-id');
+    $('.btn-restore').on('click', function () {
+        var eventName = $(this).data('event-name');
+        var categoryName = $(this).data('category-name');
+        var userName = $(this).data('user-name');
+        var inscritoId = $(this).data('inscrito-id');
 
-            $('#text-event-restore').text(eventName);
-            $('#text-category-restore').text(categoryName);
-            $('#text-user-restore').text(userName);
-            $('#id_inscrito_restore').val(inscritoId);
-        });
+        $('#text-event-restore').text(eventName);
+        $('#text-category-restore').text(categoryName);
+        $('#text-user-restore').text(userName);
+        $('#id_inscrito_restore').val(inscritoId);
+    });
 
 </script>
 <?= $this->endSection() ?>

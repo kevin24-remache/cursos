@@ -301,8 +301,9 @@ class InscripcionesController extends BaseController
                     return $this->redirectViewInscripcion(null, [['La inscripción no se puede eliminar por que ya esta aprobada', 'error']], null);
                 }
                 $delete_registration = $registrationsModel->delete($id);
+                $delete_payment = $this->paymentsModel->delete($id);
 
-                if (!$delete_registration) {
+                if (!$delete_registration || !$delete_payment) {
                     return $this->redirectViewInscripcion(null, [['No fue posible eliminar la inscripción', 'warning']], $data);
                 } else {
                     return $this->redirectViewInscripcion(null, [['Inscripción eliminada exitosamente', 'success']], null);

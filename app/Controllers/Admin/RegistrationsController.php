@@ -21,13 +21,13 @@ class RegistrationsController extends BaseController
         $this->paymentsModel = new PaymentsModel();
     }
 
-    private function redirectView($validation=null, $flashMessages=null, $last_data=null, $last_action=null, $id_evento=null)
+    private function redirectView($validation = null, $flashMessages = null, $last_data = null, $last_action = null, $id_evento = null)
     {
-        return redirect()->to('admin/event/inscritos/' .$id_evento)->
-        with('flashValidation', isset($validation) ? $validation->getErrors() : null)->
-        with('flashMessages', $flashMessages)->
-        with('last_data', $last_data)->
-        with('last_action',$last_action);
+        return redirect()->to('admin/event/inscritos/' . $id_evento)->
+            with('flashValidation', isset($validation) ? $validation->getErrors() : null)->
+            with('flashMessages', $flashMessages)->
+            with('last_data', $last_data)->
+            with('last_action', $last_action);
     }
 
     public function inscritos($eventId)
@@ -134,22 +134,22 @@ class RegistrationsController extends BaseController
             if ($validation->run($data)) {
                 $paymentCompleted = $this->paymentsModel->isPaymentCompletedByRegistrationId($id_inscrito);
                 if ($paymentCompleted) {
-                    return $this->redirectView(null, [['La inscripción no se puede actualizar por que ya se encuentra aprobada', 'error']], null,null, $id_event);
+                    return $this->redirectView(null, [['La inscripción no se puede actualizar por que ya se encuentra aprobada', 'error']], null, null, $id_event);
                 }
 
                 // Actualizar los datos en la DB
                 $registrationsModel = new RegistrationsModel();
                 // unset($data['id_category']);
-                $update_registration = $registrationsModel->updateRegistrations($ic,$full_name_user,$data);
+                $update_registration = $registrationsModel->updateRegistrations($ic, $full_name_user, $data);
 
                 if (!$update_registration) {
                     return $this->redirectView(null, [['No fue posible actualizar los datos del usuario inscrito', 'warning']], $data, 'update', $id_event);
                 } else {
-                    log_message("warning",$update_registration);
-                    return $this->redirectView(null, [['Datos del usuario actualizado exitosamente', 'success']], null,null,$id_event);
+                    log_message("warning", $update_registration);
+                    return $this->redirectView(null, [['Datos del usuario actualizado exitosamente', 'success']], null, null, $id_event);
                 }
             } else {
-                return $this->redirectView($validation, [['Error en los datos enviados', 'warning']], $data, 'update',$id_event);
+                return $this->redirectView($validation, [['Error en los datos enviados', 'warning']], $data, 'update', $id_event);
             }
         } catch (\Exception $e) {
             return $this->redirectView(null, [['No se pudo actualizar los datos del usuario', 'danger']], null, null, $id_event);
@@ -185,23 +185,24 @@ class RegistrationsController extends BaseController
 
                 $paymentCompleted = $this->paymentsModel->isPaymentCompletedByRegistrationId($id);
                 if ($paymentCompleted) {
-                    return $this->redirectView(null, [['La inscripción no se puede eliminar por que ya se encuentra aprobada', 'error']], null,null, $id_event);
+                    return $this->redirectView(null, [['La inscripción no se puede eliminar por que ya se encuentra aprobada', 'error']], null, null, $id_event);
                 }
-                // Actualizar los datos en la DB
+                // Eliminar los datos en la DB
                 $registrationsModel = new RegistrationsModel();
                 unset($data['id_event']);
                 $delete_registration = $registrationsModel->delete($id);
+                $delete_payment = $this->paymentsModel->delete($id);
 
-                if (!$delete_registration) {
-                    return $this->redirectView(null, [['No fue posible eliminar la inscripción', 'warning']], $data, 'update', $id_event);
+                if (!$delete_registration || !$delete_payment) {
+                    return $this->redirectView(null, [['No fue posible eliminar la inscripción', 'warning']], $data, 'delete', $id_event);
                 } else {
-                    return $this->redirectView(null, [['Inscripción eliminada exitosamente', 'success']], null,null,$id_event);
+                    return $this->redirectView(null, [['Inscripción eliminada exitosamente', 'success']], null, null, $id_event);
                 }
             } else {
-                return $this->redirectView($validation, [['Error en los datos enviados', 'warning']], $data, 'update',$id_event);
+                return $this->redirectView($validation, [['Error en los datos enviados', 'warning']], $data, 'delete', $id_event);
             }
         } catch (\Exception $e) {
-            log_message("warning",$e->getMessage());
+            log_message("warning", $e->getMessage());
             return $this->redirectView(null, [['No se pudo eliminar el registro', 'danger']], null, null, $id_event);
         }
     }
@@ -254,7 +255,7 @@ class RegistrationsController extends BaseController
         return view('admin/registrations/trash/trash', $data);
     }
 
-    private function redirectTrashView($validation = null, $flashMessages = null, $last_data = null,)
+    private function redirectTrashView($validation = null, $flashMessages = null, $last_data = null, )
     {
 
         return redirect()->to('admin/inscritos/trash')->
@@ -270,15 +271,62 @@ class RegistrationsController extends BaseController
             $registrationsModel = new RegistrationsModel();
 
             $client = $registrationsModel->onlyDeleted()->find($inscrito_id);
-            if (isset($client)) {
+            $payment = $this->paymentsModel->onlyDeleted()->find($inscrito_id);
+            if (isset($client) && isset($payment)) {
                 $registrationsModel->withDeleted()->set(['deleted_at' => null])->update($inscrito_id);
+                $this->paymentsModel->withDeleted()->set(['deleted_at' => null])->update($inscrito_id);
                 return $this->redirectTrashView(null, [['Inscripción restaurada correctamente', 'success']]);
-            }
-            else {
-                return $this->redirectTrashView(null,[['No existe la inscripción buscada', 'warning']]);
+            } else {
+                return $this->redirectTrashView(null, [['No existe la inscripción buscada', 'warning']]);
             }
         } catch (\Exception $e) {
-            return $this->redirectTrashView(null,[['No fue posible restaurar la inscripción', 'danger']]);
+            return $this->redirectTrashView(null, [['No fue posible restaurar la inscripción', 'danger']]);
         }
     }
+
+    public function deleteAll()
+    {
+        try {
+            // Instanciar los modelos de inscripciones y pagos
+            $registrationsModel = new RegistrationsModel();
+            $paymentsModel = new PaymentsModel();
+
+            // Obtener todos los pagos eliminados (soft deleted)
+            $deletedPayments = $paymentsModel->onlyDeleted()->findAll();
+            $skippedRecords = 0; // Para contar cuántos registros no se eliminaron
+
+            foreach ($deletedPayments as $payment) {
+                // Verificamos si el payment_status es igual a 2
+                if ($payment['payment_status'] == 2) {
+                    // Si el estado del pago es 2, no eliminar este pago ni el registro asociado
+                    $skippedRecords++;
+                    continue;
+                }
+
+                // Verificar si el registro asociado en la tabla registrations está eliminado
+                $registrationId = $payment['id_register']; // Asumimos que 'id_register' es la columna de llave foránea
+                $deletedRegistration = $registrationsModel->onlyDeleted()->find($registrationId);
+
+                if ($deletedRegistration) {
+                    // Si el registro está eliminado lógicamente, eliminar permanentemente el registro
+                    $registrationsModel->delete($registrationId, true); // 'true' para eliminación definitiva
+                }
+
+                // Eliminar el registro de payments
+                $paymentsModel->delete($payment['id'], true); // 'true' para eliminación definitiva
+            }
+
+            // Mensaje de éxito o advertencia dependiendo de si se saltaron registros
+            if ($skippedRecords > 0) {
+                return $this->redirectTrashView(null, [["Algunos registros no se eliminaron porque están aprobados o no fueron eliminados.", 'warning']]);
+            }
+
+            return $this->redirectTrashView(null, [['Las inscripciones y pagos permitidos han sido eliminados permanentemente', 'success']]);
+
+        } catch (\Exception $e) {
+            log_message("error", $e->getMessage());
+            return $this->redirectTrashView(null, [['No se pudieron eliminar las inscripciones y pagos', 'danger']]);
+        }
+    }
+
 }
