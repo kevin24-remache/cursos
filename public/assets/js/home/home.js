@@ -500,5 +500,25 @@ document.addEventListener("DOMContentLoaded", function () {
   // Aplicar la misma validación al input con ID "numeroCedulaRegistro"
   const numeroCedulaRegistroInput = document.getElementById("numeroCedulaRegistro");
   validarCedulaLongitud(numeroCedulaRegistroInput);
+// Obtener los parámetros de la URL
+const urlParams = new URLSearchParams(window.location.search);
+const modal = urlParams.get('modal');
+const codigoPago = urlParams.get('codigoPago');
+
+// Si el parámetro 'modal' está presente y es 'metodo'
+if (modal === 'metodo') {
+    // Asignar el código de pago al campo de texto (si está presente)
+    if (codigoPago) {
+        document.getElementById('codigoPagoMetodo').value = codigoPago;
+    }
+
+    // Mostrar el modal automáticamente
+    var myModal = new bootstrap.Modal(document.getElementById('modalMetodo'));
+    myModal.show();
+
+    // Eliminar los parámetros de la URL inmediatamente después de mostrar el modal
+    const newUrl = window.location.origin + window.location.pathname;
+    window.history.replaceState({}, '', newUrl); // Actualiza la URL sin los parámetros
+}
 
 });

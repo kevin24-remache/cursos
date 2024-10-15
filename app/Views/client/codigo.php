@@ -47,7 +47,7 @@
         h1 {
             color: #c3171b;
             margin: 0;
-            font-size: 24px;
+            font-size: 1.5rem;
         }
 
         .details-table {
@@ -63,7 +63,7 @@
         }
 
         .highlight {
-            color: blue;
+            color: #0c244b;
             font-weight: bold;
         }
 
@@ -71,8 +71,19 @@
             color: green;
         }
 
+        .alert-payment {
+            color: #c3171b;
+            background-color: #ffe5e5;
+            border: 2px solid #c3171b;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
         .space {
-            padding-bottom: 10%;
+            padding-bottom: 5%;
             background-color: #F5F5F5;
         }
 
@@ -89,9 +100,7 @@
             width: 100%;
             display: table;
             table-layout: fixed;
-            /* Emula el comportamiento de Flexbox para que las columnas se dividan equitativamente */
             border-spacing: 0;
-            /* Elimina el espacio entre las celdas */
         }
 
         .col {
@@ -99,51 +108,10 @@
             padding-right: 0.75rem;
             padding-left: 0.75rem;
             vertical-align: top;
-            /* Asegura que el contenido de las columnas esté alineado al tope */
-        }
-
-        .col-1 {
-            width: 8.333333%;
-        }
-
-        .col-2 {
-            width: 16.666667%;
-        }
-
-        .col-3 {
-            width: 25%;
-        }
-
-        .col-4 {
-            width: 33.333333%;
-        }
-
-        .col-5 {
-            width: 41.666667%;
         }
 
         .col-6 {
             width: 50%;
-        }
-
-        .col-7 {
-            width: 58.333333%;
-        }
-
-        .col-8 {
-            width: 66.666667%;
-        }
-
-        .col-9 {
-            width: 75%;
-        }
-
-        .col-10 {
-            width: 83.333333%;
-        }
-
-        .col-11 {
-            width: 91.666667%;
         }
 
         .col-12 {
@@ -170,6 +138,10 @@
         }
 
         /* Padding general */
+
+        .p-0 {
+            padding: 0rem !important;
+        }
 
         .p-2 {
             padding: 0.5rem !important;
@@ -205,11 +177,17 @@
                     </div>
                 </div>
                 <div class="content-d">
-                    <h2>Estimado(a) Cliente,
-                        <?= $user ?>
-                    </h2>
-                    <p>Has sido inscrito exitosamente en el evento. A continuación, se detallan los datos de tu
-                        inscripción:</p>
+                    <p>Estimado(a),
+                        <strong>
+                            <?= $user ?>
+                        </strong>
+                    </p>
+                    <p>Has sido registrado exitosamente en el evento.</p>
+
+                    <div class="alert-payment p-0">
+                        <p>Tu inscripción se completará cuando verifiquemos tu pago</p>
+                    </div>
+
                     <table class="details-table">
                         <tr>
                             <th>Evento:</th>
@@ -229,18 +207,18 @@
                                 <?= number_format($precio, 2) ?>
                             </td>
                         </tr>
-                        <tr>
+                        <!-- <tr>
                             <th>Código de Pago:</th>
                             <td class="highlight">
                                 <?= $codigoPago ?>
                             </td>
-                        </tr>
-                        <tr>
+                        </tr> -->
+                        <!-- <tr>
                             <th>Fecha Límite de Pago:</th>
                             <td class="highlight">
                                 <?= $fechaLimitePago ?>
                             </td>
-                        </tr>
+                        </tr> -->
                         <tr>
                             <th>Fecha de Emisión:</th>
                             <td>
@@ -248,14 +226,17 @@
                             </td>
                         </tr>
                     </table>
-                    <p style="color: #c3171b; text-align: center;">
-                        Realiza el pago antes de la fecha límite utilizando el código de pago proporcionado.
+                    <!-- Nueva sección para subir el comprobante de pago -->
+                    <p style="text-align: center;">
+                        Con el código de pago <span class="highlight">
+                            <?= $codigoPago ?>
+                        </span>,
+                        puedes elegir tu método de pago (depósito o tarjeta) en el sistema para completar tu pago.
                     </p>
-                    <p style="color: #c3171b; text-align: center;">Tu inscripción al evento no estará completa hasta que
-                        verifiquemos correctamente tu pago.</p>
-                        <hr>
-                        <!-- Tabla de cuentas bancarias -->
-                    <h3 style="text-align: center;">Para depósitos la cuenta</h3>
+                    <p style="text-align: center;">Haz clic en <a style="border-bottom: 2px solid #0c244b; text-decoration: none; border-radius: 10px; color:#0c244b; padding: 5px 5px; background-color: #e5e8ff;"
+                        href="<?= base_url('?modal=metodo&codigoPago=' . $codigoPago) ?>"> <strong>PAGAR EN EL SISTEMA</strong></a></p>
+                    <hr>
+                    <h3 style="text-align: center;">Para depósitos o transferencias bancarias:</h3>
                     <table class="details-table">
                         <tr>
                             <th>Banco:</th>
@@ -301,6 +282,18 @@
                             <td>342434343535</td>
                         </tr> -->
                     </table>
+
+                    <h3 style="text-align: center;">Métodos de pago disponibles:</h3>
+                    <ul class="row" style="list-style-type: none; padding: 0;">
+                        <li class="col" style="padding-left: 0;"><strong>Depósito Bancario:</strong> Realiza un depósito
+                            en nuestra cuenta bancaria y luego
+                            sube tu comprobante en el sistema.</li>
+                        <li class="col" style="padding-left: 0;"><strong>Pago con Tarjeta:</strong> Usa PayPhone para
+                            pagar de manera segura con tu tarjeta
+                            de crédito o débito.</li>
+                    </ul>
+
+                    <hr>
                     <p style="text-align: center;">Gracias por tu participación.</p>
                 </div>
             </div>
@@ -308,8 +301,6 @@
         </div>
 
         <div class="footer">
-            <div>
-            </div>
             <p>© 2024 PROSERVI-UEB-EP | Softec Apps S.A.S. Todos los derechos reservados.</p>
         </div>
 

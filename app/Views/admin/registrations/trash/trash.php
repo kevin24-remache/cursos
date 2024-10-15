@@ -105,7 +105,6 @@ Inscripciones eliminadas
 
 <?= $this->section('scripts') ?>
 <script>
-    $(document).ready(function () {
         $('.btn-restore').on('click', function () {
             var eventName = $(this).data('event-name');
             var categoryName = $(this).data('category-name');
@@ -117,7 +116,6 @@ Inscripciones eliminadas
             $('#text-user-restore').text(userName);
             $('#id_inscrito_restore').val(inscritoId);
         });
-    });
 
 </script>
 <?= $this->endSection() ?>
