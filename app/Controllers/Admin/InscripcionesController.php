@@ -235,7 +235,7 @@ class InscripcionesController extends BaseController
                             'evento' => $paymentData['evento'],
                             'categoria' => $paymentData['categoria'],
                             'precio' => $paymentData['precio'],
-                            'codigo_pago' => $paymentData['codigo_pago'],
+                            'codigoPago' => $paymentData['codigo_pago'],
                             'fecha_limite_pago' => $paymentData['fecha_limite_pago'],
                             'fechaEmision' => Time::now()->toDateTimeString(),
                         ]),
