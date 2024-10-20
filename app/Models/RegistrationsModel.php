@@ -126,6 +126,8 @@ class RegistrationsModel extends Model
             ->join('categories', 'registrations.cat_id = categories.id', 'left')
             ->where('registrations.ic', $cedula)
             ->where('payments.payment_status', $estado)
+            ->where('payments.deleted_at IS NULL')  // Filtrar registros no eliminados de payments
+            ->where('registrations.deleted_at IS NULL')  // Filtrar registros no eliminados de registrations
             ->orderBy('payments.payment_cod')
             ->get()
             ->getResultArray();

@@ -78,8 +78,8 @@ Eventos
                                     </form>
 
 
-                                    <button class="js-mytooltip btn btn-outline-danger btn-delete m-1" title="Eliminar" data-toggle="modal"
-                                        data-target="#delete" data-mytooltip-custom-class="align-center"
+                                    <button class="js-mytooltip btn btn-outline-danger btn-delete m-1" title="Eliminar"
+                                        data-toggle="modal" data-target="#delete" data-mytooltip-custom-class="align-center"
                                         data-mytooltip-direction="top" data-mytooltip-theme="danger"
                                         data-mytooltip-content="Eliminar" data-event-name="<?= $event['event_name'] ?>"
                                         data-event-id="<?= $event['id'] ?>">
@@ -139,14 +139,12 @@ Eventos
 
 <?= $this->section('scripts') ?>
 <script>
-    $(document).ready(function () {
-        $('.btn-delete').on('click', function () {
-            var eventName = $(this).data('event-name');
-            var eventId = $(this).data('event-id');
+    $('.btn-delete').on('click', function () {
+        var eventName = $(this).data('event-name');
+        var eventId = $(this).data('event-id');
 
-            $('#text-event').text(eventName);
-            $('#formPago #id_pago').val(eventId);
-        });
+        $('#text-event').text(eventName);
+        $('#formPago #id_pago').val(eventId);
     });
 
 </script>

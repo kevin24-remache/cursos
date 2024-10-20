@@ -51,6 +51,7 @@ $routes->group('admin', static function ($routes) {
         $categories->post('add', 'Admin\EventsController::add');
         $categories->post('update', 'Admin\EventsController::update');
         $categories->post('delete', 'Admin\EventsController::delete');
+        $categories->post('deleteAll', 'Admin\EventsController::deleteAll');
 
         $categories->get('get_event', 'Admin\EventsController::get_event');
         $categories->get('get_categories_by_event/(:num)', 'Admin\EventsController::get_categories_by_event/$1');

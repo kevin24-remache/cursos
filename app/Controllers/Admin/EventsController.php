@@ -371,7 +371,6 @@ class EventsController extends BaseController
         }
     }
 
-
     public function trash()
     {
         // get flash data
@@ -449,7 +448,6 @@ class EventsController extends BaseController
         return $this->response->setJSON($formatted_events);
     }
 
-
     public function get_categories_by_event($eventId)
     {
         $categoriesModel = new CategoryModel;
@@ -465,5 +463,32 @@ class EventsController extends BaseController
         }
 
         return $this->response->setJSON($formatted_categories);
+    }
+
+    public function deleteAll()
+    {
+        $eventId = $this->request->getPost('id');
+
+        // Verificar que el ID no esté vacío
+        if (empty($eventId)) {
+            return $this->redirectView(null, [['El ID del evento es requerido', 'error']]);
+        }
+
+        try {
+            $eventsModel = new EventsModel();
+            // Buscar el evento por ID
+            $event = $eventsModel->withDeleted()->find($eventId);
+
+            // Verificar si el evento existe
+            if ($event) {
+                $eventsModel->deleteEventWithRelations($eventId);
+
+                return $this->redirectTrashView(null, [['Evento con sus registros eliminados exitosamente', 'success']]);
+            } else {
+                return $this->redirectTrashView(null, [['Evento no encontrado', 'error']]);
+            }
+        } catch (\Exception $e) {
+            return $this->redirectTrashView(null, [['No se pudo eliminar el evento', 'error']]);
+        }
     }
 }

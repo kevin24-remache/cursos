@@ -62,11 +62,20 @@ Eventos eliminados
 
                                     <button class="js-mytooltip btn btn-outline-success m-1 btn-restore" data-toggle="modal"
                                         data-target="#recover" data-event-name="<?= $event['event_name'] ?>"
-                                        data-event-id="<?= $event['id'] ?>"
-                                        data-mytooltip-custom-class="align-center" data-mytooltip-direction="top"
-                                        data-mytooltip-theme="success" data-mytooltip-content="Recuperar" title="Recuperar evento">
+                                        data-event-id="<?= $event['id'] ?>" data-mytooltip-custom-class="align-center"
+                                        data-mytooltip-direction="top" data-mytooltip-theme="success"
+                                        data-mytooltip-content="Recuperar" title="Recuperar evento">
 
                                         <i class="fa fa-recycle fa-lg" aria-hidden="true"></i>
+                                    </button>
+
+
+                                    <button class="js-mytooltip btn btn-outline-danger btn-delete m-1"
+                                        title="Eliminar definitivamente" data-toggle="modal" data-target="#delete"
+                                        data-mytooltip-custom-class="align-center" data-mytooltip-direction="top"
+                                        data-mytooltip-theme="danger" data-mytooltip-content="Eliminar definitivamente"
+                                        data-event-name="<?= $event['event_name'] ?>" data-event-id="<?= $event['id'] ?>">
+                                        <i class="fa fa-ban" aria-hidden="true"></i>
                                     </button>
 
                                 </td>
@@ -77,51 +86,85 @@ Eventos eliminados
             </div>
         </div>
     </div>
+</div>
 
-    <div class="modal fade" id="recover" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content rounded-2">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel">Restaurar</h4>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="<?= base_url("admin/event/trash/restore") ?>" id="formPago" method="post">
-                        <div class="row mb-3">
-                            <div class="col">
-                                <p>Estas seguro de restaurar el evento : <span class="text-danger"
-                                        id="text-event-restore"></span></p>
-                            </div>
+<div class="modal fade" id="recover" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content rounded-2">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Restaurar</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="<?= base_url("admin/event/trash/restore") ?>" id="formPago" method="post">
+                    <div class="row mb-3">
+                        <div class="col">
+                            <p>Estas seguro de restaurar el evento : <span class="text-danger"
+                                    id="text-event-restore"></span></p>
                         </div>
-                        <input type="hidden" name="id" id="id_event_restore">
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button form="formPago" type="submit" class="btn btn-success">Restaurar</button>
-                </div>
+                    </div>
+                    <input type="hidden" name="id" id="id_event_restore">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button form="formPago" type="submit" class="btn btn-success">Restaurar</button>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Modal-->
+<div class="modal fade" id="delete" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content rounded-2">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Eliminar definitivamente</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="<?= base_url("admin/event/deleteAll") ?>" id="formDelete" method="post">
+                    <div class="row mb-3">
+                        <div class="col">
+                            <p>Estas seguro de eliminar el evento : <span class="text-danger" id="text-event"></span>
+                                con todas sus inscripciones y pagos?
+                            </p>
+                        </div>
+                    </div>
+                    <input type="hidden" name="id" id="id_event_delete">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button form="formDelete" type="submit" class="btn btn-danger">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <?= $this->endSection() ?>
 
 
 <?= $this->section('scripts') ?>
 <script>
-    $(document).ready(function () {
-        $('.btn-restore').on('click', function () {
-            var eventName = $(this).data('event-name');
-            var eventId = $(this).data('event-id');
+    $('.btn-restore').on('click', function () {
+        var eventName = $(this).data('event-name');
+        var eventId = $(this).data('event-id');
 
-            $('#text-event-restore').text(eventName);
-            $('#id_event_restore').val(eventId);
-        });
+        $('#text-event-restore').text(eventName);
+        $('#id_event_restore').val(eventId);
     });
 
+    $('.btn-delete').on('click', function () {
+        var eventName = $(this).data('event-name');
+        var eventId = $(this).data('event-id');
+
+        $('#text-event').text(eventName);
+        $('#formDelete #id_event_delete').val(eventId);
+    });
 </script>
 <?= $this->endSection() ?>

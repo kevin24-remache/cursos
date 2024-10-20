@@ -139,4 +139,79 @@ class EventsModel extends Model
             return false;
         }
     }
+
+    public function deleteEventWithRelations($eventId)
+    {
+        $db = \Config\Database::connect();
+
+        // Iniciar una transacción
+        $db->transStart();
+
+        try {
+            // Eliminar depósitos relacionados con los pagos del evento
+            $db->table('deposits')
+                ->whereIn('payment_id', function ($builder) use ($eventId) {
+                    return $builder->select('payments.id')
+                        ->from('payments')
+                        ->join('registrations', 'registrations.id = payments.id_register')
+                        ->where('registrations.event_cod', $eventId);
+                })
+                ->delete();
+
+            // Eliminar pagos en línea relacionados con los pagos del evento
+            $db->table('pago_linea')
+                ->whereIn('payment_id', function ($builder) use ($eventId) {
+                    return $builder->select('payments.id')
+                        ->from('payments')
+                        ->join('registrations', 'registrations.id = payments.id_register')
+                        ->where('registrations.event_cod', $eventId);
+                })
+                ->delete();
+
+            // Eliminar registros de inscripcion_pagos relacionados con los pagos del evento
+            $db->table('inscripcion_pagos')
+                ->whereIn('pago_id', function ($builder) use ($eventId) {
+                    return $builder->select('payments.id')
+                        ->from('payments')
+                        ->join('registrations', 'registrations.id = payments.id_register')
+                        ->where('registrations.event_cod', $eventId);
+                })
+                ->delete();
+
+            // Eliminar pagos relacionados con las inscripciones del evento
+            $db->table('payments')
+                ->whereIn('id_register', function ($builder) use ($eventId) {
+                    return $builder->select('registrations.id')
+                        ->from('registrations')
+                        ->where('registrations.event_cod', $eventId);
+                })
+                ->delete();
+
+            // Eliminar inscripciones relacionadas con el evento
+            $db->table('registrations')
+                ->where('event_cod', $eventId)
+                ->delete();
+
+            // Finalmente, eliminar el evento
+            $db->table('events')
+                ->where('id', $eventId)
+                ->delete();
+
+            // Completar la transacción
+            $db->transComplete();
+
+            if ($db->transStatus() === FALSE) {
+                // Si la transacción falla, se revierte
+                throw new \Exception('Error eliminando el evento y sus registros relacionados');
+            }
+
+            return true; // Todo fue exitoso
+        } catch (\Exception $e) {
+            // Manejar errores
+            log_message('error', $e->getMessage());
+            $db->transRollback(); // Hacer rollback en caso de error
+            return false;
+        }
+    }
+
 }
