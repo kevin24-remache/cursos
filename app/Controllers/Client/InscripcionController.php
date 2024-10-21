@@ -85,40 +85,44 @@ class InscripcionController extends BaseController
 
     public function validarCedula()
     {
+        // Generar nuevo token CSRF al inicio
+        $newCsrfToken = csrf_hash();
+
         // Obtener los datos JSON
         $data = $this->request->getJSON();
 
         // Validar si el cuerpo de la solicitud contiene el campo 'cedula'
         if (is_null($data) || !isset($data->cedula) || empty($data->cedula)) {
-            return $this->response->setJSON([
-                'status' => 'validation',
-                'message' => 'Cédula o RUC requerido',
-                'code' => 400
-            ], 400);
+            return $this->response
+                ->setHeader('X-CSRF-TOKEN', $newCsrfToken)
+                ->setJSON([
+                    'status' => 'validation',
+                    'message' => 'Cédula o RUC requerido',
+                    'code' => 400
+                ], 400);
         }
 
         $cedula = trim($data->cedula);
-        $ipAddress = $this->request->getIPAddress(); // Capturar la dirección IP del cliente
+        $ipAddress = $this->request->getIPAddress();
 
         // Validar que la cédula sea numérica
         $validation = \Config\Services::validation();
         $validation->setRules([
-            'cedula' => 'required|numeric' // Regla para validar que sea numérico
+            'cedula' => 'required|numeric'
         ]);
 
         // Ejecutar la validación y revisar si falló
         if (!$validation->run(['cedula' => $cedula])) {
-            // Obtener el mensaje de error generado automáticamente por CodeIgniter
             $errorMessage = $validation->getError('cedula');
-
-            // Registrar el error en el log con la dirección IP del cliente
             log_message('warning', "Validación fallida: Cédula no numérica ingresada desde IP: {$ipAddress}");
 
-            return $this->response->setJSON([
-                'status' => 'validation',
-                'message' => $errorMessage,  // Usar el mensaje de error de CodeIgniter
-                'code' => 400
-            ], 400);
+            return $this->response
+                ->setHeader('X-CSRF-TOKEN', $newCsrfToken)
+                ->setJSON([
+                    'status' => 'validation',
+                    'message' => $errorMessage,
+                    'code' => 400
+                ], 400);
         }
 
         // Usar el servicio para obtener los datos del usuario si la cédula es válida
@@ -131,21 +135,24 @@ class InscripcionController extends BaseController
             // Verificar si el email está vacío o es inválido
             $email = $personaData['email'];
             $phone = $personaData['phone'];
+
             if ($email == '@' || !$email || !$phone) {
-                return $this->response->setJSON([
-                    'status' => 'warning',
-                    'message' => 'Usuario encontrado pero email vació',
-                    'code' => 200,
-                    'persona' => [
-                        'id' => $personaData['identification'],
-                        'nombres' => $personaData['name'],
-                        'apellidos' => $personaData['surname'],
-                        'email' => $email,
-                        'phone' => $personaData['phone'],
-                        'address' => $personaData['address'],
-                        'gender' => $personaData['gender'],
-                    ]
-                ], 200);
+                return $this->response
+                    ->setHeader('X-CSRF-TOKEN', $newCsrfToken)
+                    ->setJSON([
+                        'status' => 'warning',
+                        'message' => 'Usuario encontrado pero email vació',
+                        'code' => 200,
+                        'persona' => [
+                            'id' => $personaData['identification'],
+                            'nombres' => $personaData['name'],
+                            'apellidos' => $personaData['surname'],
+                            'email' => $email,
+                            'phone' => $personaData['phone'],
+                            'address' => $personaData['address'],
+                            'gender' => $personaData['gender'],
+                        ]
+                    ], 200);
             }
 
             // Guardar los datos del usuario en la sesión para su uso posterior
@@ -156,25 +163,27 @@ class InscripcionController extends BaseController
 
             $persona_formateada = formatear_nombre_apellido($personaData['name'], $personaData['surname']);
 
-            $respuesta = [
-                'status' => 'success',
-                'message' => 'Usuario encontrado',
-                'code' => 200,
-                'persona' => [
-                    'id' => $personaData['identification'],
-                    'nombres' => $persona_formateada['nombres'],
-                    'apellidos' => $persona_formateada['apellidos'],
-                    'email' => mask_email($personaData['email']),
-                ]
-            ];
-
-            return $this->response->setJSON($respuesta);
+            return $this->response
+                ->setHeader('X-CSRF-TOKEN', $newCsrfToken)
+                ->setJSON([
+                    'status' => 'success',
+                    'message' => 'Usuario encontrado',
+                    'code' => 200,
+                    'persona' => [
+                        'id' => $personaData['identification'],
+                        'nombres' => $persona_formateada['nombres'],
+                        'apellidos' => $persona_formateada['apellidos'],
+                        'email' => mask_email($personaData['email']),
+                    ]
+                ]);
         } else {
-            return $this->response->setJSON([
-                'status' => 'error',
-                'message' => 'Usuario no encontrado',
-                'code' => 404
-            ], 404);
+            return $this->response
+                ->setHeader('X-CSRF-TOKEN', $newCsrfToken)
+                ->setJSON([
+                    'status' => 'error',
+                    'message' => 'Usuario no encontrado',
+                    'code' => 404
+                ], 404);
         }
     }
 

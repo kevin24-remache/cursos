@@ -1,14 +1,16 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Mostrar el preloader cuando la página comienza a cargarse
-  window.onbeforeunload = function () {
-    showPreloader();
-  };
+  // Funciones para manejar el token CSRF
+  function getCsrfToken() {
+    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  }
 
-  // Ocultar el preloader cuando la página ha terminado de cargarse
-  window.onload = function () {
-    hidePreloader();
-  };
+  function updateCsrfToken(newToken) {
+    if (newToken) {
+      document.querySelector('meta[name="csrf-token"]').setAttribute('content', newToken);
+    }
+  }
 
+  // Funciones del preloader
   function showPreloader() {
     document.getElementById("preloader").style.display = "flex";
   }
@@ -24,23 +26,30 @@ document.addEventListener("DOMContentLoaded", function () {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': getCsrfToken()
         },
         body: JSON.stringify({ cedula: userId }),
       });
+
+      // Obtener y actualizar el token CSRF desde los headers de la respuesta
+      const newCsrfToken = response.headers.get('X-CSRF-TOKEN');
+      updateCsrfToken(newCsrfToken);
+
       const data = await response.json();
       hidePreloader();
+
       if (data.status === 'success') {
         return { status: 'success', persona: data.persona };
       } else if (data.status === 'warning') {
         return { status: 'warning', persona: data.persona };
       } else if (data.status === 'validation') {
-        return { status: 'validation', message: data.message};
+        return { status: 'validation', message: data.message };
       } else {
         return { status: 'error', persona: null };
       }
     } catch (error) {
       hidePreloader();
-      console.log("Error getting document:", error);
+      console.error("Error en la solicitud:", error);
       return { status: 'error', persona: null };
     }
   }
@@ -500,16 +509,16 @@ document.addEventListener("DOMContentLoaded", function () {
   // Aplicar la misma validación al input con ID "numeroCedulaRegistro"
   const numeroCedulaRegistroInput = document.getElementById("numeroCedulaRegistro");
   validarCedulaLongitud(numeroCedulaRegistroInput);
-// Obtener los parámetros de la URL
-const urlParams = new URLSearchParams(window.location.search);
-const modal = urlParams.get('modal');
-const codigoPago = urlParams.get('codigoPago');
+  // Obtener los parámetros de la URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const modal = urlParams.get('modal');
+  const codigoPago = urlParams.get('codigoPago');
 
-// Si el parámetro 'modal' está presente y es 'metodo'
-if (modal === 'metodo') {
+  // Si el parámetro 'modal' está presente y es 'metodo'
+  if (modal === 'metodo') {
     // Asignar el código de pago al campo de texto (si está presente)
     if (codigoPago) {
-        document.getElementById('codigoPagoMetodo').value = codigoPago;
+      document.getElementById('codigoPagoMetodo').value = codigoPago;
     }
 
     // Mostrar el modal automáticamente
@@ -519,6 +528,6 @@ if (modal === 'metodo') {
     // Eliminar los parámetros de la URL inmediatamente después de mostrar el modal
     const newUrl = window.location.origin + window.location.pathname;
     window.history.replaceState({}, '', newUrl); // Actualiza la URL sin los parámetros
-}
+  }
 
 });

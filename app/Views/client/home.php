@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<?= csrf_hash() ?>">
     <title>Inicio</title>
     <link rel="icon" href="<?= base_url("assets/images/icono.jpeg"); ?>" type="image/jpeg">
     <!-- Theme style -->
@@ -924,6 +925,7 @@
     <!-- template -->
     <script src="<?= base_url("dist/js/niche.js") ?>"></script>
     <script src="<?= base_url("assets/js/sweetalert/sweetalert.min.js") ?>"></script>
+    <script src="<?= base_url("assets/js/preloader.js") ?>"></script>
 </body>
 
 </html>
