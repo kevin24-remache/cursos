@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     reloadSection();
 
     $('#depositosTable').on('click', 'td:nth-child(2), td:nth-child(4)', function (e) {
-        if (e.detail === 3) {
+        if (e.detail === 1) {
             var cell = table.cell(this);
             var data = cell.data();
 
