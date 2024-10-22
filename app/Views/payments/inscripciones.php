@@ -10,7 +10,7 @@ Pagos
     <div class="content-header sty-one">
         <h1 class="text-black">Inscripciones</h1>
         <ol class="breadcrumb">
-            <li><a href="#">Home</a></li>
+            <li><a href="#">Inicio</a></li>
             <li><i class="fa fa-angle-right"></i> Inscripciones</li>
         </ol>
     </div>
@@ -143,27 +143,25 @@ Pagos
 <?= $this->section('scripts') ?>
 
 <script>
-    $(document).ready(function () {
-        $(".btn-pagar").click(function () {
-            var fila = $(this).closest("tr");
-            var ic = fila.data("ic");
-            var estadoPago = fila.data("estado-pago");
-            var idPago = fila.data("id-pago");
-            var codigoPago = fila.data("codigo-pago");
-            var nombres = fila.data("nombres");
-            var evento = fila.data("evento");
-            var categoria = fila.data("categoria");
-            var precio = fila.data("precio");
+    $(".btn-pagar").click(function () {
+        var fila = $(this).closest("tr");
+        var ic = fila.data("ic");
+        var estadoPago = fila.data("estado-pago");
+        var idPago = fila.data("id-pago");
+        var codigoPago = fila.data("codigo-pago");
+        var nombres = fila.data("nombres");
+        var evento = fila.data("evento");
+        var categoria = fila.data("categoria");
+        var precio = fila.data("precio");
 
-            // Actualizar los campos del modal
-            $("#cedula").val(ic);
-            $("#estado_pago").val(estadoPago);
-            $("#id_pago").val(idPago);
-            $("#nombre").val(nombres);
-            $("#evento").val(evento);
-            $("#categoria").val(categoria);
-            $("#precio").val(precio);
-        });
+        // Actualizar los campos del modal
+        $("#cedula").val(ic);
+        $("#estado_pago").val(estadoPago);
+        $("#id_pago").val(idPago);
+        $("#nombre").val(nombres);
+        $("#evento").val(evento);
+        $("#categoria").val(categoria);
+        $("#precio").val(precio);
     });
 </script>
 
