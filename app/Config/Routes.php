@@ -25,6 +25,7 @@ $routes->group('admin', static function ($routes) {
     $routes->post('config/add', 'Config\ConfigController::add');
     $routes->post('config/update', 'Config\ConfigController::update');
 
+    $routes->get('deposito_all', 'Admin\DepositosController::deposits_all');
     $routes->group('pagos', static function ($pagos) {
 
         $pagos->get('/', 'Admin\PagosController::index');

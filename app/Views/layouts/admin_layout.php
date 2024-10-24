@@ -127,11 +127,14 @@
                         </a>
                     </li>
                     <li
-                        class="treeview  <?= (isset($modulo) && in_array($modulo, [ModulosAdmin::PAGOS, ModulosAdmin::PAGOS_COMPLETOS, ModulosAdmin::PAGOS_RECHAZADOS, ModulosAdmin::PAGOS_INCOMPLETOS])) ? 'active' : '' ?>">
+                        class="treeview  <?= (isset($modulo) && in_array($modulo, [ModulosAdmin::DEPOSITO_ALL,ModulosAdmin::PAGOS, ModulosAdmin::PAGOS_COMPLETOS, ModulosAdmin::PAGOS_RECHAZADOS, ModulosAdmin::PAGOS_INCOMPLETOS])) ? 'active' : '' ?>">
                         <a href="#"> <i class="fa fa-credit-card-alt" aria-hidden="true"></i> <span>Cobrar con
                                 depósito</span> <span class="pull-right-container"> <i
                                     class="fa fa-angle-left pull-right"></i> </span> </a>
-                        <ul class="treeview-menu">
+                        <ul class="treeview-menu"><li
+                                class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::DEPOSITO_ALL)) ? 'active' : '' ?>">
+                                <a href="<?= base_url('admin/deposito_all') ?>">Todos los depósitos</a>
+                            </li>
                             <li
                                 class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::PAGOS)) ? 'active' : '' ?>">
                                 <a href="<?= base_url('admin/pagos') ?>">Ingresados</a>

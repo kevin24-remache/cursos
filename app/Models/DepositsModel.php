@@ -141,4 +141,28 @@ class DepositsModel extends Model
         return ['completed' => false, 'num_autorizacion' => null];
     }
 
+    public function getAllDepositsWithDetails()
+    {
+        return $this->select('
+        deposits.*,
+        registrations.full_name_user,
+        registrations.ic,
+        registrations.address,
+        registrations.phone,
+        registrations.email,
+        registrations.monto_category,
+        events.event_name,
+        events.event_date,
+        categories.category_name,
+        payments.payment_status,
+        payments.num_autorizacion,
+        payments.id as id_pago
+    ')
+            ->join('payments', 'deposits.payment_id = payments.id')
+            ->join('registrations', 'payments.id_register = registrations.id')
+            ->join('events', 'registrations.event_cod = events.id')
+            ->join('categories', 'registrations.cat_id = categories.id')
+            ->findAll();
+    }
+
 }

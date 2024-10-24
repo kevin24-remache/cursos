@@ -8,6 +8,7 @@ use App\Models\PaymentsModel;
 use App\Models\PaymentMethodsModel;
 use App\Models\RejectionReasonsModel;
 use CodeIgniter\I18n\Time;
+use ModulosAdmin;
 use PaymentStatus;
 use DepositoStatus;
 
@@ -559,5 +560,29 @@ class DepositosController extends BaseController
         }
     }
 
+
+    public function deposits_all()
+    {
+        // get flash data
+        $flashValidation = session()->getFlashdata('flashValidation');
+        $flashMessages = session()->getFlashdata('flashMessages');
+        $last_data = session()->getFlashdata('last_data');
+        $last_action = session()->getFlashdata('last_action');
+        $uniqueCode = session()->getFlashdata('uniqueCode');
+
+        $modulo = ModulosAdmin::DEPOSITO_ALL;
+        $depositos = $this->depositsModel->getAllDepositsWithDetails();
+
+        $data = [
+            'modulo' => $modulo,
+            'depositos' => $depositos,
+            'last_action' => $last_action,
+            'last_data' => $last_data,
+            'validation' => $flashValidation,
+            'flashMessages' => $flashMessages,
+            'uniqueCode' => $uniqueCode,
+        ];
+        return view('admin/pagos/depositos/deposits_all', $data);
+    }
 
 }
