@@ -44,3 +44,4 @@ El sistema está organizado en diferentes carpetas según las responsabilidades 
    - `ClientController`: Controla las vistas general del cliente y acciones generales del cliente.
    - `InscripcionController`: Permite a los clientes inscribirse en los eventos, registrarse en la API y validar si existe el cliente.
    - `DepositosController`: Gestiona la carga de comprobantes de depósito por parte de los usuarios.
+# congreso-
