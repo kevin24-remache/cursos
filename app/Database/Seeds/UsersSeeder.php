@@ -17,7 +17,7 @@ class UsersSeeder extends Seeder
             'last_name' => 'B',
             'phone_number' => '0989026071',
             'email' => 'admin@admin.com',
-            'password' => password_hash('admin123', PASSWORD_DEFAULT),
+            'password' => password_hash('password', PASSWORD_DEFAULT),
             'address'=>'Guaranda',
             ],
             //Admin pagos

@@ -2,6 +2,11 @@
 # Operating Specific Junk Files
 #-------------------------
 
+#uploads && events
+uploads
+public/assets/images/events/*
+
+
 # OS X
 .DS_Store
 .AppleDouble

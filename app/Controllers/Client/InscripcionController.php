@@ -307,7 +307,7 @@ class InscripcionController extends BaseController
         ];
 
         // PUSH CORRECTO A LA COLA (emails)
-        $jobId = service('queue')->push('default', 'App\Jobs\Email', $emailData);
+        $jobId = service('queue')->push('emails', 'email', $emailData);
 
         if ($jobId) {
             session()->remove('persona');
