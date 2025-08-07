@@ -23,7 +23,8 @@ class ApiPrivadaService
 
             $response = $client->get($url, [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . $token
+                    'Authorization' => 'Bearer ' . $token,
+                    'User-agent' => 'CodeIgniter'
                 ]
             ]);
 

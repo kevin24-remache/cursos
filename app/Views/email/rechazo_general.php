@@ -90,27 +90,6 @@
 </head>
 
 <body class="body" style="background-color: #F5F5F5; margin: 0; padding: 0; -webkit-text-size-adjust: none; text-size-adjust: none;">
-	<table class="nl-container" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #F5F5F5;">
-		<tbody>
-			<tr>
-				<td>
-					<table class="row row-1" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-image: url('<?= base_url('assets/images/email/bg_top.png')?>'); background-position: top center; background-repeat: repeat;">
-						<tbody>
-							<tr>
-								<td>
-									<table class="row-content stack" align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000000; width: 650px; margin: 0 auto;" width="650">
-										<tbody>
-											<tr>
-												<td class="column column-1" width="100%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;">
-													<div class="spacer_block block-1" style="height:51px;line-height:51px;font-size:1px;">&#8202;</div>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</td>
-							</tr>
-						</tbody>
-					</table>
 					<table class="row row-2" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #f5f5f5;">
 						<tbody>
 							<tr>
@@ -151,7 +130,7 @@
 													<table class="heading_block block-1" width="100%" cellpadding="10" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
 														<tr>
 															<td class="pad">
-																<h2 style="margin: 0; color: #727272; direction: ltr; font-family: Tahoma, Verdana, Segoe, sans-serif; font-size: 30px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: center; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 36px;"><span class="tinyMce-placeholder"><span style="color: #c3171b;">Pago Rechazado</span><br></span></h2>
+																<h2 style="margin: 0; color: #727272; direction: ltr; font-family: Tahoma, Verdana, Segoe, sans-serif; font-size: 30px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: center; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 36px;"><span class="tinyMce-placeholder"><span style="color: #FFD700;">Pago Rechazado</span><br></span></h2>
 															</td>
 														</tr>
 													</table>
@@ -198,7 +177,7 @@
 														<tr>
 															<td class="pad">
 																<div style="color:#555555;direction:ltr;font-family:Tahoma, Verdana, Segoe, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:19.2px;">
-																	<p style="margin: 0; margin-bottom: 16px;">Lamentamos informarle que su pago para el evento: <strong><?= $nombreEvento?></strong> ha sido rechazado</p>
+																	<p style="margin: 0; margin-bottom: 16px;">Lamentamos informarle que su pago para el curso: <strong><?= $nombreEvento?></strong> ha sido rechazado</p>
 																	<p style="margin: 0;">Motivo del rechazo:&nbsp;</p>
 																	<p><strong><?= $rejectionReason ?></strong></p>
 																</div>
@@ -381,11 +360,6 @@
 												<td class="column column-1" width="100%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 30px; padding-top: 30px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;">
 													<table class="paragraph_block block-1" width="100%" border="0" cellpadding="10" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;">
 														<tr>
-															<td class="pad">
-																<div style="color:#FFFFFF;font-family:Tahoma, Verdana, Segoe, sans-serif;font-size:14px;font-weight:400;line-height:120%;text-align:center;mso-line-height-alt:16.8px;">
-																	<p style="margin: 0;">© 2024 PROSERVI-UEB-EP | Softec Apps S.A.S. Todos los derechos reservados.</p>
-																</div>
-															</td>
 														</tr>
 													</table>
 												</td>

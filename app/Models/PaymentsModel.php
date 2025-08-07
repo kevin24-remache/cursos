@@ -157,7 +157,7 @@ class PaymentsModel extends Model
         // Verificar si la transacción fue exitosa
         if ($this->db->transStatus() === FALSE) {
             // Si algo salió mal, lanzar una excepción o manejar el error
-            throw new \Exception('Error en la actualización del pago o inserción en inscripcion_pagos.');
+            throw new \Exception('Error en la actualización del pago o inserción en inscripción_pagos.');
         }
 
         return $update;

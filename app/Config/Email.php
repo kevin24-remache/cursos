@@ -13,7 +13,7 @@ class Email extends BaseConfig
         $this->SMTPUser = getenv('SMTP_USER') ?? '';
         $this->SMTPPass = getenv('SMTP_PASSWORD') ?? '';
 
-        $this->fromEmail = getenv('SMTP_HOST') ?? '';
+        $this->fromEmail = getenv('SMTP_USER') ?? '';
         $this->fromName = getenv('SMTP_NAME') ?? '';
     }
 

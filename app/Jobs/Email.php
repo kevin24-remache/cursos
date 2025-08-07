@@ -21,40 +21,35 @@ class Email extends BaseJob implements JobInterface
         $htmlContent = $this->data['htmlContent'];
         $pdfFilename = $this->data['pdfFilename'] ?? 'document.pdf';
         $paymentData = $this->data['paymentData'] ?? null; // Datos de pago si aplica
+
         try {
             // Generar PDF según el tipo de correo
             if ($this->data['emailType'] === 'send_email_facture' && $paymentData) {
-                // Generar el PDF de la factura
                 $pdfData = $this->generate_pdf($paymentData);
                 $pdfOutput = $pdfData['output'];
             } else {
-                // Generar un PDF estándar desde el contenido HTML proporcionado
                 $options = new Options();
                 $options->set('isHtml5ParserEnabled', true);
                 $options->set('isRemoteEnabled', true);
                 $options->set('defaultFont', 'Arial');
                 $dompdf = new Dompdf($options);
                 $dompdf->loadHtml($htmlContent);
-                $dompdf->setPaper('A4', 'portrait');
+                $dompdf->setPaper('A4', 'portrait'); // <-- SOLO USAR ESTO
                 $dompdf->render();
                 $pdfOutput = $dompdf->output();
             }
 
-            // Guardar el PDF temporalmente en el servidor
             $tempPdfPath = WRITEPATH . 'uploads/' . $pdfFilename;
             file_put_contents($tempPdfPath, $pdfOutput);
 
-            // Configurar y enviar el correo electrónico
             $email = service('email', null, false);
             $email->setTo($to);
             $email->setSubject($subject);
-            $email->setMessage($message . '<br><br>' . $htmlContent); // Incluir contenido HTML
-            $email->attach($tempPdfPath); // Adjuntar PDF
+            $email->setMessage($message . '<br><br>' . $htmlContent);
+            $email->attach($tempPdfPath);
 
-            // Intentar enviar el correo
             $result = $email->send(false);
 
-            // Eliminar el archivo temporal después de enviar el correo
             unlink($tempPdfPath);
 
             if (!$result) {
@@ -64,22 +59,20 @@ class Email extends BaseJob implements JobInterface
             return $result;
         } catch (Exception $e) {
             log_message('error', 'Error al enviar el email: ' . $e->getMessage());
-            // Lanzar la excepción para que el job falle y pueda ser reintentado
             throw $e;
         }
     }
+
     public function generate_pdf($payment)
     {
-        // Configurar las opciones de Dompdf
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true);
         $options->set('isRemoteEnabled', true);
         $options->set('defaultFont', 'Arial');
 
-        // Crear una nueva instancia de Dompdf con las opciones configuradas
         $pdf = new Dompdf($options);
 
-        // Contenido HTML de la factura
+        // Usa el view que ya tienes, pero adapta el CSS si hace falta para que sea ancho A4
         $html = view('email/facture', [
             'num_autorizacion' => $payment['num_autorizacion'],
             'user' => $payment['user'],
@@ -101,18 +94,11 @@ class Email extends BaseJob implements JobInterface
         ]);
 
         $pdf->loadHtml($html);
-
-        // Tamaño de la página en puntos (58 x 210 mm)
-        $customPaper = array(0, 0, 164.41, 595.51); // 58mm = 164.41pt, 210mm = 595.51pt
-        $pdf->setPaper($customPaper);
-
-        // Renderizar el PDF
+        $pdf->setPaper('A4', 'portrait'); // <-- SOLO A4 VERTICAL, JAMÁS CUSTOM
         $pdf->render();
 
-        // Obtener la salida del PDF como una cadena
         $output = $pdf->output();
 
-        // Devolver tanto el objeto Dompdf como el contenido del PDF
         return ['pdf' => $pdf, 'output' => $output];
     }
 }

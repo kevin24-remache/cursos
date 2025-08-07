@@ -45,7 +45,7 @@ Depósitos individuales
                             value="<?= $datosPago[0]['payment_status'] ?>">
                         <div class="row mb-3">
                             <div class="col">
-                                <label>Evento:</label>
+                                <label>Curso:</label>
                                 <input type="text" class="form-control" id="evento"
                                     value="<?= $datosPago[0]['evento'] ?>" readonly>
                             </div>

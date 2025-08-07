@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/admin_layout'); ?>
 
 <?= $this->section('title') ?>
-Todas las inscripciones
+Todos los Participantes
 <?= $this->endSection() ?>
 
 <?= $this->section('css') ?>
@@ -14,10 +14,10 @@ Todas las inscripciones
 
 <div class="content-wrapper">
     <div class="content-header sty-one">
-        <h1 class="text-black">Todas las inscripciones</h1>
+        <h1 class="text-black">Todas los Participantes</h1>
         <ol class="breadcrumb">
             <li><a href="#">Inicio</a></li>
-            <li class="sub-bread"><i class="fa fa-angle-right"></i> Inscripciones</li>
+            <li class="sub-bread"><i class="fa fa-angle-right"></i> Inscritos</li>
         </ol>
     </div>
     <div class="content">
@@ -32,7 +32,7 @@ Todas las inscripciones
                             <th class="exclude-view">Dirección</th>
                             <th class="exclude-view">Teléfono</th>
                             <th>Email</th>
-                            <th>Evento</th>
+                            <th>Curso</th>
                             <th>Precio</th>
                             <th>Estado</th>
                             <th class="exclude-view">Método de pago</th>
@@ -138,9 +138,9 @@ Todas las inscripciones
                         </div>
                         <div class="row">
                             <div class="form-group col-12">
-                                <label for="edit-event">Evento</label>
+                                <label for="edit-event">Curso</label>
                                 <select class="form-control select2" id="edit-event" name="event_id" style="width:100%">
-                                    <option value="">Seleccione un evento</option>
+                                    <option value="">Seleccione un curso</option>
                                 </select>
                             </div>
                             <div class="form-group col-12">
@@ -226,17 +226,17 @@ Todas las inscripciones
                 cache: true
             },
             minimumInputLength: 1, // Requiere al menos un carácter para buscar
-            placeholder: 'Buscar evento...', // Mensaje de placeholder
+            placeholder: 'Buscar curso...', // Mensaje de placeholder
             allowClear: true, // Permite limpiar la selección
             language: {
                 inputTooShort: function () {
                     return "Escriba al menos un carácter para buscar"; // Mensaje personalizado
                 },
                 noResults: function () {
-                    return "No se encontró ningún evento con ese nombre"; // Mensaje cuando no hay resultados
+                    return "No se encontró ningún curso con ese nombre"; // Mensaje cuando no hay resultados
                 },
                 searching: function () {
-                    return "Buscando eventos..."; // Mensaje de búsqueda
+                    return "Buscando cursos..."; // Mensaje de búsqueda
                 }
             }
         }).on('select2:select', function (e) {

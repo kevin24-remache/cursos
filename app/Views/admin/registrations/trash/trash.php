@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/admin_layout'); ?>
 
 <?= $this->section('title') ?>
-Inscripciones eliminadas
+Participantes Eliminados
 <?= $this->endSection() ?>
 
 <?= $this->section('css') ?>
@@ -12,10 +12,10 @@ Inscripciones eliminadas
 
 <div class="content-wrapper">
     <div class="content-header sty-one">
-        <h1 class="text-black">Inscripciones eliminadas</h1>
+        <h1 class="text-black">Participantes Eliminados</h1>
         <ol class="breadcrumb">
             <li><a href="#">Inicio</a></li>
-            <li class="sub-bread"><i class="fa fa-angle-right"></i> Inscripciones eliminadas</li>
+            <li class="sub-bread"><i class="fa fa-angle-right"></i> Eliminados</li>
         </ol>
     </div>
     <div class="content">
@@ -39,7 +39,7 @@ Inscripciones eliminadas
                             <th>Dirección</th>
                             <th class="exclude-view">Teléfono</th>
                             <th>Email</th>
-                            <th>Evento</th>
+                            <th>Curso</th>
                             <th>Categoría</th>
                             <th class="exclude-column">Acciones</th>
                         </tr>
@@ -92,7 +92,7 @@ Inscripciones eliminadas
                         <div class="row mb-3">
                             <div class="col">
                                 <p>Estas seguro de restaurar la inscripción del usuario : <strong
-                                        id="text-user-restore"></strong><br /> para el evento : <strong
+                                        id="text-user-restore"></strong><br /> para el curso : <strong
                                         id="text-event-restore"></strong> <br /> con el monto de : <strong
                                         id="text-category-restore"></strong></p>
                             </div>

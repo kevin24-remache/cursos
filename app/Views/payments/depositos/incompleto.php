@@ -25,7 +25,7 @@ Depósitos incompletos
                             <th>Código de pago</th>
                             <th class="exclude-view">Cédula</th>
                             <th>Nombres</th>
-                            <th>Evento</th>
+                            <th>Curso</th>
                             <th>Categoría</th>
                             <th class="exclude-view">Dirección</th$>
                             <th class="exclude-view">Teléfono</th>

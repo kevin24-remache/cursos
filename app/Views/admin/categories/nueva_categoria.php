@@ -13,11 +13,11 @@ Agregar categorías
 
 <div class="content-wrapper bg-white">
     <div class="content-header sty-one shadow">
-        <h1 class="text-black">Nueva categoría</h1>
+        <h1 class="text-black">Nuevo curso</h1>
         <ol class="breadcrumb">
             <li><a href="#">Inicio</a></li>
             <li class="sub-bread"><i class="fa fa-angle-right"></i> Categoría</li>
-            <li><i class="fa fa-angle-right"></i> Nueva categoría</li>
+            <li><i class="fa fa-angle-right"></i> Nuevo curso</li>
         </ol>
     </div>
 
@@ -31,7 +31,7 @@ Agregar categorías
 
                     <div class="card-header bg-gray">
 
-                        <h5 class="pull-left text-dark m-b-0">Agregar categoría</h5>
+                        <h5 class="pull-left text-dark m-b-0">Agregar curso</h5>
                         <div class="pull-right">
                             <div class="row">
                                 <label class="control-label">Monto de comisión <span class="text-primary">$<?= $additional_charge ?> USD</span></label>
@@ -47,7 +47,7 @@ Agregar categorías
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group has-feedback">
-                                        <label class="control-label">Nombre de la categoría</label>
+                                        <label class="control-label">Nombre del curso</label>
                                         <input class="form-control" name="category_name" placeholder=""
                                             value="<?= isset($last_data) ? display_data($last_data, 'category_name') : '' ?>"
                                             type="text">
@@ -57,7 +57,7 @@ Agregar categorías
                                 </div>
                                 <div class="col">
                                     <div class="form-group has-feedback">
-                                        <label class="control-label">Valor de la categoría</label>
+                                        <label class="control-label">Valor del curso</label>
                                         <input class="form-control" name="category_value" placeholder=""
                                             value="<?= isset($last_data) ? display_data($last_data, 'cantidad_dinero') : '' ?>"
                                             type="number">
@@ -69,7 +69,7 @@ Agregar categorías
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group has-feedback">
-                                        <label class="control-label">Descripción de la categoría</label>
+                                        <label class="control-label">Descripción del curso</label>
                                         <textarea class="form-control" name="short_description" id="" rows="4"
                                             placeholder=""><?= isset($last_data) ? display_data($last_data, 'short_description') : '' ?></textarea>
                                         <span
@@ -78,7 +78,7 @@ Agregar categorías
                                 </div>
                             </div>
                             <div>
-                                <button type="submit" class="btn btn-success">Crear categoría nueva</button>
+                                <button type="submit" class="btn btn-success">Crear curso nuevo</button>
                             </div>
                         </form>
 

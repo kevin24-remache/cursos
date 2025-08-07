@@ -202,7 +202,7 @@ class EventsModel extends Model
 
             if ($db->transStatus() === FALSE) {
                 // Si la transacción falla, se revierte
-                throw new \Exception('Error eliminando el evento y sus registros relacionados');
+                throw new \Exception('Error eliminando el curso y sus registros relacionados');
             }
 
             return true; // Todo fue exitoso

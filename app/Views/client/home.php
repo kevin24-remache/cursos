@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="<?= csrf_hash() ?>">
     <title>Inicio</title>
-    <link rel="icon" href="<?= base_url("assets/images/icono.jpeg"); ?>" type="image/jpeg">
+    <link rel="icon" href="<?= base_url("assets/images/logo-ep.png"); ?>" type="image/jpeg">
     <!-- Theme style -->
     <link rel="stylesheet" href="<?= base_url("assets/css/styles.css") ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
@@ -53,193 +53,293 @@
             color: #888;
         }
     </style>
-    <main class="flex-grow-1" style="background-color: #d9d9d9;">
-        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #0C244B;">
-            <div class="container-fluid">
-                <a class="navbar-brand ms-lg-4" href="">
-                    <h4>PROSERVI-UEB-EP</h4>
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <!-- Añadir este botón dentro del <ul class="navbar-nav"> junto a los otros botones -->
-                        <li class="nav-item">
-                            <button title="Puntos de Recaudación" class="btn btn-outline-light me-2 mb-2 mb-lg-0"
-                                data-bs-toggle="modal" data-bs-target="#modalPuntosRecaudacion" type="button">
-                                <i class="fa-solid fa-location-dot"></i> PUNTOS DE RECAUDACIÓN
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button title="Información Bancaria" class="btn btn-outline-light me-2 mb-2 mb-lg-0"
-                                data-bs-toggle="modal" data-bs-target="#modalCuentasBancarias" type="button"
-                                data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver información bancaria">
-                                <i class="fa-solid fa-circle-info"></i> INFORMACIÓN BANCARIA
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button title="Consultar Voucher" class="btn btn-outline-light mb-2 mb-lg-0"
-                                data-bs-toggle="modal" data-bs-target="#modalVoucher" type="button"
-                                data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                title="Consultar detalles del voucher">
-                                <i class="fa-solid fa-file-pdf"></i> CONSULTAR VOUCHER
-                            </button>
-                        </li>
-
-                    </ul>
-                </div>
+<main class="flex-grow-1" style="background-color: #f0f4fa;">
+    <!-- Enhanced Navigation Bar -->
+    <nav class="navbar navbar-expand-lg shadow-lg" style="background: linear-gradient(135deg, #0C244B 0%, #1a3b6d 100%);">
+        <div class="container-fluid">
+            <!-- Logo and Brand Name -->
+            <a class="navbar-brand ms-lg-4 d-flex align-items-center" href="">
+                <h4 class="mb-0 fw-bold text-white" style="letter-spacing: 1px; text-shadow: 0px 2px 3px rgba(0,0,0,0.2);">
+                    <span style="color: #FFD700;">DOCTRINA</span> TECH
+                </h4>
+            </a>
+            
+            <!-- Mobile Toggle Button -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" 
+                style="border: 2px solid #FFD700;">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <!-- Navigation Items -->
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <!-- Collection Points Button -->
+                    <li class="nav-item mx-2">
+                        <button title="Puntos de Recaudación" 
+                            class="btn me-2 mb-2 mb-lg-0 rounded-pill px-4 py-2 fw-bold"
+                            style="background: linear-gradient(to right, #FFD700, #FFC107); color: #0C244B; box-shadow: 0 4px 8px rgba(255, 215, 0, 0.3); transform: translateY(0); transition: all 0.3s ease;"
+                            onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 12px rgba(255, 215, 0, 0.4)';"
+                            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(255, 215, 0, 0.3)';"
+                            data-bs-toggle="modal" data-bs-target="#modalPuntosRecaudacion" type="button">
+                            <i class="fa-solid fa-location-dot me-2"></i> PUNTOS DE RECAUDACIÓN
+                        </button>
+                    </li>
+                    
+                    <!-- Bank Information Button -->
+                    <li class="nav-item mx-2">
+                        <button title="Información Bancaria" 
+                            class="btn me-2 mb-2 mb-lg-0 rounded-pill px-4 py-2 fw-bold"
+                            style="background: linear-gradient(to right, #ffffff, #f0f0f0); color: #0C244B; box-shadow: 0 4px 8px rgba(255, 255, 255, 0.3); transform: translateY(0); transition: all 0.3s ease;"
+                            onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 12px rgba(255, 255, 255, 0.4)';"
+                            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(255, 255, 255, 0.3)';"
+                            data-bs-toggle="modal" data-bs-target="#modalCuentasBancarias" type="button">
+                            <i class="fa-solid fa-circle-info me-2"></i> INFORMACIÓN BANCARIA
+                        </button>
+                    </li>
+                    
+                    <!-- Check Voucher Button -->
+                    <!-- <li class="nav-item mx-2">
+                        <button title="Consultar Voucher"
+                            class="btn mb-2 mb-lg-0 rounded-pill px-4 py-2 fw-bold position-relative overflow-hidden"
+                            style="background: linear-gradient(to right, #0C244B, #1a3b6d); color: white; border: 2px solid #FFD700; box-shadow: 0 4px 8px rgba(12, 36, 75, 0.4); transform: translateY(0); transition: all 0.3s ease;" 
+                            onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 12px rgba(12, 36, 75, 0.5)';"
+                            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(12, 36, 75, 0.4)';"
+                            data-bs-toggle="modal" data-bs-target="#modalVoucher" type="button">
+                            <i class="fa-solid fa-file-pdf me-2"></i> CONSULTAR VOUCHER
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger animate__animated animate__pulse animate__infinite">
+                                <i class="fa-solid fa-bell"></i>
+                            </span>
+                        </button>
+                    </li> -->
+                </ul>
             </div>
-        </nav>
-        <div class="mb-4">
-            <div class="text-center">
-                <img src="<?= base_url("assets/images/logo-ep.png"); ?>" alt="" height="100px">
-            </div>
-            <section class="container flex-grow-1 d-flex">
-                <div class="row flex-grow-1">
-                    <?php if (empty($events)): ?>
-                        <div class="no-events pt-3">
-                            <div>
-                                <h2>No hay eventos registrados</h2>
-                                <p>Actualmente no hay eventos disponibles. Por favor, vuelve más tarde.</p>
-                            </div>
-                        </div>
-                    <?php else: ?>
-                        <?php foreach ($events as $key => $event): ?>
-                            <div class="col-12 col-sm-12 col-md-4 col-lg-3 col-xl-3 p-3">
-                                <div class="bg-white shadow rounded-2">
-                                    <figure class="p-1">
-                                        <img src="<?= base_url("") . $event['image']; ?>" alt="Imagen del Curso"
-                                            class="img-fluid imagen-pequena rounded-2 ">
-                                    </figure>
-                                    <figure class="text-center">
-                                        <img src="<?= base_url("assets/images/logo_ueb.png") ?>" alt="Logo del curso"
-                                            class="img-fluid" width="120px;">
-                                    </figure>
-                                    <section class="px-2">
-                                        <article class="date__start__content">
-                                            <?= $event['formatted_event_date'] ?>
-                                        </article>
-                                        <section class="card__icons__container">
-                                            <?php if ($event['modality'] == 'Virtual' || $event['modality'] == 'Hibrida'): ?>
-                                                <article class="text-center">
-                                                    <p><i class="fa-regular fa-clock"></i> DURACIÓN</p>
-                                                    <span><?= $event['event_duration'] ?> Horas</span>
-                                                </article>
-                                            <?php endif; ?>
-                                            <article class="text-center">
-                                                <p><i class="fa fa-users"></i> MODALIDAD</p>
-                                                <span><?= $event['modality'] ?></span>
-                                            </article>
-                                        </section>
-                                        <section class="pt-3 pb-1">
-                                            <button class="btn btn-danger mb-2 btn-inscribirse" data-bs-toggle="modal"
-                                                data-bs-target="#modalInscripcion" data-evento="<?= $event['event_name'] ?>"
-                                                data-event-id="<?= $event['id'] ?>" type="button" style="width:100%;">
-                                                INSCRIBIRSE
-                                            </button>
-                                            <button class="btn card__button mb-2" type="button" data-bs-toggle="modal"
-                                                data-bs-target="#modalMetodo" style="width:100%;">
-                                                PAGAR
-                                            </button>
-                                        </section>
-                                    </section>
-                                </div>
-                            </div>
-                        <?php endforeach ?>
-                    <?php endif; ?>
-                    <style>
-                        @media (min-width: 550px) and (max-width: 767.98px) {
-                            .col-12.col-sm-12 {
-                                flex: 0 0 50%;
-                                max-width: 50%;
-                            }
-                        }
-
-                        .modal-lg {
-                            max-width: 900px;
-                        }
-
-                        .card {
-                            transition: transform 0.2s ease-in-out;
-                            overflow: hidden;
-                        }
-
-                        .card:hover {
-                            transform: translateY(-5px);
-                        }
-
-                        .rounded-circle {
-                            width: 50px;
-                            height: 50px;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                        }
-
-                        .card-img-wrapper {
-                            position: relative;
-                            overflow: hidden;
-                            height: 200px;
-                        }
-
-                        .sucursal-img {
-                            width: 100%;
-                            height: 100%;
-                            object-fit: cover;
-                            transition: transform 0.3s ease;
-                        }
-
-                        .card:hover .sucursal-img {
-                            transform: scale(1.1);
-                        }
-
-                        .img-overlay {
-                            position: absolute;
-                            bottom: 0;
-                            left: 0;
-                            right: 0;
-                            background: linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%);
-                            padding: 20px;
-                            transition: all 0.3s ease;
-                        }
-
-                        .card:hover .img-overlay {
-                            background: linear-gradient(0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.1) 100%);
-                        }
-
-                        .modal-content {
-                            border-radius: 15px;
-                            overflow: hidden;
-                        }
-
-                        .card {
-                            border-radius: 10px;
-                        }
-
-                        .list-unstyled li {
-                            padding: 8px 0;
-                            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-                        }
-
-                        .list-unstyled li:last-child {
-                            border-bottom: none;
-                        }
-
-                        .text-home {
-                            color: #0C244B !important;
-                        }
-
-                        .bg-home {
-                            background-color: #0C244B !important;
-                        }
-                    </style>
-                </div>
-            </section>
         </div>
-    </main>
+    </nav>
 
+    <!-- Logo Section -->
+    <div class="mb-4 py-4" style="background: linear-gradient(to bottom, #ffffff, #f0f4fa);">
+        <div class="text-center">
+            <img src="<?= base_url("assets/images/logo-ep.png"); ?>" alt="" height="120px" class="img-fluid animate__animated animate__fadeIn" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">
+        </div>
+    </div>
+
+    <!-- Courses Section -->
+    <section class="container flex-grow-1 d-flex pb-5">
+        <div class="row flex-grow-1">
+            <?php if (empty($events)): ?>
+                <div class="no-events pt-5 text-center animate__animated animate__fadeIn">
+                    <div class="bg-white p-5 rounded-4 shadow-lg">
+                        <i class="fa-solid fa-calendar-xmark fa-4x mb-3" style="color: #0C244B;"></i>
+                        <h2 class="fw-bold" style="color: #0C244B;">No hay cursos registrados</h2>
+                        <p class="lead">Actualmente no hay cursos disponibles. Por favor, vuelve más tarde.</p>
+                        <button class="btn btn-lg rounded-pill px-4 py-2 mt-3 fw-bold animate__animated animate__pulse animate__infinite"
+                            style="background: linear-gradient(to right, #FFD700, #FFC107); color: #0C244B; box-shadow: 0 4px 8px rgba(255, 215, 0, 0.3);">
+                            <i class="fa-solid fa-bell me-2"></i> Notificarme cuando haya nuevos cursos
+                        </button>
+                    </div>
+                </div>
+            <?php else: ?>
+                <?php foreach ($events as $key => $event): ?>
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 p-3 animate__animated animate__fadeIn" style="animation-delay: calc(<?= $key ?> * 0.1s);">
+                        <div class="bg-white shadow-lg rounded-4 h-100 overflow-hidden" style="transition: all 0.3s ease; transform: translateY(0);" 
+                            onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 15px 30px rgba(0,0,0,0.15)';" 
+                            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='';">
+                            
+                            <!-- Course Image -->
+                            <figure class="p-0 m-0 position-relative">
+                                <div class="position-absolute top-0 end-0 m-2">
+                                    <span class="badge rounded-pill px-3 py-2" 
+                                        style="background-color: <?= $event['modality'] == 'Virtual' ? '#0C244B' : ($event['modality'] == 'Hibrida' ? '#FFD700' : '#28a745') ?>; 
+                                        color: <?= $event['modality'] == 'Hibrida' ? '#0C244B' : 'white' ?>; 
+                                        font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                                        <?= $event['modality'] ?>
+                                    </span>
+                                </div>
+                                <img src="<?= base_url("") . $event['image']; ?>" alt="Imagen del Curso"
+                                    class="img-fluid w-100 rounded-4" style="height: 180px; object-fit: cover;">
+                                <div class="position-absolute bottom-0 start-0 w-100 p-3" 
+                                    style="background: linear-gradient(0deg, rgba(12, 36, 75, 0.8) 0%, rgba(12, 36, 75, 0) 100%);">
+                                    <div class="date__start__content text-white fw-bold" style="text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
+                                        <i class="fa-regular fa-calendar-days me-2"></i><?= $event['formatted_event_date'] ?>
+                                    </div>
+                                </div>
+                            </figure>
+                            
+                            <!-- Logo -->
+                            
+                            <!-- Course Info -->
+                            <section class="px-3 pt-2 pb-3">
+                                <div class="row g-2 mb-3">
+                                    <?php if ($event['modality'] == 'Virtual' || $event['modality'] == 'Hibrida'): ?>
+                                        <div class="col-6">
+                                            <div class="bg-light rounded-3 p-2 h-100 text-center" style="border-left: 4px solid #FFD700;">
+                                                <p class="mb-1 fw-bold" style="color: #0C244B; font-size: 0.8rem;"><i class="fa-regular fa-clock me-1"></i> DURACIÓN</p>
+                                                <span class="fw-bold" style="color: #1a3b6d;"><?= $event['event_duration'] ?> Horas</span>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+                                    <?php
+$ciudad = strtolower(trim($event['address'])); // Asegura que sea minúscula y sin espacios
+?>
+
+<?php if ($ciudad === 'Guaranda'): ?>
+    <div class="col-12">
+        <div class="bg-light rounded-3 p-2 h-100 text-center" style="border-left: 4px solid #0C244B;">
+            <p class="mb-1 fw-bold" style="color: #0C244B; font-size: 0.8rem;">
+                <i class="fa fa-map-marker me-1"></i> CIUDAD: GUARANDA
+            </p>
+            <span class="fw-bold" style="color: #1a3b6d;">
+                <?= esc($event['address']) ?>
+            </span>
+        </div>
+    </div>
+
+<?php elseif ($ciudad === 'Quito'): ?>
+    <div class="col-12">
+        <div class="bg-light rounded-3 p-2 h-100 text-center" style="border-left: 4px solid #FFD700;">
+            <p class="mb-1 fw-bold" style="color: #FFD700; font-size: 0.8rem;">
+                <i class="fa fa-map-marker me-1"></i> CIUDAD: QUITO
+            </p>
+            <span class="fw-bold" style="color: #1a3b6d;">
+                <?= esc($event['address']) ?>
+            </span>
+        </div>
+    </div>
+
+<?php else: ?>
+    <div class="col-12">
+        <div class="bg-light rounded-3 p-2 h-100 text-center" style="border-left: 4px solid #28a745;">
+            <p class="mb-1 fw-bold" style="color: #28a745; font-size: 0.8rem;">
+                <i class="fa fa-map-marker me-1"></i> CIUDAD
+            </p>
+            <span class="fw-bold" style="color: #1a3b6d;">
+                <?= esc($event['address']) ?>
+            </span>
+        </div>
+    </div>
+<?php endif; ?>
+
+                                
+                                <!-- Buttons -->
+                                <div class="pt-2 pb-1 d-flex flex-column gap-2">
+                                    <button class="btn btn-danger fw-bold py-2 rounded-pill position-relative overflow-hidden"
+                                        style="background: linear-gradient(45deg, #ff3547, #ff5252); box-shadow: 0 4px 8px rgba(255, 53, 71, 0.3); transform: translateY(0); transition: all 0.3s ease;"
+                                        onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 12px rgba(255, 53, 71, 0.4)';"
+                                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(255, 53, 71, 0.3)';"
+                                        data-bs-toggle="modal" data-bs-target="#modalInscripcion" 
+                                        data-evento="<?= $event['event_name'] ?>" data-event-id="<?= $event['id'] ?>" type="button">
+                                        <i class="fa-solid fa-user-plus me-2"></i> INSCRIBIRSE
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning" style="color: #0C244B;">
+                                            <i class="fa-solid fa-star"></i>
+                                        </span>
+                                    </button>
+                                    
+                                    <button class="btn fw-bold py-2 rounded-pill"
+                                        style="background: linear-gradient(45deg, #FFD700, #FFC107); color: #0C244B; box-shadow: 0 4px 8px rgba(255, 215, 0, 0.3); transform: translateY(0); transition: all 0.3s ease;"
+                                        onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 12px rgba(255, 215, 0, 0.4)';"
+                                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(255, 215, 0, 0.3)';"
+                                        type="button" data-bs-toggle="modal" data-bs-target="#modalMetodo">
+                                        <i class="fa-solid fa-credit-card me-2"></i> PAGAR AHORA
+                                    </button>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                <?php endforeach ?>
+            <?php endif; ?>
+        </div>
+    </section>
+    
+    <!-- Custom Styles -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        /* Responsive adjustments */
+        @media (min-width: 550px) and (max-width: 767.98px) {
+            .col-12.col-sm-6 {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+        }
+
+        /* Modal styles */
+        .modal-lg {
+            max-width: 900px;
+        }
+        
+        .modal-content {
+            border-radius: 15px;
+            overflow: hidden;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #0C244B 0%, #1a3b6d 100%);
+            color: white;
+            border-bottom: 3px solid #FFD700;
+        }
+        
+        .modal-footer {
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        /* List styles */
+        .list-unstyled li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+        
+        .list-unstyled li:hover {
+            background-color: rgba(12, 36, 75, 0.05);
+        }
+        
+        .list-unstyled li:last-child {
+            border-bottom: none;
+        }
+        
+        /* Custom colors */
+        .text-primary-dt {
+            color: #0C244B !important;
+        }
+        
+        .text-secondary-dt {
+            color: #FFD700 !important;
+        }
+        
+        .bg-primary-dt {
+            background-color: #0C244B !important;
+        }
+        
+        .bg-secondary-dt {
+            background-color: #FFD700 !important;
+        }
+        
+        /* Animation for buttons */
+        @keyframes pulse-border {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(255, 215, 0, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+            }
+        }
+        
+        .pulse-button {
+            animation: pulse-border 2s infinite;
+        }
+    </style>
+</main>
     <!-- Modal de Puntos de Recaudación -->
     <div class="modal fade" id="modalPuntosRecaudacion" tabindex="-1" aria-labelledby="modalPuntosRecaudacionLabel"
         aria-hidden="true">
@@ -416,14 +516,14 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalInscripcionLabel">Inscripción al Congreso</h5>
+                    <h5 class="modal-title" id="modalInscripcionLabel">Inscripción al Curso</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="formInscripcion">
                         <input type="hidden" id="eventoId" name="eventoId">
                         <div class="mb-3">
-                            <label for="nombreEvento" class="form-label">Nombre del Evento</label>
+                            <label for="nombreEvento" class="form-label">Nombre del Curso</label>
                             <input type="text" class="form-control" id="nombreEvento" readonly>
                         </div>
 
@@ -542,7 +642,7 @@
                 <div class="modal-body">
                     <form id="formDetallesEvento">
                         <div class="mb-3">
-                            <label for="descripcionEvento" class="form-label">Descripción del Evento</label>
+                            <label for="descripcionEvento" class="form-label">Descripción del Curso</label>
                             <textarea rows="3" class="form-control" id="descripcionEvento" readonly></textarea>
                         </div>
                         <div class="mb-3">
@@ -550,11 +650,11 @@
                             <div id="categoria"></div>
                         </div>
                         <div class="alert alert-success" role="alert">
-                            <p>Estudiante: <span id="nombresPersona" class="text-primary"></span> <span
+                            <p>Participante: <span id="nombresPersona" class="text-primary"></span> <span
                                     id="apellidosPersona" class="text-primary"></span></p>
                             Cuando finalices se te enviara un
                             código a tu correo electrónico: <span id="emailPersona" class="text-primary"></span> que
-                            deberás usarlo para realizar el pago
+                            deberás usarlo para realizar el pago.
                         </div>
                         <div class="mb-3 row">
                             <input type="hidden" id="id_user">
@@ -692,7 +792,7 @@
     </div>
 
     <!-- Modal Autorización-->
-    <div class="modal fade" id="modalVoucher" tabindex="-1" aria-labelledby="modalVoucherLabel" aria-hidden="true">
+   <!--  <div class="modal fade" id="modalVoucher" tabindex="-1" aria-labelledby="modalVoucherLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-dark text-white">
@@ -719,7 +819,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
 
 
@@ -824,9 +924,6 @@
     <!-- Footer-->
     <footer class="bg-dark text-light py-4 mt-auto">
         <div class="container-fluid text-center">
-            <div class="small m-0 text-white p-1">Copyright 2024 &copy; PROSERVI-UEB-EP |
-                <a href="" class="text-decoration-none link-light">Softec Apps S.A.S</a>
-            </div>
         </div>
     </footer>
     <!-- Payphone -->
@@ -908,16 +1005,12 @@
         <?php endif; ?>
 
         function submitVoucherForm() {
-            var numeroAuto = document.getElementById('numero_auto').value.replace(/\s/g, '');
+    var numeroAuto = document.getElementById('numero_auto').value;
 
-            if (numeroAuto.length > 19) {
-                numeroAuto = numeroAuto.slice(13);
-                numeroAuto = numeroAuto.slice(0, -6);
-            }
+    var url = '<?= base_url("pdf/") ?>' + numeroAuto;
+    window.location.href = url;
+}
 
-            var url = '<?= base_url("pdf/") ?>' + numeroAuto;
-            window.location.href = url;
-        }
     </script>
 
     <script src="<?= base_url("assets/js/home/home.js") ?>"></script>

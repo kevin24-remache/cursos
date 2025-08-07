@@ -11,12 +11,12 @@ class EventRules
     {
         if (isset($data['modality']) && ($data['modality'] == Modalidad::Virtual || $data['modality'] == Modalidad::Hibrida)) {
             if (empty($str)) {
-                $error = 'La duración del evento es requerida para modalidades Virtual o Hibrida.';
+                $error = 'La duración del curso es requerida para modalidades Virtual o Hibrida.';
                 return false;
             }
 
             if (!is_numeric($str)) {
-                $error = 'La duración del evento debe ser un valor numérico.';
+                $error = 'La duración del curso debe ser un valor numérico.';
                 return false;
             }
         }
@@ -29,7 +29,7 @@ class EventRules
         $hoy = new DateTime();
 
         if ($fechaEvento <= $hoy) {
-            $error = 'La fecha del evento debe ser una fecha futura';
+            $error = 'La fecha del curso debe ser una fecha futura';
             return false;
         }
 
@@ -59,7 +59,7 @@ class EventRules
         }
 
         if ($fechaEvento && $fechaInicio >= $fechaEvento) {
-            $error = 'La fecha de inicio de la inscripción debe ser menor a la fecha del evento';
+            $error = 'La fecha de inicio de la inscripción debe ser menor a la fecha del curso';
             return false;
         }
 
@@ -83,7 +83,7 @@ class EventRules
         }
 
         if ($fechaEvento && !($fechaFin <= $fechaEvento)) {
-            $error = 'La fecha de finalización de la inscripción debe ser menor o igual a la fecha del evento';
+            $error = 'La fecha de finalización de la inscripción debe ser menor o igual a la fecha del curso';
             return false;
         }
 

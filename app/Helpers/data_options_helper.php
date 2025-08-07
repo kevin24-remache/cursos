@@ -4,7 +4,8 @@ class RolesOptions
     const AdminPrincipal = 1;
     const AdministradorDePagos = 2;
     const AdministradorProservi = 3;
-    // const UsuarioPublico = 4;
+    const UsuarioPublico = 4;
+    // const UsuarioPublico = 5;
 }
 
 class ModulosAdmin
@@ -27,6 +28,7 @@ class ModulosAdmin
     const MIS_RECAUDACIONES = 'MIS_RECAUDACIONES';
     const RECAUDACIONES = 'RECAUDACIONES';
     const RECAUDACIONES_ONLINE = 'RECAUDACIONES_ONLINE';
+    
 }
 
 class ModulosAdminPagos
@@ -46,6 +48,7 @@ class ModulosAdminPagos
     const MIS_RECAUDACIONES = 'MIS_RECAUDACIONES';
 }
 
+
 class PaymentStatus
 {
     const Pendiente = 1;
@@ -61,8 +64,10 @@ class Modalidad
     const Presencial = 'Presencial';
     const Virtual = 'Virtual';
     const Hibrida = 'Hibrida';
-
 }
+
+
+
 
 if (!function_exists('getPaymentStatusText')) {
     function getPaymentStatusText($status)
@@ -85,6 +90,7 @@ if (!function_exists('getPaymentStatusText')) {
         }
     }
 }
+
 if (!function_exists('style_estado')) {
     function style_estado($estado_pago)
     {
@@ -106,6 +112,7 @@ if (!function_exists('style_estado')) {
         }
     }
 }
+
 if (!function_exists('mapEstadoToValue')) {
     function mapEstadoToValue($estadoText)
     {
@@ -118,13 +125,14 @@ if (!function_exists('mapEstadoToValue')) {
                 return PaymentStatus::Fallido;
             case 'enproceso':
                 return PaymentStatus::EnProceso;
-            case 'Incompleto':
+            case 'incompleto':
                 return PaymentStatus::Incompleto;
             default:
                 return null; // Estado inválido
         }
     }
 }
+
 if (!function_exists('mapValueToEstado')) {
     function mapValueToEstado($value)
     {
@@ -138,12 +146,11 @@ if (!function_exists('mapValueToEstado')) {
             case PaymentStatus::EnProceso:
                 return 'enproceso';
             case PaymentStatus::Incompleto:
-                return 'Incompleto';
+                return 'incompleto';
             default:
                 return 'desconocido';
         }
     }
-
 }
 
 if (!function_exists('getRolesOptions')) {
@@ -153,10 +160,10 @@ if (!function_exists('getRolesOptions')) {
             RolesOptions::AdminPrincipal => 'Admin Principal',
             RolesOptions::AdministradorDePagos => 'Administrador de Pagos',
             RolesOptions::AdministradorProservi => 'Usuario Proservi',
-            // RolesOptions::UsuarioPublico => 'Usuario Público',
         ];
     }
 }
+
 if (!function_exists('getListRolesOptions')) {
     function getListRolesOptions($rol)
     {

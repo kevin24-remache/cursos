@@ -13,6 +13,7 @@
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Theme style -->
     <link rel="stylesheet" href="<?= base_url("dist/css/style.css") ?>">
@@ -38,6 +39,232 @@
 
     <!-- Preloader -->
     <link rel="stylesheet" href="<?= base_url("assets/css/preloader.css") ?>">
+    
+    <!-- Estilos personalizados para sidebar -->
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f0f4fa;
+        }
+        
+        /* Header Styling */
+        .main-header {
+            background: linear-gradient(135deg, #0C244B 0%, #1a3b6d 100%);
+            border-bottom: 3px solid #FFD700;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .main-header .logo {
+            background: linear-gradient(135deg, #0C244B 0%, #1a3b6d 100%);
+            border-right: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        .main-header .navbar {
+            background: linear-gradient(135deg, #0C244B 0%, #1a3b6d 100%);
+        }
+        
+        /* Sidebar Styling */
+        .main-sidebar {
+            background-color: #0C244B;
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar {
+            background-color: #0C244B;
+        }
+        
+        /* User Panel */
+        .user-panel {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px 15px;
+        }
+        
+        .user-panel .image {
+            margin-bottom: 10px;
+        }
+        
+        .user-panel .info {
+            text-align: center;
+        }
+        
+        .user-panel .info p {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .user-panel .info a {
+            color: rgba(255, 255, 255, 0.7);
+            margin: 0 5px;
+            transition: all 0.3s ease;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        
+        .user-panel .info a:hover {
+            color: #FFD700;
+            background-color: rgba(255, 215, 0, 0.1);
+        }
+        
+        /* Sidebar Menu */
+        .sidebar-menu {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .sidebar-menu > li {
+            position: relative;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .sidebar-menu > li > a {
+            color: rgba(255, 255, 255, 0.8) !important;
+            border-left: 3px solid transparent;
+            padding: 15px 20px;
+            display: block;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-menu > li > a:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+            text-decoration: none;
+            border-left: 3px solid rgba(255, 215, 0, 0.5);
+        }
+        
+        .sidebar-menu > li.active > a,
+        .sidebar-menu > li.treeview.active > a {
+            background-color: rgba(255, 215, 0, 0.15) !important;
+            color: #FFD700 !important;
+            border-left: 3px solid #FFD700;
+            font-weight: 600;
+        }
+        
+        .sidebar-menu > li > a > i {
+            width: 20px;
+            margin-right: 10px;
+            text-align: center;
+            font-size: 16px;
+        }
+        
+        /* Treeview Menu */
+        .treeview-menu {
+            background-color: rgba(0, 0, 0, 0.2);
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        
+        .treeview-menu > li > a {
+            color: rgba(255, 255, 255, 0.7) !important;
+            padding: 12px 20px 12px 50px;
+            display: block;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .treeview-menu > li > a:hover {
+            background-color: rgba(255, 255, 255, 0.05) !important;
+            color: rgba(255, 255, 255, 0.9) !important;
+            text-decoration: none;
+        }
+        
+        .treeview-menu > li.active > a {
+            background-color: rgba(255, 215, 0, 0.1) !important;
+            color: #FFD700 !important;
+            border-left: 3px solid #FFD700;
+            font-weight: 600;
+        }
+        
+        /* Pull Right Container */
+        .pull-right-container {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .pull-right-container .fa-angle-left {
+            color: rgba(255, 255, 255, 0.6);
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-menu > li:hover .pull-right-container .fa-angle-left,
+        .sidebar-menu > li.active .pull-right-container .fa-angle-left {
+            color: #FFD700;
+            transform: rotate(-90deg);
+        }
+        
+        /* Header item special styling */
+        .sidebar-menu > li.header {
+            background-color: rgba(255, 215, 0, 0.1);
+            border-left: 3px solid #FFD700;
+            margin: 10px 0;
+        }
+        
+        .sidebar-menu > li.header > a {
+            color: #FFD700 !important;
+            font-weight: 600;
+            background-color: transparent !important;
+        }
+        
+        .sidebar-menu > li.header > a:hover {
+            background-color: rgba(255, 215, 0, 0.2) !important;
+        }
+        
+        /* Dropdown menu in header */
+        .navbar-custom-menu .dropdown-menu {
+            background-color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+        }
+        
+        .navbar-custom-menu .user-header {
+            background: linear-gradient(135deg, #0C244B 0%, #1a3b6d 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .navbar-custom-menu .dropdown-menu li a {
+            color: #333;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-custom-menu .dropdown-menu li a:hover {
+            background-color: #f8f9fa;
+            color: #0C244B;
+        }
+        
+        /* Content wrapper */
+        .content-wrapper {
+            background-color: #f0f4fa;
+            min-height: 100vh;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 767px) {
+            .sidebar-menu > li > a {
+                padding: 12px 15px;
+            }
+            
+            .treeview-menu > li > a {
+                padding: 10px 15px 10px 40px;
+            }
+            
+            .pull-right-container {
+                right: 10px;
+            }
+        }
+    </style>
+    
     <?= $this->renderSection('css'); ?>
 
 </head>
@@ -53,8 +280,8 @@
         <header class="main-header">
             <!-- Logo -->
             <a href="<?= base_url("admin/dashboard") ?>" class="logo blue-bg">
-            <span class="logo-mini"><img class="img-fluid" style="width:35px; background:white; border-radius:10px;"  src="<?= base_url("assets/images/icono-sin-fondo.png") ?>" alt=""></span>
-                <span class="logo-lg"><img style="width:120px; background:white; border-radius:10px;"
+            <span class="logo-mini"><img class="img-fluid" style="width:50px; background:white; border-radius:20px;"  src="<?= base_url("assets/images/icono-sin-fondo.png") ?>" alt=""></span>
+                <span class="logo-lg"><img style="width:60px; background:white; border-radius:10px;"
                         src="<?= base_url("assets/images/logo-ep.png") ?>" alt=""></span> </a>
             <nav class="navbar blue-bg navbar-static-top">
                 <!-- Sidebar toggle button-->
@@ -66,22 +293,11 @@
                         <!-- User Account: style can be found in dropdown.less -->
                         <li class="dropdown user user-menu p-ph-res">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <img
-                                    src="<?= base_url('assets/images/admin_letter.jpeg') ?>" class="user-image"
+                                    src="<?= base_url('assets/images/letter_admin.png') ?>" class="user-image"
                                     alt="User Image"> <span class="hidden-xs"><?= session('first_name') . ' ' . session('last_name') ?></span> </a>
                             <ul class="dropdown-menu">
 
-                                <li class="user-header">
-                                    <div class="pull-left user-img"><img
-                                            src="<?= base_url('assets/images/admin_letter.jpeg') ?>"
-                                            class="img-responsive" alt="User"></div>
-                                    <p class="text-left"><?= session('first_name') . ' ' . session('last_name') ?>
-                                        <small><?= session('user_email') ?></small>
-                                    </p>
-                                    <!-- <div class="view-link text-left"><a href="#">Ver perfil</a> </div> -->
-                                </li>
-                                <hr>
-                                <!-- <li><a href="#"><i class="icon-profile-male"></i> Mi perfil</a></li> -->
-                                <li role="separator" class="divider"></li>
+                                
                                 <li><a href="<?= base_url("admin/config") ?>"><i class="icon-gears"></i>
                                         Configuración</a></li>
                                 <li role="separator" class="divider"></li>
@@ -99,7 +315,7 @@
 
                 <div class="user-panel">
                     <div class="image text-center">
-                        <img src="<?= base_url('assets/images/admin_letter.jpeg') ?>" class="img-circle"
+                        <img src="<?= base_url('assets/images/letter_admin.png') ?>" class="img-circle"
                             alt="User Image">
                     </div>
                     <div class="info text-black">
@@ -154,41 +370,58 @@
                             </li>
                         </ul>
                     </li>
-                    <li
-                        class="treeview <?= (isset($modulo) && in_array($modulo, [ModulosAdmin::INSCRIPCIONES,ModulosAdmin::INSCRIPCIONES_ELIMINADAS])) ? 'active' : '' ?>">
+                    <li class="treeview <?= (isset($modulo) && in_array($modulo, [ModulosAdmin::INSCRIPCIONES,ModulosAdmin::INSCRIPCIONES_ELIMINADAS])) ? 'active' : '' ?>">
                         <a href="#"> <i class="fa fa-users"></i>
-                        <span>Inscripciones</span>
+                        <span>Participantes</span>
                             <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
                         <ul class="treeview-menu">
                             <li
                                 class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::INSCRIPCIONES)) ? 'active' : '' ?>">
-                                <a href="<?= base_url("admin/inscritos") ?>">Todas</a>
+                                <a href="<?= base_url("admin/inscritos") ?>">Todos los Participantes</a>
                             </li>
                             <li
                                 class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::INSCRIPCIONES_ELIMINADAS)) ? 'active' : '' ?>">
-                                <a href="<?= base_url("admin/inscritos/trash") ?>">Eliminadas</a>
+                                <a href="<?= base_url("admin/inscritos/trash") ?>">Participantes Eliminados</a>
                             </li>
                         </ul>
                     </li>
                     <li
                         class="treeview <?= (isset($modulo) && in_array($modulo, [ModulosAdmin::EVENTS, ModulosAdmin::EVENTS_LIST, ModulosAdmin::EVENTS_ADD,ModulosAdmin::CATEGORY_LIST])) ? 'active' : '' ?>">
-                        <a href="#"> <i class="fa fa-ticket"></i> <span>Eventos</span> <span
+                        <a href="#"> <i class="fa fa-ticket"></i> <span>Cursos</span> <span
                                 class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
                         <ul class="treeview-menu">
                             <li
                                 class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::EVENTS_ADD)) ? 'active' : '' ?>">
-                                <a href="<?= base_url("admin/event/new") ?>">Nuevo evento</a>
+                                <a href="<?= base_url("admin/event/new") ?>">Nuevo Curso</a>
                             </li>
                             <li
                                 class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::EVENTS_LIST)) ? 'active' : '' ?>">
-                                <a href="<?= base_url("admin/event") ?>">Lista de eventos</a>
+                                <a href="<?= base_url("admin/event") ?>">Lista de Cursos</a>
                             </li>
                             <li
                                 class="<?= (isset($modulo) && checkActiveModule($modulo, ModulosAdmin::CATEGORY_LIST)) ? 'active' : '' ?>">
-                                <a href="<?= base_url("admin/category") ?>">Categorías de eventos</a>
+                                <a href="<?= base_url("admin/category") ?>">Categorías de Cursos</a>
                             </li>
                         </ul>
                     </li>
+
+<li class="treeview <?= (isset($modulo) && $modulo === 'CERTIFICADOS') ? 'active' : '' ?>">
+    <a href="#">
+        <i class="fa fa-certificate"></i>
+        <span>Certificados</span>
+        <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+        </span>
+    </a>
+    <ul class="treeview-menu">
+        <li>
+            <a href="<?= base_url('admin/certificados') ?>">
+                <i class="fa fa-list"></i> Ver certificados
+            </a>
+        </li>
+    </ul>
+</li>
+
                     <li
                         class="treeview <?= (isset($modulo) && in_array($modulo, [ModulosAdmin::MIS_RECAUDACIONES,ModulosAdmin::RECAUDACIONES,ModulosAdmin::RECAUDACIONES_ONLINE])) ? 'active' : '' ?>">
                         <a href="#"> <i class="fa fa-book"></i>
@@ -338,6 +571,9 @@
     <script src="<?= base_url("assets/js/datatables.js") ?>"></script>
 
     <script src="<?= base_url("assets/js/preloader.js") ?>"></script>
+    
+<!-- <script src="<?= base_url('dist/bootstrap/js/bootstrap.bundle.min.js') ?>"></script>
+<script src="<?= base_url('assets/plugins/select2/select2.min.js') ?>"></script> -->
     <?= $this->renderSection('scripts'); ?>
 </body>
 

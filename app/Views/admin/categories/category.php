@@ -11,7 +11,7 @@ Categorías
         <h1 class="text-black">Categorías</h1>
         <ol class="breadcrumb">
             <li><a href="#">Inicio</a></li>
-            <li class="sub-bread"><i class="fa fa-angle-right"></i>Categorías de eventos</li>
+            <li class="sub-bread"><i class="fa fa-angle-right"></i>Categorías de cursos</li>
         </ol>
     </div>
 
@@ -21,9 +21,9 @@ Categorías
                 <table id="category" class="table datatable table-hover table-bordered">
                     <thead class="thead-light">
                         <tr>
-                            <th>Nombre de la categoría</th>
-                            <th>Valor por la categoría</th>
-                            <th>Descripción de la categoría</th>
+                            <th>Nombre del curso</th>
+                            <th>Valor por el curso</th>
+                            <th>Descripción del curso</th>
                             <th class="exclude-column">Acciones</th>
                         </tr>
                     </thead>
@@ -79,7 +79,7 @@ Categorías
                 <form action="<?= base_url("admin/category/delete") ?>" id="form_delete" method="post">
                     <div class="row mb-3">
                         <div class="col">
-                            <p>Estas seguro de eliminar la categoría : <span class="text-danger"
+                            <p>Estas seguro de eliminar este curso : <span class="text-danger"
                                     id="text-category"></span></p>
                         </div>
                     </div>
@@ -115,7 +115,7 @@ Categorías
                     <hr>
                     <div class="row mb-3">
                         <div class="col">
-                            <label>Nombre de la categoría</label>
+                            <label>Nombre del curso</label>
                             <div class="input-group">
                                 <div class="input-group-addon"><i class="fa fa-tasks" aria-hidden="true"></i>
                                 </div>
@@ -129,7 +129,7 @@ Categorías
                             </span>
                         </div>
                         <div class="col">
-                            <label>Valor de la categoría</label>
+                            <label>Valor del curso</label>
                             <div class="input-group">
                                 <div class="input-group-addon"><i class="fa fa-usd" aria-hidden="true"></i>
                                 </div>
@@ -145,7 +145,7 @@ Categorías
                     </div>
                     <div class="row mb-3">
                         <div class="col">
-                            <label>Descripción de la categoría</label>
+                            <label>Descripción del curso</label>
                             <div class="input-group">
                                 <div class="input-group-addon"><i class="fa fa-commenting-o" aria-hidden="true"></i>
                                 </div>
@@ -194,7 +194,7 @@ Categorías
                     <hr>
                     <div class="row mb-3">
                         <div class="col">
-                            <label>Nombre de la categoría</label>
+                            <label>Nombre del curso</label>
                             <div class="input-group">
                                 <div class="input-group-addon"><i class="fa fa-tasks" aria-hidden="true"></i>
                                 </div>
@@ -208,7 +208,7 @@ Categorías
                             </span>
                         </div>
                         <div class="col">
-                            <label>Valor de la categoría</label>
+                            <label>Valor del curso</label>
                             <div class="input-group">
                                 <div class="input-group-addon"><i class="fa fa-usd" aria-hidden="true"></i>
                                 </div>
@@ -222,7 +222,7 @@ Categorías
                             </span>
                         </div>
                     </div>
-                    <label>Descripción de la categoría</label>
+                    <label>Descripción del curso</label>
                     <div class="input-group">
                         <div class="input-group-addon"><i class="fa fa-commenting-o" aria-hidden="true"></i></div>
                         <textarea name="short_description" id=""

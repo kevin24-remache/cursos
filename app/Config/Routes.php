@@ -42,8 +42,13 @@ $routes->group('admin', static function ($routes) {
         $pagos->get('completados', 'Admin\PagosController::completados');
         $pagos->get('rechazados', 'Admin\PagosController::rechazados');
         $pagos->get('incompletos', 'Admin\PagosController::incompletos');
+
     });
 
+    $routes->get('certificados', 'Admin\CertificadosController::index');
+    $routes->get('certificados/nuevo', 'Admin\CertificadosController::nuevo');
+    $routes->post('certificados/guardar', 'Admin\CertificadosController::guardar');    
+    
     $routes->group('event', static function ($categories) {
         $categories->get('/', 'Admin\EventsController::index');
         $categories->get('get/(:num)', 'Admin\EventsController::get/$1');
@@ -70,6 +75,7 @@ $routes->group('admin', static function ($routes) {
             $trash->post('restore', 'Admin\EventsController::restore');
         });
     });
+    
 
     $routes->group('users', static function ($categories) {
         $categories->get('/', 'Admin\UsersController::index');

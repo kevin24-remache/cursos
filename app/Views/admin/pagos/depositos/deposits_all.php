@@ -28,7 +28,7 @@ Depósitos
                             <th>Fecha</th>
                             <th>Estado</th>
                             <th class="exclude-view">Correo</th>
-                            <th class="exclude-view">Evento</th>
+                            <th class="exclude-view">Curso</th>
                             <th>Valor</th>
                             <th>Acciones</th>
                         </tr>

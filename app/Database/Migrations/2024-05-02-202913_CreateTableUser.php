@@ -54,6 +54,10 @@ class CreateTableUser extends Migration
                 'type' => 'TEXT',
                 'null' => true,
             ],
+            'gender' => [
+                'type' => 'ENUM',
+                'constraint' => ['Masculino', 'Femenino', 'Otro'],
+            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => false,

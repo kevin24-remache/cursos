@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/admin_layout'); ?>
 
 <?= $this->section('title') ?>
-Agregar eventos
+Agregar Curso
 <?= $this->endSection() ?>
 
 <?= $this->section('css') ?>
@@ -17,11 +17,11 @@ Agregar eventos
 
 <div class="content-wrapper bg-white">
     <div class="content-header sty-one shadow">
-        <h1 class="text-black">Nuevo evento</h1>
+        <h1 class="text-black">Nuevo Curso</h1>
         <ol class="breadcrumb">
             <li><a href="#">Inicio</a></li>
-            <li class="sub-bread"><i class="fa fa-angle-right"></i> Eventos</li>
-            <li><i class="fa fa-angle-right"></i> Nuevo evento</li>
+            <li class="sub-bread"><i class="fa fa-angle-right"></i> Cursos</li>
+            <li><i class="fa fa-angle-right"></i> Nuevo curso</li>
         </ol>
     </div>
 
@@ -33,7 +33,7 @@ Agregar eventos
             <div class="col-lg-12">
                 <div class="card shadow-sm">
                     <div class="card-header bg-gray ">
-                        <h5 class="text-dark m-b-0">Agregar un evento</h5>
+                        <h5 class="text-dark m-b-0">Agregar curso</h5>
                     </div>
                     <div class="card-body">
 
@@ -42,7 +42,7 @@ Agregar eventos
 
                                 <div class="col-md-4">
                                     <div class="form-group has-feedback">
-                                        <label class="control-label">Nombre del evento</label>
+                                        <label class="control-label">Nombre del curso</label>
                                         <input class="form-control" name="event_name" placeholder=""
                                             value="<?= isset($last_data) ? display_data($last_data, 'event_name') : '' ?>"
                                             type="text" required>
@@ -52,7 +52,7 @@ Agregar eventos
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group has-feedback">
-                                        <label class="control-label">Fecha del evento</label>
+                                        <label class="control-label">Fecha del curso</label>
                                         <input class="form-control" name="event_date" placeholder="" type="date"
                                             value="<?= isset($last_data) ? display_data($last_data, 'event_date') : '' ?>"
                                             required>
@@ -64,7 +64,7 @@ Agregar eventos
                                     <div class="form-group has-feedback">
                                         <label class="control-label">Modalidad</label>
                                         <select class="form-select" name="modality" id="modality" required>
-                                            <option value="" disabled selected>Seleccione la modalidad del evento
+                                            <option value="" disabled selected>Seleccione la modalidad del curso
                                             </option>
                                             <option value="Presencial" <?= isset($last_data) && $last_data['modality'] == 'Presencial' ? 'selected' : '' ?>>Presencial
                                             </option>
@@ -81,7 +81,7 @@ Agregar eventos
                                 <!-- Nuevo campo para la dirección del evento -->
                                 <div class="col-md-4" id="event-duration-container" style="display: none;">
                                     <div class="form-group has-feedback">
-                                        <label class="control-label">Duración del evento</label>
+                                        <label class="control-label">Duración del curso</label>
                                         <input class="form-control" name="event_duration" id="event_duration"
                                             type="number"
                                             value="<?= isset($last_data) ? display_data($last_data, 'event_duration') : '' ?>">
@@ -91,7 +91,7 @@ Agregar eventos
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group has-feedback">
-                                        <label class="control-label">Dirección del evento</label>
+                                        <label class="control-label">Dirección del curso</label>
                                         <input class="form-control" name="address" placeholder="" type="text"
                                             value="<?= isset($last_data) ? display_data($last_data, 'address') : '' ?>">
                                         <span
@@ -100,11 +100,11 @@ Agregar eventos
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group has-feedback">
-                                        <label class="control-label">Categorías del evento</label>
+                                        <label class="control-label">Categorías de los cursos</label>
 
                                         <select id="id_cat" class="form-control select2" name="id_cat[]"
                                             multiple="multiple" style="width: 100%">
-                                            <option value="" disabled>Seleccione una categoría</option>
+                                            <option value="" disabled>Seleccione un curso</option>
                                             <?php foreach ($categories as $key => $category): ?>
                                                 <option value="<?= $category["id"] ?>" <?= isset($last_data['categories']) && in_array($category["id"], $last_data['categories']) ? 'selected' : '' ?>>
                                                     <?= $category["category_name"] ?> -
@@ -138,7 +138,7 @@ Agregar eventos
                                 </div>
                                 <div class="col-lg-6 col-md-6">
                                     <div class="form-group has-feedback">
-                                        <label class="control-label">Descripción del evento</label>
+                                        <label class="control-label">Descripción del curso</label>
                                         <textarea class="form-control" name="short_description" id="" rows="10"
                                             placeholder=""><?= isset($last_data) ? display_data($last_data, 'short_description') : '' ?></textarea>
                                         <span
@@ -147,7 +147,7 @@ Agregar eventos
                                 </div>
 
                                 <div class="col-lg-6 col-md-6">
-                                    <label>Imagen del evento</label>
+                                    <label>Imagen del curso</label>
                                     <input type="file" id="input-file-now form-control" class="dropify" name="image"
                                         accept="image/jpeg, image/png"
                                         value="<?= isset($last_data) ? display_data($last_data, 'image') : '' ?>" />
@@ -155,7 +155,7 @@ Agregar eventos
                                         class="text-danger"><?= isset($validation) ? display_data($validation, 'image') : '' ?></span>
                                 </div>
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-success">Agregar evento</button>
+                                    <button type="submit" class="btn btn-success">Agregar curso</button>
                                 </div>
                             </div>
                         </form>

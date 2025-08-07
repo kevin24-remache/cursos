@@ -161,7 +161,7 @@
 
 <body>
     <header>
-        <img src="<?= base_url('assets/images/email/bg_top.jpg'); ?>" alt="bg-top" style="width: 100%;">
+        <img src="<?= base_url('assets/images/email/bg_top.jpeg'); ?>" alt="bg-top" style="width: 100%;">
     </header>
     <main style="background-color: #F5F5F5;">
 
@@ -188,7 +188,7 @@
                     </div>
                     <table class="details-table">
                         <tr>
-                            <th>Evento:</th>
+                            <th>Curso:</th>
                             <td>
                                 <?= $evento ?>
                             </td>
@@ -294,17 +294,12 @@
                     </ul>
 
                     <hr>
-                    <p style="text-align: center;">Gracias por tu participación.</p>
+                    <p style="text-align: center;">Gracias por tu inscripción al curso.</p>
                 </div>
             </div>
             <div class="space"></div>
         </div>
 
-        <div class="footer">
-            <div>
-            </div>
-            <p>© 2024 PROSERVI-UEB-EP | Softec Apps S.A.S. Todos los derechos reservados.</p>
-        </div>
 
     </main>
 </body>

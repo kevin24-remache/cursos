@@ -34,11 +34,6 @@
                 <h3><i class="fa fa-exclamation-circle text-red" ></i> Requiere de autorización.</h3>
             </div>
         </div>
-        <div class="lockscreen-footer text-center m-t-3">
-            Copyright 2024 &copy; PROSERVI-UEB-EP |
-            <a href="" class="text-decoration-none link-light">Softec Apps S.A.S</a>
-
-        </div>
     </div>
 
     <script src="<?= base_url("dist/js/jquery.min.js") ?>"></script>

@@ -48,7 +48,8 @@ class RegistrationsController extends BaseController
         }
 
         $eventModel = new EventsModel();
-        $event = $eventModel->find($eventId);
+        $event = $eventModel->find(
+$eventId);
 
         $categoryModel = new CategoryModel();
         $categories = $categoryModel->getCategoriesByEventId($eventId);

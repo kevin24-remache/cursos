@@ -57,9 +57,9 @@ class EventsController extends BaseController
         $event_duration = $this->request->getPost('event_duration');
         $registrations_start_date = $this->request->getPost('registrations_start_date');
         $registrations_end_date = $this->request->getPost('registrations_end_date');
-        $image = $this->request->getFile('image');
+        $image = $this->request->getFile('image'); // Solo obtener una vez
         $categories = $this->request->getPost('id_cat');
-
+    
         $data = [
             'event_name' => trim($event_name),
             'short_description' => trim($short_description),
@@ -71,7 +71,7 @@ class EventsController extends BaseController
             'registrations_end_date' => $registrations_end_date,
             'categories' => $categories,
         ];
-
+    
         // Iniciar la transacción
         $db = \Config\Database::connect();
         try {
@@ -127,41 +127,55 @@ class EventsController extends BaseController
                     ]
                 ]
             );
-
+    
             if ($validation->run($data)) {
+                // SUBIR LA IMAGEN ANTES de iniciar la transacción
+                $imagePath = uploadImage($image);
+                
+                if ($imagePath === false) {
+                    return $this->redirectView(null, [['Error en la subida de la imagen', 'danger']], $data, 'new');
+                }
+    
                 $db->transStart();
-
+    
                 unset($data['categories']);
+                
+                // Agregar la imagen a los datos
+                $data['image'] = $imagePath;
+                
                 // Guardar los datos en la DB
                 $eventsModel = new EventsModel;
                 $new_event = $eventsModel->insert($data);
-
+    
                 if ($new_event) {
-                    $image = $this->request->getFile('image');
-                    $imagePath = uploadImage($image);
-
-                    if ($imagePath !== false) {
-                        $data['image'] = $imagePath;
-                        $eventsModel->update($new_event, ['image' => $data['image']]);
-
-                        // Guardar categorías
-                        $eventCategoryModel = new EventCategoryModel();
-                        foreach ($categories as $category_id) {
-                            $eventCategoryModel->insert([
-                                'event_id' => $new_event,
-                                'cat_id' => $category_id,
-                            ]);
-                        }
-
-                        $db->transComplete();
-
-                        return $this->redirectView(null, [['Evento agregado exitosamente', 'success']], null, 'new');
-                    } else {
-                        $db->transRollback();
-                        return $this->redirectView(null, [['Error en la subida de la imagen', 'danger']], $data, 'new');
+                    // Guardar categorías
+                    $eventCategoryModel = new EventCategoryModel();
+                    foreach ($categories as $category_id) {
+                        $eventCategoryModel->insert([
+                            'event_id' => $new_event,
+                            'cat_id' => $category_id,
+                        ]);
                     }
+    
+                    $db->transComplete();
+    
+                    if ($db->transStatus() === false) {
+                        // Si la transacción falló, eliminar la imagen subida
+                        $fullImagePath = ROOTPATH . 'public/' . $imagePath;
+                        if (file_exists($fullImagePath)) {
+                            unlink($fullImagePath);
+                        }
+                        return $this->redirectView(null, [['Error al guardar el evento', 'danger']], $data, 'new');
+                    }
+    
+                    return $this->redirectView(null, [['Evento agregado exitosamente', 'success']], null, 'new');
                 } else {
                     $db->transRollback();
+                    // Eliminar la imagen subida si no se pudo guardar el evento
+                    $fullImagePath = ROOTPATH . 'public/' . $imagePath;
+                    if (file_exists($fullImagePath)) {
+                        unlink($fullImagePath);
+                    }
                     return $this->redirectView(null, [['No fue posible guardar el evento', 'warning']], $data, 'new');
                 }
             } else {
@@ -170,7 +184,16 @@ class EventsController extends BaseController
         } catch (\Exception $e) {
             // Si ocurre alguna excepción, revertir la transacción
             $db->transRollback();
-            return $this->redirectView(null, [['No se pudo registrar el evento ' . $e->getMessage(), 'danger']], null, 'new');
+            
+            // Si la imagen se subió, eliminarla
+            if (isset($imagePath) && $imagePath !== false) {
+                $fullImagePath = ROOTPATH . 'public/' . $imagePath;
+                if (file_exists($fullImagePath)) {
+                    unlink($fullImagePath);
+                }
+            }
+            
+            return $this->redirectView(null, [['No se pudo registrar el evento: ' . $e->getMessage(), 'danger']], null, 'new');
         }
     }
 
@@ -413,12 +436,12 @@ class EventsController extends BaseController
             $client = $eventsModel->onlyDeleted()->find($category_id);
             if (isset($client)) {
                 $eventsModel->withDeleted()->set(['deleted_at' => null])->update($category_id);
-                return $this->redirectTrashView(null, [['Evento restaurada correctamente', 'success']]);
+                return $this->redirectTrashView(null, [['Curso restaurada correctamente', 'success']]);
             } else {
                 return $this->redirectTrashView(null, [['No existe el evento buscado', 'warning']]);
             }
         } catch (\Exception $e) {
-            return $this->redirectTrashView(null, [['No fue posible restaurar el evento', 'danger']]);
+            return $this->redirectTrashView(null, [['No fue posible restaurar el curso', 'danger']]);
         }
     }
 
@@ -471,7 +494,7 @@ class EventsController extends BaseController
 
         // Verificar que el ID no esté vacío
         if (empty($eventId)) {
-            return $this->redirectView(null, [['El ID del evento es requerido', 'error']]);
+            return $this->redirectView(null, [['El ID del curso es requerido', 'error']]);
         }
 
         try {
@@ -483,12 +506,12 @@ class EventsController extends BaseController
             if ($event) {
                 $eventsModel->deleteEventWithRelations($eventId);
 
-                return $this->redirectTrashView(null, [['Evento con sus registros eliminados exitosamente', 'success']]);
+                return $this->redirectTrashView(null, [['Curso con sus registros eliminados exitosamente', 'success']]);
             } else {
-                return $this->redirectTrashView(null, [['Evento no encontrado', 'error']]);
+                return $this->redirectTrashView(null, [['Curso no encontrado', 'error']]);
             }
         } catch (\Exception $e) {
-            return $this->redirectTrashView(null, [['No se pudo eliminar el evento', 'error']]);
+            return $this->redirectTrashView(null, [['No se pudo eliminar el curso', 'error']]);
         }
     }
 }

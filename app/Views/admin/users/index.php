@@ -21,6 +21,12 @@ Usuarios
     </div>
     <div class="content">
         <div class="info-box">
+        <div class="mb-3">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addUserModal">
+        <i class="fa fa-user-plus"></i> Agregar Usuario
+    </button>
+</div>
+
             <div class="table-responsive">
                 <table id="users" class="table datatable">
                     <thead class="thead-light">

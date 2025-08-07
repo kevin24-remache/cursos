@@ -36,11 +36,6 @@
                         href="<?= base_url("/") ?>">volver al inicio</a></p>
             </div>
         </div>
-        <div class="lockscreen-footer text-center m-t-3">
-            Copyright 2024 &copy; PROSERVI-UEB-EP |
-            <a href="" class="text-decoration-none link-light">Softec Apps S.A.S</a>
-
-        </div>
     </div>
 
     <script src="<?= base_url("dist/js/jquery.min.js") ?>"></script>

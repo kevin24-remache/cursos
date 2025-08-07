@@ -5,7 +5,7 @@ if (!function_exists('format_event_date')) {
         // Convierte la fecha de Y-m-d a una marca de tiempo
         $timestamp = strtotime($date);
         // Formatea la fecha en el formato deseado
-        $formattedDate = "Inicia el " . date("d", $timestamp) . " de " . date("F", $timestamp) . " de " . date("Y", $timestamp);
+        $formattedDate = "Este curso inicia el " . date("d", $timestamp) . " de " . date("F", $timestamp) . " de " . date("Y", $timestamp);
 
         // Opcional: Traducir los meses al español
         $formattedDate = str_replace(

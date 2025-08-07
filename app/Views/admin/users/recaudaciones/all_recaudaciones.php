@@ -32,7 +32,7 @@ Consolidado
                             <th class="exclude-view">Teléfono</th>
                             <th>Correo</th>
                             <th class="exclude-view">Dirección</th>
-                            <th>Evento</th>
+                            <th>Curso</th>
                             <th>Monto</th>
                             <th>Método</th>
                             <th>Fecha</th>

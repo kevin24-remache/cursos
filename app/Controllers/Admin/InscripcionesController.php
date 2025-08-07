@@ -188,7 +188,7 @@ class InscripcionesController extends BaseController
                         'rules' => 'required|valid_email',
                     ],
                     'event_cod' => [
-                        'label' => 'Evento',
+                        'label' => 'Curso',
                         'rules' => 'required',
                     ],
                     'cat_id' => [
@@ -244,7 +244,7 @@ class InscripcionesController extends BaseController
                     ];
 
                     // Añadir el trabajo a la cola
-                    $jobId = service('queue')->push('emails', 'email', $emailData);
+                    $jobId = service('queue')->push('default', 'App\Jobs\Email', $emailData);
 
                     if ($jobId) {
                         return $this->redirectViewInscripcion(null, [['Datos del usuario actualizados y correo enviado', 'success']], null);

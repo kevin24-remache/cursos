@@ -25,7 +25,7 @@ Pagos
                             <th>Código de pago</th>
                             <th>Cédula</th>
                             <th>Nombres</th>
-                            <th>Evento</th>
+                            <th>Curso</th>
                             <th>Categoría</th>
                             <th class="exclude-view">Dirección</th$>
                             <th class="exclude-view">Teléfono</th>
@@ -112,7 +112,7 @@ Pagos
                         <input type="hidden" name="estado_pago" id="estado_pago">
                         <div class="row mb-3">
                             <div class="col">
-                                <label>Evento:</label>
+                                <label>Curso:</label>
                                 <input type="text" class="form-control" id="evento" readonly>
                             </div>
                         </div>

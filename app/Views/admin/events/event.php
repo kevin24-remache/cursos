@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/admin_layout'); ?>
 
 <?= $this->section('title') ?>
-Eventos
+Cursos
 <?= $this->endSection() ?>
 
 <?= $this->section('css') ?>
@@ -12,10 +12,10 @@ Eventos
 
 <div class="content-wrapper">
     <div class="content-header sty-one">
-        <h1 class="text-black">Eventos</h1>
+        <h1 class="text-black">Cursos</h1>
         <ol class="breadcrumb">
             <li><a href="#">Inicio</a></li>
-            <li class="sub-bread"><i class="fa fa-angle-right"></i> Eventos</li>
+            <li class="sub-bread"><i class="fa fa-angle-right"></i> Cursos</li>
             <li><i class="fa fa-angle-right"></i> Lista</li>
         </ol>
     </div>
@@ -25,11 +25,11 @@ Eventos
                 <table id="event" class="table datatable">
                     <thead class="thead-light">
                         <tr>
-                            <th>Evento</th>
-                            <th class="exclude-view">Descripción del evento</th>
-                            <th>Fecha del evento</th>
-                            <th class="exclude-view">Dirección del evento</th>
-                            <th class="exclude-view">Categorías del evento</th>
+                            <th>Curso</th>
+                            <th class="exclude-view">Descripción del curso</th>
+                            <th>Fecha del curso</th>
+                            <th class="exclude-view">Dirección del curso</th>
+                            <th class="exclude-view">Categorías de los cursos</th>
                             <th>Fecha de inicio de la inscripción</th>
                             <th>Fecha de finalización de la inscripción</th>
                             <th class="exclude-column">Acciones</th>
@@ -116,7 +116,7 @@ Eventos
                     <form action="<?= base_url("admin/event/delete") ?>" id="formPago" method="post">
                         <div class="row mb-3">
                             <div class="col">
-                                <p>Estas seguro de eliminar el evento : <span class="text-danger"
+                                <p>Estas seguro de eliminar el curso : <span class="text-danger"
                                         id="text-event"></span></p>
                             </div>
                         </div>

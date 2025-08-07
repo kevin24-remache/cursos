@@ -8,54 +8,37 @@ use App\Models\PaymentsModel;
 use App\Models\RegistrationsModel;
 use App\Services\ApiPrivadaService;
 use CodeIgniter\I18n\Time;
+use App\Models\UsersModel;
+use RolesOptions;
 
 class InscripcionController extends BaseController
 {
     private $apiPrivadaService;
+    private $usuariosModel;
 
     public function __construct()
     {
-
         $this->apiPrivadaService = new ApiPrivadaService();
+        $this->usuariosModel = new UsersModel();
     }
 
     private function generarCodigoPagoUnico()
     {
         $paymentModel = new PaymentsModel();
-
         do {
-            $codigoPago = rand(1000000, 9999999); // Genera un código de pago aleatorio de 7 dígitos
+            $codigoPago = rand(1000000, 9999999);
             $existingCode = $paymentModel->where('payment_cod', $codigoPago)->first();
         } while ($existingCode);
-
         return $codigoPago;
     }
 
     private function calcularFechaLimitePago($fechaInscripcion, $fechaEvento)
     {
-        // Calcular la diferencia en días entre la fecha de inscripción y la fecha del evento
         $diasRestantes = $fechaInscripcion->diff($fechaEvento)->days;
-
-        // Si la inscripción es el mismo día del evento
-        if ($diasRestantes == 0) {
-            return $fechaEvento;
-        }
-
-        // Si la diferencia es menor que 7 días, el intervalo será el número de días restantes
-        if ($diasRestantes < 7) {
-            $intervalo = new \DateInterval('P' . $diasRestantes . 'D');
-        } else {
-            $intervalo = new \DateInterval('P7D'); // Intervalo de 7 días
-        }
-
-        // Calcular la fecha límite de pago
+        if ($diasRestantes == 0) return $fechaEvento;
+        $intervalo = $diasRestantes < 7 ? new \DateInterval('P' . $diasRestantes . 'D') : new \DateInterval('P7D');
         $fechaLimitePago = (clone $fechaInscripcion)->add($intervalo);
-
-        // Comparar con la fecha del evento
-        if ($fechaLimitePago > $fechaEvento) {
-            $fechaLimitePago = $fechaEvento;
-        }
-
+        if ($fechaLimitePago > $fechaEvento) $fechaLimitePago = $fechaEvento;
         return $fechaLimitePago;
     }
 
@@ -127,7 +110,46 @@ class InscripcionController extends BaseController
                     ], 400);
             }
 
-            // Usar el servicio para obtener los datos del usuario si la cédula es válida
+            // ✅ Verificar en la base de datos local
+            $usuario = $this->usuariosModel
+                ->where('ic', $cedula)
+                ->where('rol_id', RolesOptions::UsuarioPublico)
+                ->first();
+
+
+            if ($usuario) {
+                helper('format_names');
+                helper('email');
+
+                // Guardar en sesión como con la API
+                session()->set('persona', [
+                    'identification' => $usuario['ic'],
+                    'name' => $usuario['first_name'],
+                    'surname' => $usuario['last_name'],
+                    'email' => $usuario['email'],
+                    'phone' => $usuario['phone_number'] ?? '',
+                    'address' => $usuario['address'] ?? '',
+                    'gender' => $usuario['gender'] ?? '',
+                ]);
+
+                $persona_formateada = formatear_nombre_apellido($usuario['first_name'], $usuario['last_name']);
+
+                return $this->response
+                    ->setHeader('X-CSRF-TOKEN', $newCsrfToken)
+                    ->setJSON([
+                        'status' => 'success',
+                        'message' => 'Usuario encontrado localmente',
+                        'code' => 200,
+                        'persona' => [
+                            'id' => $usuario['ic'],
+                            'nombres' => $persona_formateada['nombres'],
+                            'apellidos' => $persona_formateada['apellidos'],
+                            'email' => mask_email($usuario['email']),
+                        ]
+                    ]);
+            }
+
+            // ❌ No encontrado localmente, consultar en la API externa
             $persona = $this->apiPrivadaService->getDataUser($cedula);
 
             // Si la persona existe y tiene éxito
@@ -143,7 +165,7 @@ class InscripcionController extends BaseController
                         ->setHeader('X-CSRF-TOKEN', $newCsrfToken)
                         ->setJSON([
                             'status' => 'warning',
-                            'message' => 'Usuario encontrado pero email vació',
+                            'message' => 'Usuario encontrado pero email vacío',
                             'code' => 200,
                             'persona' => [
                                 'id' => $personaData['identification'],
@@ -202,15 +224,13 @@ class InscripcionController extends BaseController
 
     public function obtenerDatosEvento()
     {
-        $eventoId = $this->request->getJSON()->eventoId;
+        $eventoId = $this->request->getJSON()->eventoId ?? null;
         if (empty($eventoId)) {
             echo json_encode("error: invalid eventoId");
             return;
         }
         $eventoModel = new EventsModel();
         $evento = $eventoModel->getEventById($eventoId);
-
-
         return $this->response->setJSON($evento);
     }
 
@@ -224,23 +244,17 @@ class InscripcionController extends BaseController
         $cedula = $data->cedula;
         $eventoId = $data->eventoId;
         $catId = $data->catId;
-
-        // Obtener los datos del usuario de la sesión (flashdata)
         $personaData = session('persona');
-
-        // Si no hay datos de la persona en la sesión, devolver error
         if (!$personaData) {
             return $this->response->setJSON(['error' => true, 'message' => 'Usuario no encontrado']);
         }
 
-        // Verificar si el evento existe
         $eventModel = new EventsModel();
         $event = $eventModel->getEventNameAndCategories($eventoId, $catId);
         if (!$event) {
             return $this->response->setJSON(['error' => true, 'message' => 'Evento no encontrado']);
         }
 
-        // **Validar si ya está inscrito en el mismo evento y categoría**
         $registrationModel = new RegistrationsModel();
         $existingRegistration = $registrationModel->where('ic', $cedula)
             ->where('event_cod', $eventoId)
@@ -251,37 +265,30 @@ class InscripcionController extends BaseController
             return $this->response->setJSON(['error' => true, 'message' => 'Ya estás inscrito en esta categoría, realiza el pago de tu inscripción']);
         }
 
-        // Generar código de pago y calcular fecha límite
         $codigoPago = $this->generarCodigoPagoUnico();
         $fechaInscripcion = Time::now();
         $fechaEvento = new Time($event['event_date']);
         $event_name = $event['event_name'];
         $fechaLimitePago = $this->calcularFechaLimitePago($fechaInscripcion, $fechaEvento);
 
-        // Preparar datos para la inscripción y el pago
         $datosInscripcion = $this->prepararDatosInscripcion($personaData, $event, $catId);
         $datosPayment = $this->prepararDatosPago($codigoPago, $fechaLimitePago);
 
-        // Guardar los datos en la base de datos
         $db = \Config\Database::connect();
         $db->transStart();
 
-        $registrationModel = new RegistrationsModel();
         $registration = $registrationModel->insert($datosInscripcion);
-
         $datosPayment['id_register'] = $registration;
         $paymentModel = new PaymentsModel();
         $payment = $paymentModel->insert($datosPayment);
 
         if (!$registration || !$payment) {
             $db->transRollback();
-
-            // Eliminar los datos de la persona de la sesión
             session()->remove('persona');
             return $this->response->setJSON(['error' => true, 'message' => 'No se pudo registrar la inscripción']);
         }
 
-        // Enviar correo electrónico a la cola
+        // Construye el email job:
         $emailData = [
             'to' => $personaData['email'],
             'subject' => 'Código de pago',
@@ -299,12 +306,10 @@ class InscripcionController extends BaseController
             'emailType' => 'send_email_registro'
         ];
 
-        // Añadir el trabajo a la cola
-        $jobId = service('queue')->push('emails', 'email', $emailData);
+        // PUSH CORRECTO A LA COLA (emails)
+        $jobId = service('queue')->push('default', 'App\Jobs\Email', $emailData);
 
         if ($jobId) {
-
-            // Eliminar los datos de la persona de la sesión
             session()->remove('persona');
             $db->transComplete();
             helper('email');
@@ -318,8 +323,6 @@ class InscripcionController extends BaseController
                 'job_id' => $jobId,
             ]);
         } else {
-
-            // Eliminar los datos de la persona de la sesión
             session()->remove('persona');
             $db->transRollback();
             return $this->response->setJSON(['error' => true, 'message' => 'No se pudo añadir el email a la cola']);
@@ -330,10 +333,13 @@ class InscripcionController extends BaseController
     {
         $data = $this->request->getJSON();
 
+        if (!empty($data->website)) {
+            return $this->response->setJSON(['error' => true, 'message' => 'Petición inválida.']);
+        }
         // Aplicar trim a todos los campos relevantes
         $data->numeroCedula = trim($data->numeroCedula);
-        $data->nombres = trim($data->nombres);
-        $data->apellidos = trim($data->apellidos);
+        $data->nombres = strtoupper(trim($data->nombres));
+        $data->apellidos = strtoupper(trim($data->apellidos));
         $data->telefono = trim($data->telefono);
         $data->email = trim($data->email);
         $data->direccion = trim($data->direccion);
@@ -347,15 +353,15 @@ class InscripcionController extends BaseController
                 ],
                 'nombres' => [
                     'label' => 'Nombres',
-                    'rules' => 'required|min_length[3]',
+                    'rules' => 'required|min_length[9]',
                 ],
                 'apellidos' => [
                     'label' => 'Apellidos',
-                    'rules' => 'required|min_length[3]',
+                    'rules' => 'required|min_length[9]',
                 ],
                 'telefono' => [
                     'label' => 'Número de teléfono o celular',
-                    'rules' => 'required|numeric|min_length[10]',
+                    'rules' => 'required|numeric|min_length[10]|max_length[10]',
                 ],
                 'email' => [
                     'label' => 'Correo electrónico',
@@ -371,7 +377,22 @@ class InscripcionController extends BaseController
         if ($validation->run((array) $data)) {
             try {
 
-                // Preparar los datos para la API
+                $nuevoUsuario = [
+                    'rol_id' => RolesOptions::UsuarioPublico,
+                    'ic' => $data->numeroCedula,
+                    'first_name' => $data->nombres,
+                    'last_name' => $data->apellidos,
+                    'phone_number' => $data->telefono,
+                    'email' => $data->email,
+                    'address' => $data->direccion,
+                    'gender' => $data->gender == 0 ? "Masculino" : "Femenino",
+                    // Agrega más campos si los tiene tu tabla
+                ];
+
+                $this->usuariosModel->insert($nuevoUsuario);
+
+                // Comentado: Registro del usuario en la API externa
+                /*
                 $dataApi = [
                     'name' => $data->nombres,
                     'surname' => $data->apellidos,
@@ -394,14 +415,14 @@ class InscripcionController extends BaseController
                     'civil_status' => null,
                 ];
 
-                // Llamada al servicio ApiPrivada
                 $apiResponse = \App\Services\ApiPrivadaService::setDataUserCi($dataApi);
 
                 if (!$apiResponse) {
                     return $this->response->setJSON(['error' => false, 'message' => 'Error al intentar registrarse']);
                 }
+                */
 
-                return $this->response->setJSON(['success' => true, 'message' => 'Usuario registrado correctamente.']);
+                return $this->response->setJSON(['success' => true, 'message' => 'Registro creado correctamente']);
             } catch (\Exception $e) {
                 log_message('warning', $e->getMessage(), ['status' => $e->getMessage()]);
                 return $this->response->setJSON(['error' => false, 'message' => 'Error al registrar el usuario']);

@@ -182,7 +182,7 @@
                             <?= $user ?>
                         </strong>
                     </p>
-                    <p>Has sido registrado exitosamente en el evento.</p>
+                    <p>Has sido registrado exitosamente en el curso.</p>
 
                     <div class="alert-payment p-0">
                         <p>Tu inscripción se completará cuando verifiquemos tu pago</p>
@@ -190,7 +190,7 @@
 
                     <table class="details-table">
                         <tr>
-                            <th>Evento:</th>
+                            <th>Curso:</th>
                             <td>
                                 <?= $evento ?>
                             </td>
@@ -258,7 +258,7 @@
                             <th>RUC:</th>
                             <td>0291525784001</td>
                         </tr>
-                        <!-- <tr>
+                        <tr>
                             <td colspan="2" style="text-align: center; font-weight: bold; padding-top: 15px;">Otra cuenta</td>
                         </tr>
                         <tr>
@@ -280,7 +280,7 @@
                         <tr>
                             <td>RUC:</td>
                             <td>342434343535</td>
-                        </tr> -->
+                        </tr> 
                     </table>
 
                     <h3 style="text-align: center;">Métodos de pago disponibles:</h3>
@@ -300,9 +300,7 @@
             <div class="space"></div>
         </div>
 
-        <div class="footer">
-            <p>© 2024 PROSERVI-UEB-EP | Softec Apps S.A.S. Todos los derechos reservados.</p>
-        </div>
+        
 
     </main>
 </body>

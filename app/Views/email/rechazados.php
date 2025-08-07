@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
 
@@ -7,120 +8,64 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<!--[if mso]><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch><o:AllowPNG/></o:OfficeDocumentSettings></xml><![endif]--><!--[if !mso]><!--><!--<![endif]-->
 	<style>
-		* {
-			box-sizing: border-box;
-		}
-
-		body {
-			margin: 0;
-			padding: 0;
-		}
-
-		a[x-apple-data-detectors] {
-			color: inherit !important;
-			text-decoration: inherit !important;
-		}
-
-		#MessageViewBody a {
-			color: inherit;
-			text-decoration: none;
-		}
-
-		p {
-			line-height: inherit
-		}
-
-		.desktop_hide,
-		.desktop_hide table {
-			mso-hide: all;
-			display: none;
-			max-height: 0px;
-			overflow: hidden;
-		}
-
-		.image_block img+div {
-			display: none;
-		}
-
-		@media (max-width:670px) {
-			.desktop_hide table.icons-outer {
-				display: inline-table !important;
-			}
-
-			.desktop_hide table.icons-inner,
-			.social_block.desktop_hide .social-table {
-				display: inline-block !important;
-			}
-
-			.icons-inner {
-				text-align: center;
-			}
-
-			.icons-inner td {
-				margin: 0 auto;
-			}
-
-			.mobile_hide {
-				display: none;
-			}
-
-			.row-content {
-				width: 100% !important;
-			}
-
-			.stack .column {
-				width: 100%;
-				display: block;
-			}
-
-			.mobile_hide {
-				min-height: 0;
-				max-height: 0;
-				max-width: 0;
-				overflow: hidden;
-				font-size: 0px;
-			}
-
-			.desktop_hide,
-			.desktop_hide table {
-				display: table !important;
-				max-height: none !important;
-			}
-		}
-	</style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            color: #222;
+            background: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        .factura-box {
+            width: 390px;
+            border: 2px solid #1e40af;
+            margin: 0 auto;
+            padding: 14px;
+            border-radius: 8px;
+        }
+        .header-info {
+            text-align: center;
+            font-size: 15px;
+            color: #1e40af;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .comprobante-title {
+            background-color: #fbbf24;
+            color: #000;
+            font-weight: bold;
+            font-size: 14px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .mensaje {
+            font-size: 12px;
+            color: #1e40af;
+            text-align: center;
+            font-weight: bold;
+            margin-top: 12px;
+        }
+        .detalles {
+            font-size: 12px;
+            text-align: center;
+            margin-top: 6px;
+        }
+        .footer {
+            margin-top: 18px;
+            font-size: 11px;
+            text-align: center;
+            color: #555;
+        }
+    </style>
 </head>
 
 <body class="body"
 	style="background-color: #F5F5F5; margin: 0; padding: 0; -webkit-text-size-adjust: none; text-size-adjust: none;">
 	<table class="nl-container" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation"
 		style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #F5F5F5;">
-		<tbody>
-			<tr>
-				<td>
-					<table class="row row-1" align="center" width="100%" border="0" cellpadding="0" cellspacing="0"
-						role="presentation"
-						style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-image: url('<?= base_url('assets/images/email/bg_top.jpg')?>'); background-position: top center; background-repeat: repeat;">
-						<tbody>
-							<tr>
-								<td>
-									<table class="row-content stack" align="center" border="0" cellpadding="0"
-										cellspacing="0" role="presentation"
-										style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000000; width: 650px; margin: 0 auto;"
-										width="650">
-										<tbody>
-											<tr>
-												<td class="column column-1" width="100%"
-													style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;">
-													<div class="spacer_block block-1"
-														style="height:51px;line-height:51px;font-size:1px;">&#8202;
-													</div>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</td>
-							</tr>
-						</tbody>
+	
 					</table>
 					<table class="row row-2" align="center" width="100%" border="0" cellpadding="0" cellspacing="0"
 						role="presentation"
@@ -159,27 +104,22 @@
 										width="650">
 										<tbody>
 											<tr>
-												<td class="column column-1" width="25%"
-													style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; border-bottom: 2px solid #0c244b; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-left: 0px; background-color: white; border-radius: 10px 10px 0px 10px">
-													<table class="image_block block-1" width="100%" border="0"
-														cellpadding="0" cellspacing="0" role="presentation"
-														style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
-														<tr>
-															<td class="pad"
-																style="width:100%;padding-right:0px;padding-left:0px;">
-																<div class="alignment" align="center"
-																	style="line-height:10px">
-																	<div style="max-width: 152px;"><img
-																			src="<?= base_url('assets/images/email/logo-ep.png')?>"
-																			style="display: block; height: auto; border: 0; width: 100%;"
-																			width="152" alt="Logo" title="Logo"
-																			height="auto"></div>
-																</div>
-															</td>
-														</tr>
-													</table>
-												</td>
-												<td class="column column-2" width="75%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; background-color: #fff; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 2px solid #0c244b;
+
+				<td class="column column-1" 
+    style="width: 25%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; border-bottom: 2px solid #0c244b; padding: 5px; vertical-align: top; background-color: white; border-radius: 10px 10px 0px 10px;">
+    
+    <table style="width: 100%; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
+        <tr>
+            <td style="padding: 10px; text-align: center;">
+                <img src="<?= base_url('assets/images/email/logo-ep.png')?>" 
+                     style="display: block; height: auto; border: 0; max-width: 120px; width: auto; margin: 0 auto;" 
+                     alt="Logo de la empresa">
+            </td>
+        </tr>
+    </table>
+    
+</td>
+										<td class="column column-2" width="75%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; background-color: #fff; padding-bottom: 5px; padding-top: 5px; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 2px solid #0c244b;
 												border-radius: 10px 10px 10px 0 ;">
 													<table class="heading_block block-1" width="100%" cellpadding="10"
 														cellspacing="0" role="presentation"
@@ -189,8 +129,10 @@
 																<h2
 																	style="margin: 0; color: #727272; direction: ltr; font-family: Tahoma, Verdana, Segoe, sans-serif; font-size: 30px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: center; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 36px;">
 																	<span class="tinyMce-placeholder"><span
-																			style="color: #c3171b;">Notificación
-																			Importante</span><br></span></h2>
+																	style="color: #FFD700;">Notificación Importante</span><br></span></h2>
+																	<h3 style="margin: 0; color: #0c244b; direction: ltr; font-family: Tahoma, Verdana, Segoe, sans-serif; font-size: 20px; font-weight: 600; letter-spacing: normal; line-height: 120%; text-align: center; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 24px;">
+        <span style="color: #0c244b;">DoctrinaTech informa</span>
+    </h3>
 															</td>
 														</tr>
 													</table>
@@ -259,7 +201,7 @@
 																	style="color:#555555;direction:ltr;font-family:Tahoma, Verdana, Segoe, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:19.2px;">
 																	<p style="margin: 0; margin-bottom: 16px;">
 																		Lamentamos informarle que su pago para el
-																		evento: <strong><?= $nombreEvento ?></strong> ha
+																		curso: <strong><?= $nombreEvento ?></strong> ha
 																		sido rechazada</p>
 																	<p style="margin: 0;">Motivo del
 																		rechazo:&nbsp;<strong><?= $rejectionReason ?></strong>
@@ -415,15 +357,8 @@
 																<table class="icons-outer" cellpadding="0"
 																	cellspacing="0" role="presentation"
 																	style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; display: inline-table;">
-																	<tr>
-																		<td
-																			style="vertical-align: middle; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;">
-																			<img class="icon"
-																				src="<?= base_url('assets/images/email/5.png')?>"
-																				height="auto" width="32" align="center"
-																				style="display: block; height: auto; margin: 0 auto; border: 0;">
-																		</td>
-																	</tr>
+	
+					
 																</table>
 															</td>
 														</tr>
@@ -556,16 +491,6 @@
 													<table class="paragraph_block block-1" width="100%" border="0"
 														cellpadding="10" cellspacing="0" role="presentation"
 														style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;">
-														<tr>
-															<td class="pad">
-																<div
-																	style="color:#FFFFFF;font-family:Tahoma, Verdana, Segoe, sans-serif;font-size:14px;font-weight:400;line-height:120%;text-align:center;mso-line-height-alt:16.8px;">
-																	<p style="margin: 0;">© 2024 PROSERVI-UEB-EP |
-																		Softec Apps S.A.S. Todos los derechos
-																		reservados.</p>
-																</div>
-															</td>
-														</tr>
 													</table>
 												</td>
 											</tr>
@@ -582,3 +507,5 @@
 </body>
 
 </html>
+
+

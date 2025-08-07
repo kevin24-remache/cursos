@@ -101,7 +101,7 @@ class Queue extends BaseQueue
      */
     public array $jobHandlers = [
         // Aquí registras todos tus jobs
-        'email' => \App\Jobs\Email::class,
+        'App\Jobs\Email' => \App\Jobs\Email::class,
     ];
 
     public string $defaultQueue = 'default';

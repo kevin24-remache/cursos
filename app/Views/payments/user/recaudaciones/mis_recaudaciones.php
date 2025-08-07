@@ -31,7 +31,7 @@ Mi recaudaciones realizada
                             <th class="exclude-view">Teléfono</th>
                             <th>Correo</th>
                             <th class="exclude-view">Dirección</th>
-                            <th>Evento</th>
+                            <th>Curso</th>
                             <th>Monto</th>
                             <th>Fecha</th>
                             <th class="exclude-column">Acciones</th>

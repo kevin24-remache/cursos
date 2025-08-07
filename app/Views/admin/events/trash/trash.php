@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/admin_layout'); ?>
 
 <?= $this->section('title') ?>
-Eventos eliminados
+Cursos eliminados
 <?= $this->endSection() ?>
 
 <?= $this->section('css') ?>
@@ -12,10 +12,10 @@ Eventos eliminados
 
 <div class="content-wrapper">
     <div class="content-header sty-one">
-        <h1 class="text-black">Eventos eliminados</h1>
+        <h1 class="text-black">Cursos eliminados</h1>
         <ol class="breadcrumb">
             <li><a href="#">Inicio</a></li>
-            <li class="sub-bread"><i class="fa fa-angle-right"></i> Eventos eliminados</li>
+            <li class="sub-bread"><i class="fa fa-angle-right"></i> Cursos eliminados</li>
         </ol>
     </div>
     <div class="content">
@@ -24,10 +24,10 @@ Eventos eliminados
                 <table id="eventTrash" class="table datatable">
                     <thead class="thead-light">
                         <tr>
-                            <th>Evento</th>
-                            <th class="exclude-view">Descripción del evento</th>
-                            <th>Fecha del evento</th>
-                            <th class="exclude-view">Dirección del evento</th>
+                            <th>Curso</th>
+                            <th class="exclude-view">Descripción del curso</th>
+                            <th>Fecha del curso</th>
+                            <th class="exclude-view">Dirección del curso</th>
                             <th>Fecha de inicio de la inscripción</th>
                             <th>Fecha de finalización de la inscripción</th>
                             <th class="exclude-column">Acciones</th>

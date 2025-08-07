@@ -11,6 +11,7 @@ if (!function_exists('generate_pdf')) {
         $options->set('isHtml5ParserEnabled', true);
         $options->set('isRemoteEnabled', true);
         $options->set('defaultFont', 'Arial');
+        $options->set('defaultFontSize', 12); // Tamaño de fuente más grande para facturas normales
 
         // Crear una nueva instancia de Dompdf con las opciones configuradas
         $pdf = new Dompdf($options);
@@ -38,9 +39,12 @@ if (!function_exists('generate_pdf')) {
 
         $pdf->loadHtml($html);
 
-        // Tamaño de la página en puntos (58 x 210 mm)
-        $customPaper = array(0, 0, 164.41, 595.51); // 58mm = 164.41pt, 210mm = 595.51pt
-        $pdf->setPaper($customPaper);
+        // Configurar tamaño de papel A4 (210 x 297 mm) - Factura normal
+        $pdf->setPaper('A4', 'portrait');
+        
+        // Alternativas de tamaños si prefieres otros formatos:
+        // $pdf->setPaper('LETTER', 'portrait'); // Carta US (216 x 279 mm)
+        // $pdf->setPaper('LEGAL', 'portrait');  // Legal US (216 x 356 mm)
 
         // Renderizar el PDF
         $pdf->render();

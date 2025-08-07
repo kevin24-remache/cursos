@@ -20,11 +20,11 @@ Editar evento
 
 <div class="content-wrapper bg-white">
     <div class="content-header sty-one shadow">
-        <h1 class="text-black">Editar evento</h1>
+        <h1 class="text-black">Editar curso</h1>
         <ol class="breadcrumb">
             <li><a href="#">Inicio</a></li>
-            <li class="sub-bread"><i class="fa fa-angle-right"></i> Eventos</li>
-            <li><i class="fa fa-angle-right"></i> Editar evento</li>
+            <li class="sub-bread"><i class="fa fa-angle-right"></i> Cursos</li>
+            <li><i class="fa fa-angle-right"></i> Editar curso</li>
         </ol>
     </div>
 
@@ -35,7 +35,7 @@ Editar evento
                     <div class="card-header bg-gray">
 
 
-                        <h5 class="pull-left text-dark m-b-0">Actualizar el evento</h5>
+                        <h5 class="pull-left text-dark m-b-0">Actualizar el curso</h5>
                         <div class="pull-right">
                             <div class="row">
                                 <div class="col mt-2">
@@ -126,7 +126,7 @@ Editar evento
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group has-feedback">
-                                        <label class="control-label">Nombre del evento</label>
+                                        <label class="control-label">Nombre del curso</label>
                                         <input class="form-control" name="event_name" placeholder=""
                                             value="<?= isset($last_data) ? display_data($last_data, 'event_name') : (isset($event) ? $event['event_name'] : '') ?>"
                                             type="text" required>
@@ -136,7 +136,7 @@ Editar evento
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group has-feedback">
-                                        <label class="control-label">Fecha del evento</label>
+                                        <label class="control-label">Fecha del curso</label>
                                         <input class="form-control" name="event_date" placeholder="" type="date"
                                             value="<?= isset($last_data) ? display_data($last_data, 'event_date') : (isset($event) ? $event['event_date'] : '') ?>"
                                             required>
@@ -149,7 +149,7 @@ Editar evento
                                         <label class="control-label">Modalidad</label>
                                         <select class="form-select" name="modality" id="modality" required>
                                             <option value="" disabled <?= !isset($event) ? 'selected' : '' ?>>Seleccione
-                                                la modalidad del evento</option>
+                                                la modalidad del curso</option>
                                             <option value="Presencial" <?= (isset($last_data) && $last_data['modality'] == 'Presencial') || (isset($event) && $event['modality'] == 'Presencial') ? 'selected' : '' ?>>Presencial
                                             </option>
                                             <option value="Virtual" <?= (isset($last_data) && $last_data['modality'] == 'Virtual') || (isset($event) && $event['modality'] == 'Virtual') ? 'selected' : '' ?>>Virtual</option>
@@ -165,7 +165,7 @@ Editar evento
                                 <!-- Nuevo campo para la dirección del evento -->
                                 <div class="col-md-4" id="event-duration-container" style="display: none;">
                                     <div class="form-group has-feedback">
-                                        <label class="control-label">Duración del evento</label>
+                                        <label class="control-label">Duración del curso</label>
                                         <input class="form-control" name="event_duration" id="event_duration"
                                             type="number"
                                             value="<?= isset($last_data) ? display_data($last_data, 'event_duration') : (isset($event) ? $event['event_duration'] : '') ?>">
@@ -175,7 +175,7 @@ Editar evento
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group has-feedback">
-                                        <label class="control-label">Dirección del evento</label>
+                                        <label class="control-label">Dirección del curso</label>
                                         <input class="form-control" name="address" placeholder="" type="text"
                                             value="<?= isset($last_data) ? display_data($last_data, 'address') : (isset($event) ? $event['address'] : '') ?>">
                                         <span
@@ -184,10 +184,10 @@ Editar evento
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group has-feedback">
-                                        <label class="control-label">Categorías del evento</label>
+                                        <label class="control-label">Categorías del curso</label>
                                         <select id="id_cat" class="form-control select2" name="id_cat[]"
                                             multiple="multiple" style="width: 100%">
-                                            <option value="" disabled>Seleccione una categoría</option>
+                                            <option value="" disabled>Seleccione una categoría de curso</option>
                                             <?php foreach ($categories as $key => $category): ?>
                                                 <option value="<?= $category["id"] ?>" <?= isset($event['category_ids']) && in_array($category["id"], explode(',', $event['category_ids'])) ? 'selected' : '' ?>>
                                                     <?= $category["category_name"] ?> -
@@ -221,7 +221,7 @@ Editar evento
                                 </div>
                                 <div class="col-lg-6 col-md-6">
                                     <div class="form-group has-feedback">
-                                        <label class="control-label">Descripción del evento</label>
+                                        <label class="control-label">Descripción del curso</label>
                                         <textarea class="form-control" name="short_description" id="" rows="10"
                                             placeholder=""><?= isset($last_data) ? display_data($last_data, 'short_description') : (isset($event) ? $event['short_description'] : '') ?></textarea>
                                         <span
@@ -230,7 +230,7 @@ Editar evento
                                 </div>
 
                                 <div class="col-lg-6 col-md-6">
-                                    <label>Imagen del evento</label>
+                                    <label>Imagen del curso</label>
                                     <input type="file" id="input-file-now form-control" class="dropify" name="image"
                                         accept="image/jpeg, image/png"
                                         data-default-file="<?= isset($event['image']) ? base_url("{$event['image']}") : '' ?>" />
@@ -238,7 +238,7 @@ Editar evento
                                         class="text-danger"><?= isset($validation) ? display_data($validation, 'image') : '' ?></span>
                                 </div>
                                 <div class="col-md-12">
-                                    <button type="submit" class="btn btn-warning">Actualizar evento</button>
+                                    <button type="submit" class="btn btn-warning">Actualizar curso</button>
                                 </div>
                             </div>
                         </form>
